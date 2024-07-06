@@ -16,7 +16,7 @@ class NavigationSplitView(QWidget):
 
         container = QWidget()
 
-        cvZtack = QStackedLayout()
+        cvZStack = QStackedLayout()
         cvHStack = QHBoxLayout()
 
         cvHStack.addWidget(sidebarView)
@@ -27,16 +27,16 @@ class NavigationSplitView(QWidget):
 
         container.setLayout(cvHStack)
 
-        cvZtack.addWidget(bgColor)
-        cvZtack.addWidget(container)
-        cvZtack.setStackingMode(QStackedLayout.StackingMode.StackAll)
+        cvZStack.addWidget(bgColor)
+        cvZStack.addWidget(container)
+        cvZStack.setStackingMode(QStackedLayout.StackingMode.StackAll)
 
-        self.sidebarToggleButton = QPushButton("D")
+        self.sidebarToggleButton = QPushButton("=")
         self.sidebarToggleButton.setFixedSize(QSize(72, 72))
         self.sidebarToggleButton.clicked.connect(self.toggleSidebar)
-        cvZtack.addWidget(self.sidebarToggleButton)
+        cvZStack.addWidget(self.sidebarToggleButton)
 
-        self.setLayout(cvZtack)
+        self.setLayout(cvZStack)
 
     def toggleSidebar(self):
         self.isSideBarVisible = not self.isSideBarVisible
