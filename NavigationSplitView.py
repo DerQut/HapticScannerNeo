@@ -32,7 +32,7 @@ class NavigationSplitView(QWidget):
         cvZStack.setStackingMode(QStackedLayout.StackingMode.StackAll)
 
         self.sidebarToggleButton = QPushButton("=")
-        self.sidebarToggleButton.setFixedSize(QSize(72, 72))
+        self.sidebarToggleButton.setFixedSize(QSize(32, 32))
         self.sidebarToggleButton.clicked.connect(self.toggleSidebar)
         cvZStack.addWidget(self.sidebarToggleButton)
 
