@@ -1,5 +1,7 @@
-from PyQt6.QtCore import QSize, Qt, QPropertyAnimation, QRect
-from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QWidget, QStackedLayout, QHBoxLayout, QVBoxLayout, QStackedWidget
+from PyQt6.QtWidgets import *
+from PyQt6 import QtCore, QtGui
+from PyQt6.QtGui import *
+from PyQt6.QtCore import *
 
 from Color import *
 
@@ -38,10 +40,16 @@ class NavigationSplitView(QWidget):
 
         self.setLayout(cvZStack)
 
+        self.timer = QTimer()
+        self.timer.setInterval(4)
+        self.timer.timeout.connect(self.animateSidebar)
+
     def toggleSidebar(self):
-
-        self.detailView.setFixedWidth(800 + 400 * self.isSideBarVisible)
-
         self.isSideBarVisible = not self.isSideBarVisible
+        self.timer.start()
 
-        self.sidebarView.setFixedSize(QSize(self.isSideBarVisible * 400, 800))
+    def animateSidebar(self):
+        if self.sidebarView.width() != self.isSideBarVisible * 400:
+            self.sidebarView.setFixedWidth(self.sidebarView.width()-10+20*self.isSideBarVisible)
+        else:
+            self.timer.stop()

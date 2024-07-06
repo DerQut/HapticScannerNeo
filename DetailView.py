@@ -1,6 +1,7 @@
-from PyQt6.QtCore import QSize, Qt
-from PyQt6.QtGui import QPalette, QColor
-from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QWidget, QStackedLayout, QHBoxLayout, QVBoxLayout, QStackedWidget
+from PyQt6.QtWidgets import *
+from PyQt6 import QtCore, QtGui
+from PyQt6.QtGui import *
+from PyQt6.QtCore import *
 
 from assets import MacColoursDark
 from Color import *
@@ -11,10 +12,20 @@ class DetailView(QWidget):
     def __init__(self, color=MacColoursDark.bg_colour):
         super().__init__()
 
-        ZStack = QStackedLayout()
+        zStack = QStackedLayout()
+
+        vStack = QVBoxLayout()
+        logField = QLabel("hej")
+        logField.setWordWrap(True)
+        vStack.addWidget(logField)
+
+        container = QWidget()
+        container.setLayout(vStack)
 
         bgColor = Color(color)
-        ZStack.addWidget(bgColor)
+        zStack.addWidget(bgColor)
+        zStack.addWidget(container)
+        zStack.setStackingMode(QStackedLayout.StackingMode.StackAll)
 
-        self.setLayout(ZStack)
+        self.setLayout(zStack)
 

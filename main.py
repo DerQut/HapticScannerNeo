@@ -8,6 +8,7 @@ from ContentView import *
 
 def main():
     app = QApplication(sys.argv)
+    app.setFont(QFont("Helvetica", 16))
 
     contentView = ContentView()
     contentView.show()
