@@ -8,6 +8,8 @@ from PyQt6.QtWidgets import *
 from assets import MacColoursDark
 from Color import *
 
+import platform, subprocess
+
 
 class ConfigDetailView(QWidget):
     def __init__(self, color=MacColoursDark.bg_colour):
@@ -54,9 +56,9 @@ class ConfigDetailView(QWidget):
         tcpipHStack.addWidget(self.ipField4)
         tcpipHStack.addWidget(QLabel("Port:"))
         tcpipHStack.addWidget(self.portField)
-        self.connectButton = QPushButton("Connect")
-        self.connectButton.setFixedWidth(120)
-        tcpipHStack.addWidget(self.connectButton)
+        self.tcpipConnectButton = QPushButton("Connect")
+        self.tcpipConnectButton.setFixedWidth(120)
+        tcpipHStack.addWidget(self.tcpipConnectButton)
 
         allConnectionsVStack.addLayout(tcpipHStack)
 
@@ -109,6 +111,7 @@ class ConfigDetailView(QWidget):
         self.ipField4.textChanged.connect(self.lineEditFormat)
 
         self.findCOMButton.clicked.connect(self.findCOMs)
+        self.tcpipConnectButton.clicked.connect(self.tcpipConnect)
 
         self.setLayout(zStack)
 
@@ -146,4 +149,15 @@ class ConfigDetailView(QWidget):
 
         self.COMPortsCombo.clear()
         self.COMPortsCombo.addItems(self.COMPorts)
+
+    def tcpipConnect(self):
+        arr = [self.ipField1, self.ipField2, self.ipField3, self.ipField4, self.portField]
+        for lineEdit in arr:
+            if lineEdit.text().strip() == "":
+                print("TCP/IP Connection error: incorrect address")
+                return -1
+        print(f"TCP/IP Connection at {self.ipField1.text()}.{self.ipField2.text()}.{self.ipField3.text()}.{self.ipField4.text()}:{self.portField.text()}")
+        param = '-n' if platform.system().lower() == 'windows' else '-c'
+        command = ['ping', param, '1', f"{self.ipField1.text()}.{self.ipField2.text()}.{self.ipField3.text()}.{self.ipField4.text()}"]
+        print(subprocess.call(command))
 
