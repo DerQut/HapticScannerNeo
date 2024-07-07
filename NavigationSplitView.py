@@ -41,7 +41,7 @@ class NavigationSplitView(QWidget):
         self.setLayout(cvZStack)
 
         self.timer = QTimer()
-        self.timer.setInterval(4)
+        self.timer.setInterval(1)
         self.timer.timeout.connect(self.animateSidebar)
 
     def toggleSidebar(self):
