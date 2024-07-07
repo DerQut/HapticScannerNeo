@@ -22,7 +22,7 @@ class NavigationSplitView(QWidget):
         cvHStack.setContentsMargins(0, 0, 0, 0)
         cvHStack.setSpacing(0)
 
-        self.sidebarToggleButton = QPushButton("<")
+        self.sidebarToggleButton = QPushButton("◀")
         self.sidebarToggleButton.setFixedSize(25, 50)
         self.sidebarToggleButton.clicked.connect(self.toggleSidebar)
 
@@ -48,7 +48,7 @@ class NavigationSplitView(QWidget):
 
     def toggleSidebar(self):
         self.isSideBarVisible = not self.isSideBarVisible
-        self.sidebarToggleButton.setText("<" if self.isSideBarVisible else ">")
+        self.sidebarToggleButton.setText("◀" if self.isSideBarVisible else "▶")
         self.timer.start()
 
     def animateSidebar(self):
