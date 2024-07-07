@@ -20,7 +20,7 @@ class SidebarView(QWidget):
         vContainer.setLayout(vStack)
 
         mainLabel = QLabel("HapticScannerNeo")
-        mainLabel.setFont(QFont("Helvetica", 28))
+        mainLabel.setFont(QFont("Helvetica", 32))
         vStack.addWidget(mainLabel)
 
         vStack.addWidget(Divider(assets.MacColoursDark.gray))
@@ -29,7 +29,7 @@ class SidebarView(QWidget):
         vStack.addWidget(entry1)
 
         spacer = QWidget()
-        spacer.setFixedSize(1, 600)
+        spacer.setFixedSize(1, 560)
         vStack.addWidget(spacer)
 
         buttonHStack = QHBoxLayout()
