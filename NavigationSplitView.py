@@ -17,10 +17,10 @@ class NavigationSplitView(QWidget):
 
         container = QWidget()
 
-        cvHStack = QHBoxLayout()
+        self.cvHStack = QHBoxLayout()
 
-        cvHStack.setContentsMargins(0, 0, 0, 0)
-        cvHStack.setSpacing(0)
+        self.cvHStack.setContentsMargins(0, 0, 0, 0)
+        self.cvHStack.setSpacing(0)
 
         self.sidebarToggleButton = QPushButton("◀")
         self.sidebarToggleButton.setFixedSize(25, 50)
@@ -33,12 +33,12 @@ class NavigationSplitView(QWidget):
         toggleSpacerDown.setFixedHeight(800-50)
         toggleVStack.addWidget(toggleSpacerDown)
 
-        cvHStack.addWidget(self.sidebarView)
-        cvHStack.addLayout(toggleVStack)
+        self.cvHStack.addWidget(self.sidebarView)
+        self.cvHStack.addLayout(toggleVStack)
 
-        cvHStack.addWidget(self.detailView)
+        self.cvHStack.addWidget(self.detailView)
 
-        self.setLayout(cvHStack)
+        self.setLayout(self.cvHStack)
 
         self.timer = QTimer()
         self.timer.setInterval(1)
@@ -56,3 +56,9 @@ class NavigationSplitView(QWidget):
             self.sidebarView.setFixedWidth(self.sidebarView.width()-10+20*self.isSideBarVisible)
         else:
             self.timer.stop()
+
+    def changeDetailView(self, newDetailView: QWidget):
+        self.cvHStack.removeWidget(self.detailView)
+        self.detailView = newDetailView
+        self.cvHStack.addWidget(self.detailView)
+        print(newDetailView)

@@ -10,9 +10,10 @@ class ContentView(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        nv = NavigationSplitView(sidebarView=SidebarView(), detailView=DetailView())
+        sidebarView = SidebarView(self)
+        self.nsv = NavigationSplitView(sidebarView, detailView=DetailView())
 
-        self.setCentralWidget(nv)
+        self.setCentralWidget(self.nsv)
 
         # Set the central widget of the Window.
         self.setFixedHeight(800)

@@ -6,11 +6,13 @@ from PyQt6.QtCore import *
 import assets
 from assets import MacColoursDark
 from Color import *
+from ContentView import *
+from ConfigDetailView import *
 
 
 class SidebarView(QWidget):
-    def __init__(self, color=MacColoursDark.side_bar_inactive_colour):
-        super().__init__()
+    def __init__(self, parent: QWidget, color=MacColoursDark.side_bar_inactive_colour):
+        super().__init__(parent)
 
         zStack = QStackedLayout()
         vStack = QVBoxLayout()
@@ -22,6 +24,9 @@ class SidebarView(QWidget):
         vStack.addWidget(mainLabel)
 
         vStack.addWidget(Divider(assets.MacColoursDark.gray))
+
+        entry1 = SidebarEntryView(self.parent(), "Configuration", ConfigDetailView())
+        vStack.addWidget(entry1)
 
         spacer = QWidget()
         spacer.setFixedSize(1, 600)
@@ -51,4 +56,31 @@ class SidebarView(QWidget):
         clearDataButton.clicked.connect(self.clearData)
 
     def clearData(self):
-        print("Clearing Data")
+        self.changeDetailView(QWidget())
+
+    def changeDetailView(self, newDetailView: QWidget):
+        self.parent().changeDetailView(newDetailView)
+
+
+class SidebarEntryView(QWidget):
+    def __init__(self, cv: QWidget, label: str, newDetailView: QWidget):
+        super().__init__()
+
+        self.cv = cv
+        self.label = label
+        self.newDetailView = newDetailView
+
+        self.hStack = QHBoxLayout()
+
+        self.button = QPushButton("+")
+        self.hStack.addWidget(self.button)
+        self.qlabel = QLabel(self.label)
+        self.hStack.addWidget(self.qlabel)
+
+        self.button.clicked.connect(self.sendDetailView)
+        self.button.setFixedSize(32, 32)
+
+        self.setLayout(self.hStack)
+
+    def sendDetailView(self):
+        self.cv.nsv.changeDetailView(self.newDetailView)
