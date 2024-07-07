@@ -9,13 +9,13 @@ from Color import *
 
 class DetailView(QWidget):
 
-    def __init__(self, color=MacColoursDark.bg_colour):
-        super().__init__()
+    def __init__(self, parent, color=MacColoursDark.bg_colour):
+        super().__init__(parent)
 
         zStack = QStackedLayout()
 
         vStack = QVBoxLayout()
-        logField = QLabel("hej")
+        logField = QLabel("k72 & Marcel Chołodecki:)")
         logField.setWordWrap(True)
         vStack.addWidget(logField)
 

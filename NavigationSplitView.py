@@ -5,17 +5,21 @@ from PyQt6.QtCore import *
 
 import assets
 from Color import *
+from DetailView import DetailView
+from LogView import LogView
+
+from SidebarView import SidebarView
 
 
 class NavigationSplitView(QWidget):
-    def __init__(self, sidebarView: QWidget, detailView: QWidget):
-        super().__init__()
+    def __init__(self, parent, sidebarView, detailView):
+        super().__init__(parent)
 
         self.isSideBarVisible = True
+        self.isLogViewVisible = True
         self.sidebarView = sidebarView
         self.detailView = detailView
-
-        container = QWidget()
+        self.logView = LogView()
 
         self.cvHStack = QHBoxLayout()
 
@@ -46,6 +50,8 @@ class NavigationSplitView(QWidget):
 
         self.sidebarToggleButton.setStyleSheet("background-color: rgba(37,38,40,0);")
 
+        #######
+
     def toggleSidebar(self):
         self.isSideBarVisible = not self.isSideBarVisible
         self.sidebarToggleButton.setText("◀" if self.isSideBarVisible else "▶")
@@ -61,4 +67,3 @@ class NavigationSplitView(QWidget):
         self.cvHStack.removeWidget(self.detailView)
         self.detailView = newDetailView
         self.cvHStack.addWidget(self.detailView)
-        print(newDetailView)

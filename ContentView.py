@@ -5,13 +5,18 @@ from NavigationSplitView import *
 from SidebarView import *
 from DetailView import *
 
+from ServerNeo import *
+
 
 class ContentView(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        sidebarView = SidebarView(self)
-        self.nsv = NavigationSplitView(sidebarView, detailView=DetailView())
+        self.server = ServerNeo()
+
+        self.sidebarView = SidebarView(self)
+        self.detailView = DetailView(self)
+        self.nsv = NavigationSplitView(self, self.sidebarView, self.detailView)
 
         self.setCentralWidget(self.nsv)
 

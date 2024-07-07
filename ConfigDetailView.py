@@ -8,14 +8,18 @@ from PyQt6.QtWidgets import *
 from assets import MacColoursDark
 from Color import *
 
-import platform, subprocess
+import platform
+import subprocess
+
+from ServerNeo import *
 
 
 class ConfigDetailView(QWidget):
-    def __init__(self, color=MacColoursDark.bg_colour):
-        super().__init__()
+    def __init__(self, parent: QWidget, color=MacColoursDark.bg_colour):
+        super().__init__(parent)
 
         self.COMPorts = []
+        self.saveDir = "C:/"
 
         zStack = QStackedLayout()
 
@@ -29,6 +33,7 @@ class ConfigDetailView(QWidget):
         vStack.addWidget(divider1)
 
         tcpipLabel = QLabel("Conection settings")
+        tcpipLabel.setFont(QFont("Helvetica", 20))
         vStack.addWidget(tcpipLabel)
 
         allConnectionsHStack = QHBoxLayout()
@@ -92,6 +97,20 @@ class ConfigDetailView(QWidget):
 
         spacer1 = QWidget()
         vStack.addWidget(spacer1)
+        dataLabel = QLabel("Data and system settings")
+        dataLabel.setFont(QFont("Helvetica", 20))
+        vStack.addWidget(dataLabel)
+
+        fileHStack = QHBoxLayout()
+        fileLabel = QLabel("Save directory:")
+        fileHStack.addWidget(fileLabel)
+        self.fileLineEdit = QLineEdit(self.saveDir)
+        self.fileLineEdit.setEnabled(False)
+        fileHStack.addWidget(self.fileLineEdit)
+        fileButton = QPushButton("Change")
+        fileButton.setFixedWidth(120)
+        fileHStack.addWidget(fileButton)
+        vStack.addLayout(fileHStack)
 
         spacer2 = QWidget()
         vStack.addWidget(spacer2)
@@ -113,7 +132,11 @@ class ConfigDetailView(QWidget):
         self.findCOMButton.clicked.connect(self.findCOMs)
         self.tcpipConnectButton.clicked.connect(self.tcpipConnect)
 
+        fileButton.clicked.connect(self.setSaveDir)
+
         self.setLayout(zStack)
+
+        self.server: ServerNeo = parent.server
 
     def lineEditFormat(self):
         arr = [self.ipField1, self.ipField2, self.ipField3, self.ipField4, self.portField]
@@ -154,10 +177,13 @@ class ConfigDetailView(QWidget):
         arr = [self.ipField1, self.ipField2, self.ipField3, self.ipField4, self.portField]
         for lineEdit in arr:
             if lineEdit.text().strip() == "":
-                print("TCP/IP Connection error: incorrect address")
                 return -1
-        print(f"TCP/IP Connection at {self.ipField1.text()}.{self.ipField2.text()}.{self.ipField3.text()}.{self.ipField4.text()}:{self.portField.text()}")
-        param = '-n' if platform.system().lower() == 'windows' else '-c'
-        command = ['ping', param, '1', f"{self.ipField1.text()}.{self.ipField2.text()}.{self.ipField3.text()}.{self.ipField4.text()}"]
-        print(subprocess.call(command))
 
+        self.server.host = f"{self.ipField1.text()}.{self.ipField2.text()}.{self.ipField3.text()}.{self.ipField4.text()}"
+        self.server.port = int(self.portField.text())
+        print(f"server: {self.server.host}:{self.server.port}")
+        #self.server.run()
+
+    def setSaveDir(self):
+        self.saveDir = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
+        self.fileLineEdit.setText(self.saveDir)

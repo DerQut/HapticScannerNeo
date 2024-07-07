@@ -25,7 +25,7 @@ class SidebarView(QWidget):
 
         vStack.addWidget(Divider(assets.MacColoursDark.gray))
 
-        entry1 = SidebarEntryView(self.parent(), "Configuration", ConfigDetailView())
+        entry1 = SidebarEntryView(self.parent(), "Configuration", ConfigDetailView(self.parent()))
         vStack.addWidget(entry1)
 
         spacer = QWidget()
@@ -56,17 +56,17 @@ class SidebarView(QWidget):
         clearDataButton.clicked.connect(self.clearData)
 
     def clearData(self):
-        self.changeDetailView(QWidget())
+        print("Clearing Data")
 
     def changeDetailView(self, newDetailView: QWidget):
         self.parent().changeDetailView(newDetailView)
 
 
 class SidebarEntryView(QWidget):
-    def __init__(self, cv: QWidget, label: str, newDetailView: QWidget):
-        super().__init__()
+    def __init__(self, parent: QWidget, label: str, newDetailView: QWidget):
+        super().__init__(parent)
 
-        self.cv = cv
+        self.cv = parent
         self.label = label
         self.newDetailView = newDetailView
 
