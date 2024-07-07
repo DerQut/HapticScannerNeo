@@ -24,8 +24,19 @@ class SidebarView(QWidget):
         vStack.addWidget(Divider(assets.MacColoursDark.gray))
 
         spacer = QWidget()
-        spacer.setFixedSize(1, 640)
+        spacer.setFixedSize(1, 600)
         vStack.addWidget(spacer)
+
+        buttonHStack = QHBoxLayout()
+        clearDataButton = QPushButton("Clear Data")
+        clearDataButton.setFixedHeight(50)
+        clearDataButton.setStyleSheet("background-color: rgba(255,0,0,0);")
+        clearLogButton = QPushButton("Clear Log")
+        clearLogButton.setFixedHeight(50)
+        buttonHStack.addWidget(clearDataButton)
+        buttonHStack.addWidget(clearLogButton)
+
+        vStack.addLayout(buttonHStack)
 
         bgColor = Color(color)
         zStack.addWidget(bgColor)
@@ -36,3 +47,8 @@ class SidebarView(QWidget):
         self.setLayout(zStack)
 
         self.setFixedSize(QSize(400, 800))
+
+        clearDataButton.clicked.connect(self.clearData)
+
+    def clearData(self):
+        print("Clearing Data")
