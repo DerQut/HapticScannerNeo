@@ -5,8 +5,9 @@ from datetime import datetime
 from PyQt6.QtCore import QObject, QThread, pyqtSignal
 
 
-class ServerNeo:
+class ServerNeo(QObject):
     def __init__(self):
+        super().__init__()
 
         print("Setting up server...")
 
