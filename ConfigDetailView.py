@@ -75,7 +75,7 @@ class ConfigDetailView(QWidget):
 
         comHStack.addWidget(QLabel("Baud rate:"))
         self.baudCombo = QComboBox()
-        self.baudCombo.addItems(["600", "1200", "2400", "4800", "9600", "14400", "19200", "28800", "38400", "56000", "57600", "115200", "128000", "256000", "400000", "500000", "600000", "700000", "800000", "90000"])
+        self.baudCombo.addItems(["600", "1200", "2400", "4800", "9600", "14400", "19200", "28800", "38400", "56000", "57600", "115200", "128000", "256000", "400000", "500000", "600000", "700000", "800000", "900000"])
         comHStack.addWidget(self.baudCombo)
 
         self.findCOMButton = QPushButton("Discover COM Ports")
@@ -112,6 +112,23 @@ class ConfigDetailView(QWidget):
         fileHStack.addWidget(fileButton)
         vStack.addLayout(fileHStack)
 
+        ticksHStack = QHBoxLayout()
+        ticksLabelVStack = QVBoxLayout()
+        ticksLabelVStack.addWidget(QLabel("Create a new folder for each measurement name:"))
+        ticksLabelVStack.addWidget(QLabel("Automatically save after every measurement:"))
+        ticksHStack.addLayout(ticksLabelVStack)
+
+        ticksHStack.addStretch()
+
+        ticksTicksVStack = QVBoxLayout()
+        self.newFolderCheck = QCheckBox("")
+        self.autoSaveCheck = QCheckBox("")
+        ticksTicksVStack.addWidget(self.newFolderCheck)
+        ticksTicksVStack.addWidget(self.autoSaveCheck)
+        ticksHStack.addLayout(ticksTicksVStack)
+
+        vStack.addLayout(ticksHStack)
+
         spacer2 = QWidget()
         vStack.addWidget(spacer2)
 
@@ -137,6 +154,20 @@ class ConfigDetailView(QWidget):
         self.setLayout(zStack)
 
         self.server: ServerNeo = parent.server
+
+        self.portField.setText(str(self.server.port))
+
+        self.newFolderCheck.setChecked(self.server.configCreateNewFolder)
+        self.autoSaveCheck.setChecked(self.server.configAutoSave)
+
+        ipParts = self.server.host.split(".")
+        self.ipField1.setText(ipParts[0])
+        self.ipField2.setText(ipParts[1])
+        self.ipField3.setText(ipParts[2])
+        self.ipField4.setText(ipParts[3])
+
+        self.saveDir = self.server.saveDir
+        self.fileLineEdit.setText(str(self.saveDir))
 
     def lineEditFormat(self):
         arr = [self.ipField1, self.ipField2, self.ipField3, self.ipField4, self.portField]
