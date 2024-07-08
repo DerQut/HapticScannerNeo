@@ -11,10 +11,9 @@ from Color import *
 class LogView(QWidget):
     def __init__(self):
         super().__init__()
-        self.vStack = QVBoxLayout()
+        self.zStack = QStackedLayout()
+        self.zStack.addWidget(Color(MacColoursDark.red))
+        self.zStack.addWidget(QLabel("Tutaj będzie LogView()"))
+        self.zStack.setStackingMode(QStackedLayout.StackingMode.StackAll)
 
-        self.vStack.setContentsMargins(0, 0, 0, 0)
-        self.vStack.setSpacing(0)
-        self.vStack.addWidget(Color(MacColoursDark.red))
-
-        self.setLayout(self.vStack)
+        self.setLayout(self.zStack)
