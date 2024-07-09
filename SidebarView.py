@@ -73,7 +73,7 @@ class SidebarEntryView(QWidget):
     def __init__(self, parent: QWidget, label: str, newDetailView: QWidget):
         super().__init__(parent)
 
-        self.cv = parent
+        self.cv: ContentView = parent
         self.label = label
         self.newDetailView = newDetailView
 
