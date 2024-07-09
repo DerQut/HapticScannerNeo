@@ -179,6 +179,8 @@ class ConfigDetailView(QWidget):
         self.saveDir = self.server.saveDir
         self.fileLineEdit.setText(str(self.saveDir))
 
+        self.hide()
+
     def lineEditFormat(self):
         arr = [self.ipField1, self.ipField2, self.ipField3, self.ipField4, self.portField]
         for lineEdit in arr:

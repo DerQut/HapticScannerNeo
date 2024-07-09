@@ -11,7 +11,7 @@ class ServerNeo(QObject):
 
         print("Setting up server...")
 
-        self.host = '127.0.0.1'
+        self.host = '192.168.1.103'
         self.port = 8881
         self.saveDir = "C:/"
         self.configCreateNewFolder = True
@@ -61,7 +61,7 @@ class ServerNeo(QObject):
 
     def fallbackConfigSetup(self):
         configFile = open("config.txt", "w+")
-        configFile.write("C:/\n127.0.0.1\n8881\n1\n1")
+        configFile.write("C:/\n192.168.1.103\n8881\n1\n1")
         configFile.close()
 
     def run(self):

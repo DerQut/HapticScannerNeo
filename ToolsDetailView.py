@@ -17,3 +17,5 @@ class ToolsDetailView(QWidget):
         self.setLayout(vStack)
 
         vStack.addWidget(Color(MacColoursDark.pink))
+
+        self.hide()

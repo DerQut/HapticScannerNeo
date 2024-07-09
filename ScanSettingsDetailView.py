@@ -17,3 +17,5 @@ class ScanSettingsDetailView(QWidget):
         self.setLayout(vStack)
 
         vStack.addWidget(Color(MacColoursDark.purple))
+
+        self.hide()

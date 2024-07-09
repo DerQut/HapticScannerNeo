@@ -17,3 +17,5 @@ class PIDDetailView(QWidget):
         self.setLayout(vStack)
 
         vStack.addWidget(Color(MacColoursDark.green))
+
+        self.hide()
