@@ -101,5 +101,8 @@ class NavigationSplitView(QWidget):
             self.logTimer.stop()
 
     def changeDetailView(self, newDetailView: QWidget):
+        self.detailView.hide()
+        newDetailView.hide()
         self.dvVStack.replaceWidget(self.detailView, newDetailView)
         self.detailView = newDetailView
+        self.detailView.show()
