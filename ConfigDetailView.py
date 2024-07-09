@@ -1,4 +1,8 @@
-import serial, sys, glob
+import time
+
+import serial
+import sys
+import glob
 
 from PyQt6 import QtCore, QtGui
 from PyQt6.QtGui import *
@@ -10,6 +14,7 @@ from Color import *
 
 import platform
 import subprocess
+import os
 
 from ServerNeo import *
 
@@ -129,8 +134,13 @@ class ConfigDetailView(QWidget):
 
         vStack.addLayout(ticksHStack)
 
-        spacer2 = QWidget()
-        vStack.addWidget(spacer2)
+        vStack.addWidget(QWidget())
+
+        self.saveAndApplyButton = QPushButton("Save and apply")
+        self.saveAndApplyButton.clicked.connect(self.saveAndApply)
+        vStack.addWidget(self.saveAndApplyButton)
+
+        vStack.addWidget(QWidget())
 
         container = QWidget()
         container.setLayout(vStack)
@@ -212,9 +222,26 @@ class ConfigDetailView(QWidget):
 
         self.server.host = f"{self.ipField1.text()}.{self.ipField2.text()}.{self.ipField3.text()}.{self.ipField4.text()}"
         self.server.port = int(self.portField.text())
-        print(f"server: {self.server.host}:{self.server.port}")
+        print(f"\nEstablishing connection at {self.server.host}:{self.server.port}")
         #self.server.run()
 
     def setSaveDir(self):
         self.saveDir = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
         self.fileLineEdit.setText(self.saveDir)
+
+    def saveAndApply(self):
+        configFile = open("config.txt", "w+")
+        configFile.write(f"""{self.saveDir}
+{self.ipField1.text()}.{self.ipField2.text()}.{self.ipField3.text()}.{self.ipField4.text()}
+{self.portField.text()}
+{str(int(self.newFolderCheck.isChecked()))}
+{str(int(self.autoSaveCheck.isChecked()))}""")
+        configFile.close()
+        self.reSetupServer()
+
+    def reSetupServer(self):
+        self.server.autoDestruct()
+        self.server = None
+        self.parent().server = None
+        self.parent().server = ServerNeo()
+        self.server = self.parent().server
