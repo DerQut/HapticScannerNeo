@@ -9,6 +9,8 @@ from Color import *
 from ContentView import *
 from ConfigDetailView import *
 from PIDDetailView import *
+from ScanSettingsDetailView import *
+from ToolsDetailView import *
 
 
 class SidebarView(QWidget):
@@ -30,10 +32,10 @@ class SidebarView(QWidget):
 
         vStack.addWidget(Divider(assets.MacColoursDark.gray))
 
-        entry1 = SidebarEntryView(self.parent(), "Configuration", ConfigDetailView(self.parent()))
-        vStack.addWidget(entry1)
-        entry2 = SidebarEntryView(self.parent(), "PID Controller settings", PIDDetailView(self.parent()))
-        vStack.addWidget(entry2)
+        vStack.addWidget(SidebarEntryView(self.parent(), "Configuration", ConfigDetailView(self.parent())))
+        vStack.addWidget(SidebarEntryView(self.parent(), "PID Controller settings", PIDDetailView(self.parent())))
+        vStack.addWidget(SidebarEntryView(self.parent(), "Scan settings", ScanSettingsDetailView(self.parent())))
+        vStack.addWidget(SidebarEntryView(self.parent(), "Tools", ToolsDetailView(self.parent())))
 
         vStack.addStretch()
 
@@ -80,12 +82,13 @@ class SidebarEntryView(QWidget):
         self.hStack = QHBoxLayout()
 
         self.button = QPushButton("+")
+        self.button.setFont(QFont("Helvetica", 10))
         self.hStack.addWidget(self.button)
         self.qlabel = QLabel(self.label)
         self.hStack.addWidget(self.qlabel)
 
         self.button.clicked.connect(self.sendDetailView)
-        self.button.setFixedSize(32, 32)
+        self.button.setFixedSize(24, 24)
 
         self.setLayout(self.hStack)
 
