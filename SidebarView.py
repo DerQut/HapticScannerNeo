@@ -20,8 +20,12 @@ class SidebarView(QWidget):
         vContainer = QWidget()
         vContainer.setLayout(vStack)
 
+        firstSpacer = QWidget()
+        firstSpacer.setFixedHeight(1)
+        vStack.addWidget(firstSpacer)
+
         mainLabel = QLabel("HapticScannerNeo")
-        mainLabel.setFont(QFont("Helvetica", 32))
+        mainLabel.setFont(QFont("Helvetica", 28))
         vStack.addWidget(mainLabel)
 
         vStack.addWidget(Divider(assets.MacColoursDark.gray))
@@ -31,9 +35,7 @@ class SidebarView(QWidget):
         entry2 = SidebarEntryView(self.parent(), "PID Controller settings", PIDDetailView(self.parent()))
         vStack.addWidget(entry2)
 
-        spacer = QWidget()
-        spacer.setFixedSize(1, 560)
-        vStack.addWidget(spacer)
+        vStack.addStretch()
 
         buttonHStack = QHBoxLayout()
         clearDataButton = QPushButton("Clear Data")
@@ -55,6 +57,8 @@ class SidebarView(QWidget):
         self.setLayout(zStack)
 
         self.setFixedSize(QSize(400, 800))
+        vStack.setSpacing(20)
+        vStack.setContentsMargins(10, 10, 10, 10)
 
         clearDataButton.clicked.connect(self.clearData)
 
