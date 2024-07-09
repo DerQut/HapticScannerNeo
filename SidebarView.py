@@ -8,6 +8,7 @@ from assets import MacColoursDark
 from Color import *
 from ContentView import *
 from ConfigDetailView import *
+from PIDDetailView import *
 
 
 class SidebarView(QWidget):
@@ -27,6 +28,8 @@ class SidebarView(QWidget):
 
         entry1 = SidebarEntryView(self.parent(), "Configuration", ConfigDetailView(self.parent()))
         vStack.addWidget(entry1)
+        entry2 = SidebarEntryView(self.parent(), "PID Controller settings", PIDDetailView(self.parent()))
+        vStack.addWidget(entry2)
 
         spacer = QWidget()
         spacer.setFixedSize(1, 560)
