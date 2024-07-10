@@ -40,13 +40,13 @@ class SidebarView(QWidget):
         vStack.addStretch()
 
         buttonHStack = QHBoxLayout()
-        clearDataButton = QPushButton("Clear Data")
-        clearDataButton.setFixedHeight(50)
-        clearDataButton.setStyleSheet("background-color: rgba(255,0,0,0);")
-        clearLogButton = QPushButton("Clear Log")
-        clearLogButton.setFixedHeight(50)
-        buttonHStack.addWidget(clearDataButton)
-        buttonHStack.addWidget(clearLogButton)
+        leftButton = QPushButton("Button 1")
+        leftButton.setFixedHeight(50)
+        leftButton.setStyleSheet(f"background-color: rgba{QPalette().accent().color().getRgb()};")
+        rightButton = QPushButton("Button 2")
+        rightButton.setFixedHeight(50)
+        buttonHStack.addWidget(leftButton)
+        buttonHStack.addWidget(rightButton)
 
         vStack.addLayout(buttonHStack)
 
@@ -62,10 +62,10 @@ class SidebarView(QWidget):
         vStack.setSpacing(20)
         vStack.setContentsMargins(10, 10, 10, 10)
 
-        clearDataButton.clicked.connect(self.clearData)
+        leftButton.clicked.connect(self.leftButtonAction)
 
-    def clearData(self):
-        print("Clearing Data")
+    def leftButtonAction(self):
+        print("..?")
 
     def changeDetailView(self, newDetailView: QWidget):
         self.parent().changeDetailView(newDetailView)
@@ -83,6 +83,7 @@ class SidebarEntryView(QWidget):
 
         self.button = QPushButton("+")
         self.button.setFont(QFont("Helvetica", 10))
+        self.button.setStyleSheet(f"background-color: rgba{QPalette().accent().color().getRgb()};")
         self.hStack.addWidget(self.button)
         self.qlabel = QLabel(self.label)
         self.hStack.addWidget(self.qlabel)
