@@ -23,7 +23,7 @@ class SidebarView(QWidget):
         vContainer.setLayout(vStack)
 
         firstSpacer = QWidget()
-        firstSpacer.setFixedHeight(1)
+        firstSpacer.setFixedHeight(0)
         vStack.addWidget(firstSpacer)
 
         mainLabel = QLabel("HapticScannerNeo")

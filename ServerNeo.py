@@ -17,6 +17,10 @@ class ServerNeo(QObject):
         self.configCreateNewFolder = True
         self.configAutoSave = True
 
+        self.proportionalGain = 1
+        self.integralGain = 1
+        self.differentialGain = 1
+
         if os.path.isfile("config.txt"):
             print("Reading config.txt...")
 
@@ -38,10 +42,32 @@ class ServerNeo(QObject):
                 self.port = int(configData[2])
                 self.configCreateNewFolder = bool(int(configData[3]))
                 self.configAutoSave = bool(int(configData[4]))
-
         else:
             print("No config.txt found. Creating...")
             self.fallbackConfigSetup()
+
+        if os.path.isfile("pid.txt"):
+            print("Reading pid.txt...")
+
+            pidFile = open("pid.txt", "r")
+            pidDataRaw = pidFile.readlines()
+            pidFile.close()
+
+            pidData = []
+
+            for line in pidDataRaw:
+                pidData.append(line.strip())
+
+            if len(pidData) < 3:
+                print("Invalid pid.txt file. Repairing...")
+                self.fallbackPIDSetup()
+            else:
+                self.proportionalGain = int(pidData[0])
+                self.integralGain = int(pidData[1])
+                self.differentialGain = int(pidData[2])
+        else:
+            print("No pid.txt found. Creating...")
+            self.fallbackPIDSetup()
 
         print("\nFinal configuration:")
         print("IP: " + self.host)
@@ -49,6 +75,7 @@ class ServerNeo(QObject):
         print("SaveDir: " + self.saveDir)
         print("NewFolder: " + str(self.configCreateNewFolder))
         print("AutoSave: " + str(self.configAutoSave))
+        print(f"Kp: {self.proportionalGain}, Ki: {self.integralGain}, Kd: {self.differentialGain}")
 
         self.receivedData = 0
         self.sentCommand = None
@@ -63,6 +90,11 @@ class ServerNeo(QObject):
         configFile = open("config.txt", "w+")
         configFile.write("C:/\n192.168.1.103\n8881\n1\n1")
         configFile.close()
+
+    def fallbackPIDSetup(self):
+        pidFile = open("pid.txt", "w+")
+        pidFile.write("1\n1\n1")
+        pidFile.close()
 
     def run(self):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

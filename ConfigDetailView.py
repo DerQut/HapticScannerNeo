@@ -30,6 +30,10 @@ class ConfigDetailView(QWidget):
 
         vStack = QVBoxLayout()
 
+        firstSpacer = QWidget()
+        firstSpacer.setFixedHeight(7)
+        vStack.addWidget(firstSpacer)
+
         nameLabel = QLabel("Configuration")
         nameLabel.setFont(QFont("Helvetica", 24))
         vStack.addWidget(nameLabel)
@@ -101,6 +105,7 @@ class ConfigDetailView(QWidget):
         vStack.addLayout(allConnectionsHStack)
 
         spacer1 = QWidget()
+        spacer1.setFixedHeight(16)
         vStack.addWidget(spacer1)
         dataLabel = QLabel("Data and system settings")
         dataLabel.setFont(QFont("Helvetica", 20))
@@ -178,6 +183,13 @@ class ConfigDetailView(QWidget):
 
         self.saveDir = self.server.saveDir
         self.fileLineEdit.setText(str(self.saveDir))
+
+        vStack.setSpacing(20)
+        tcpipHStack.setSpacing(6)
+        ticksHStack.setSpacing(6)
+        comHStack.setSpacing(6)
+        fileHStack.setSpacing(6)
+        vStack.addStretch()
 
         self.hide()
 
