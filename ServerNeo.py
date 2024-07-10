@@ -77,9 +77,11 @@ class ServerNeo(QObject):
         print("IP: " + self.host)
         print("Port: " + str(self.port))
         print("SaveDir: " + self.saveDir)
-        print("NewFolder: " + str(self.configCreateNewFolder))
-        print("AutoSave: " + str(self.configAutoSave))
+        print("configCreateNewFolder: " + str(self.configCreateNewFolder))
+        print("configAutoSave: " + str(self.configAutoSave))
         print(f"Kp: {self.proportionalGain}, Ki: {self.integralGain}, Kd: {self.differentialGain}")
+        print(f"pidSetpoint: {self.pidSetpoint}")
+        print(f"isPIDOnline: {self.isPIDOnline}\n")
 
         self.receivedData = 0
         self.sentCommand = None

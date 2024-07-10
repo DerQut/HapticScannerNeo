@@ -14,7 +14,6 @@ class PIDDetailView(QWidget):
 
         # TODO: Manual vs Online exclusive checkbox (what does it do?)
         # TODO: CE and CV readout (Cross-Entropy? or like the Error? idk and Control Variable, which is the output of the PID summator)
-        # TODO Setpoint numeric input (from -10V to +10V? yes.)
 
         # Honestly idc I'm not touching any of that
 
@@ -165,7 +164,10 @@ class PIDDetailView(QWidget):
         self.server.differentialGain = self.differentialGain
         self.server.pidSetpoint = self.pidSetpoint
 
-        print(f"Kp={self.server.proportionalGain}, Ki={self.server.integralGain}, Kd={self.server.differentialGain}")
+        print("New PID settings:")
+        print(f"Kp: {self.server.proportionalGain}, Ki: {self.server.integralGain}, Kd: {self.server.differentialGain}")
+        print(f"pidSetpoint: {self.server.pidSetpoint}")
+        print(f"isPIDOnline: {self.isPIDOnline}\n")
 
     def applyGain(self):
         self.proportionalGain = self.proportionalGainSpinBox.value()
