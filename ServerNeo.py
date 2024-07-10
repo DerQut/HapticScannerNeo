@@ -12,13 +12,9 @@ class ServerNeo(QObject):
     def __init__(self):
         super().__init__()
 
-        self.logFile = f"log-{strftime("%Y-%m-%d--%H-%M-%S", gmtime())}.txt"
-
-        logFileAppend(self.logFile, "Setting up server...")
-
         self.host = '192.168.1.103'
         self.port = 8881
-        self.saveDir = "C:/"
+        self.saveDir = "C:/PomiaryHaptyczne"
         self.configCreateNewFolder = True
         self.configAutoSave = True
 
@@ -29,8 +25,6 @@ class ServerNeo(QObject):
         self.isPIDOnline = True
 
         if os.path.isfile("config.txt"):
-            logFileAppend(self.logFile, "Reading config.txt")
-
             configFile = open("config.txt", "r")
             configDataRaw = configFile.readlines()
             configFile.close()
@@ -41,7 +35,6 @@ class ServerNeo(QObject):
                 configData.append(line.strip())
 
             if len(configData) < 5:
-                logFileAppend(self.logFile, "Invalid config.txt file. Repairing...")
                 self.fallbackConfigSetup()
             else:
                 self.saveDir = configData[0]
@@ -50,11 +43,9 @@ class ServerNeo(QObject):
                 self.configCreateNewFolder = bool(int(configData[3]))
                 self.configAutoSave = bool(int(configData[4]))
         else:
-            logFileAppend(self.logFile, "No config.txt found. Creating...")
             self.fallbackConfigSetup()
 
         if os.path.isfile("pid.txt"):
-            logFileAppend(self.logFile, "Reading pid.txt...")
 
             pidFile = open("pid.txt", "r")
             pidDataRaw = pidFile.readlines()
@@ -66,7 +57,6 @@ class ServerNeo(QObject):
                 pidData.append(line.strip())
 
             if len(pidData) < 5:
-                logFileAppend(self.logFile, "Invalid pid.txt file. Repairing...")
                 self.fallbackPIDSetup()
             else:
                 self.proportionalGain = int(pidData[0])
@@ -75,10 +65,17 @@ class ServerNeo(QObject):
                 self.pidSetpoint = float(pidData[3])
                 self.isPIDOnline = bool(int(pidData[4]))
         else:
-            logFileAppend(self.logFile, "No pid.txt found. Creating...")
             self.fallbackPIDSetup()
 
-        logFileAppend(self.logFile, "Final configuration:")
+        if list(self.saveDir)[len(self.saveDir)-1] != "/":
+            self.saveDir = self.saveDir + "/"
+
+        if not os.path.isdir(self.saveDir):
+            os.mkdir(self.saveDir)
+
+        self.logFile = f"{self.saveDir}log-{strftime("%Y-%m-%d--%H-%M-%S", gmtime())}.txt"
+
+        logFileAppend(self.logFile, "Initial configuration:")
         logFileAppend(self.logFile, "IP: " + self.host)
         logFileAppend(self.logFile, "Port: " + str(self.port))
         logFileAppend(self.logFile, "SaveDir: " + self.saveDir)
@@ -106,7 +103,7 @@ class ServerNeo(QObject):
 
     def fallbackConfigSetup(self):
         configFile = open("config.txt", "w+")
-        configFile.write("C:/\n192.168.1.103\n8881\n1\n1")
+        configFile.write("C:/PomiaryHaptyczne\n192.168.1.103\n8881\n1\n1")
         configFile.close()
 
     def fallbackPIDSetup(self):

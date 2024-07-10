@@ -241,6 +241,8 @@ class ConfigDetailView(QWidget):
 
     def setSaveDir(self):
         self.saveDir = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
+        if list(self.saveDir)[len(list(self.saveDir)) - 1] != "/":
+            self.saveDir += "/"
         self.fileLineEdit.setText(self.saveDir)
 
     def saveAndApply(self):
