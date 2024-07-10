@@ -93,7 +93,14 @@ class ServerNeo(QObject):
 
         self.waitingForAnswer = False
 
+        self.socket: socket.socket = None
+        self.conn: socket.socket = None
+        self.addr = None
+
     def reSetup(self):
+        if self.socket is not None:
+            self.socket.close()
+
         self.__init__()
 
     def fallbackConfigSetup(self):

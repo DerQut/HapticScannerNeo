@@ -3,6 +3,7 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QStackedLayo
 
 from NavigationSplitView import *
 from SidebarView import *
+from LogView import *
 from DetailView import *
 
 from ServerNeo import *
@@ -16,7 +17,8 @@ class ContentView(QMainWindow):
 
         self.sidebarView = SidebarView(self)
         self.detailView = DetailView(self)
-        self.nsv = NavigationSplitView(self, self.sidebarView, self.detailView)
+        self.logView = LogView(parent=self)
+        self.nsv = NavigationSplitView(self, self.sidebarView, self.detailView, self.logView)
 
         self.setCentralWidget(self.nsv)
 

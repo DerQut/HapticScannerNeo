@@ -7,6 +7,8 @@ from assets import MacColoursDark
 from Color import *
 from ServerNeo import *
 
+from logFileAppend import *
+
 
 class PIDDetailView(QWidget):
     def __init__(self, parent=None):
@@ -164,10 +166,7 @@ class PIDDetailView(QWidget):
         self.server.differentialGain = self.differentialGain
         self.server.pidSetpoint = self.pidSetpoint
 
-        print("New PID settings:")
-        print(f"Kp: {self.server.proportionalGain}, Ki: {self.server.integralGain}, Kd: {self.server.differentialGain}")
-        print(f"pidSetpoint: {self.server.pidSetpoint}")
-        print(f"isPIDOnline: {self.isPIDOnline}\n")
+        logFileAppend(self.server.logFile, f"New PID settings applied: Kp: {self.proportionalGain}, Ki: {self.integralGain}, Kd: {self.differentialGain}, Setpoint: {self.pidSetpoint}, isOnline: {self.isPIDOnline}")
 
     def applyGain(self):
         self.proportionalGain = self.proportionalGainSpinBox.value()

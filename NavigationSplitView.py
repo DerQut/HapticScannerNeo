@@ -12,15 +12,15 @@ from SidebarView import SidebarView
 
 
 class NavigationSplitView(QWidget):
-    def __init__(self, parent, sidebarView, detailView):
+    def __init__(self, parent, sidebarView, detailView, logView):
         super().__init__(parent)
 
         self.isSideBarVisible = True
         self.isLogViewVisible = True
         self.sidebarView = sidebarView
         self.detailView = detailView
-        self.logView = LogView()
-        self.logView.setFixedHeight(100)
+        self.logView = logView
+        self.logView.setFixedHeight(150)
 
         self.cvHStack = QHBoxLayout()
 
@@ -95,7 +95,7 @@ class NavigationSplitView(QWidget):
             self.sidebarTimer.stop()
 
     def animateLog(self):
-        if self.logView.height() != self.isLogViewVisible * 100:
+        if self.logView.height() != self.isLogViewVisible * 150:
             self.logView.setFixedHeight(self.logView.height()-5+10*self.isLogViewVisible)
         else:
             self.logTimer.stop()
