@@ -30,6 +30,8 @@ class LogView(QWidget):
         self.timer.timeout.connect(self.readLog)
         self.timer.start()
 
+        self.scrollArea.verticalScrollBar().setValue(-1)
+
     def readLog(self):
 
         if not os.path.isfile(self.server.logFile):
@@ -42,15 +44,17 @@ class LogView(QWidget):
         yBuffer = self.scrollArea.verticalScrollBar().value()
 
         vStack = QVBoxLayout()
-        vStack.setContentsMargins(0, 0, 0, 0)
+        #vStack.setContentsMargins(5, 5, 5, 5)
         vStack.setSpacing(0)
+        vStack.addStretch()
 
         for line in lines:
             label = QLabel(line)
             label.setFont(QFont("Helvetica", 11))
+            label.setFixedHeight(18)
             vStack.addWidget(label)
 
-        shouldPush = (self.scrollArea.widget().height() - self.scrollArea.verticalScrollBar().height() == yBuffer) or (self.scrollArea.verticalScrollBar().value() == 0)
+        shouldPush = (self.scrollArea.widget().height() - self.scrollArea.verticalScrollBar().height() == yBuffer) or (self.scrollArea.verticalScrollBar().value() == -1)
 
         container = QWidget()
         container.setLayout(vStack)
