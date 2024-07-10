@@ -86,6 +86,10 @@ class NavigationSplitView(QWidget):
         self.isLogViewVisible = not self.isLogViewVisible
         self.logToggleButton.setText("▼" if self.isLogViewVisible else "▲")
         self.logTimer.start()
+        if self.isLogViewVisible:
+            self.logView.timer.start()
+        else:
+            self.logView.timer.stop()
 
     def animateSidebar(self):
         if self.sidebarView.width() != self.isSideBarVisible * 400:
