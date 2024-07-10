@@ -20,6 +20,5 @@ class ContentView(QMainWindow):
 
         self.setCentralWidget(self.nsv)
 
-        # Set the central widget of the Window.
         self.setFixedHeight(800)
         self.setFixedWidth(1200)
