@@ -48,10 +48,6 @@ class PIDDetailView(QWidget):
 
         vStack.addWidget(Divider(MacColoursDark.gray))
 
-        gainLabel = QLabel("Numeric Settings")
-        gainLabel.setFont(QFont("Helvetica", 20))
-        vStack.addWidget(gainLabel)
-
         gainHStack = QHBoxLayout()
 
         gainLabelsVStack = QVBoxLayout()
