@@ -20,6 +20,8 @@ class ServerNeo(QObject):
         self.proportionalGain = 1
         self.integralGain = 1
         self.differentialGain = 1
+        self.pidSetpoint = 10
+        self.isPIDOnline = True
 
         if os.path.isfile("config.txt"):
             print("Reading config.txt...")
@@ -58,13 +60,15 @@ class ServerNeo(QObject):
             for line in pidDataRaw:
                 pidData.append(line.strip())
 
-            if len(pidData) < 3:
+            if len(pidData) < 5:
                 print("Invalid pid.txt file. Repairing...")
                 self.fallbackPIDSetup()
             else:
                 self.proportionalGain = int(pidData[0])
                 self.integralGain = int(pidData[1])
                 self.differentialGain = int(pidData[2])
+                self.pidSetpoint = int(pidData[3])
+                self.isPIDOnline = bool(int(pidData[4]))
         else:
             print("No pid.txt found. Creating...")
             self.fallbackPIDSetup()
@@ -93,7 +97,7 @@ class ServerNeo(QObject):
 
     def fallbackPIDSetup(self):
         pidFile = open("pid.txt", "w+")
-        pidFile.write("1\n1\n1")
+        pidFile.write("1\n1\n1\n10\n1")
         pidFile.close()
 
     def run(self):

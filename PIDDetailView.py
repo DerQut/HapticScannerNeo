@@ -12,7 +12,6 @@ class PIDDetailView(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
 
-        # TODO: Three numeric inputs (Kp, Ki, Kd) with ranges of 0-65535? gotta ask the doctor
         # TODO: Manual vs Online exclusive checkbox (what does it do?)
         # TODO: CE and CV readout (Cross-Entropy? or like the Error? idk and Control Variable, which is the output of the PID summator)
         # TODO Setpoint numeric input (from -10V to +10V? yes.)
@@ -24,6 +23,9 @@ class PIDDetailView(QWidget):
         self.proportionalGain = self.server.proportionalGain
         self.integralGain = self.server.integralGain
         self.differentialGain = self.server.differentialGain
+
+        self.isPIDOnline = self.server.isPIDOnline
+        self.pidSetpoint = self.server.pidSetpoint
 
         zStack = QStackedLayout()
         zStack.setStackingMode(QStackedLayout.StackingMode.StackAll)
@@ -45,7 +47,7 @@ class PIDDetailView(QWidget):
 
         vStack.addWidget(Divider(MacColoursDark.gray))
 
-        gainLabel = QLabel("Gain Settings")
+        gainLabel = QLabel("Numeric Settings")
         gainLabel.setFont(QFont("Helvetica", 20))
         vStack.addWidget(gainLabel)
 
@@ -55,6 +57,7 @@ class PIDDetailView(QWidget):
         gainLabelsVStack.addWidget(QLabel("Proportional Gain:"))
         gainLabelsVStack.addWidget(QLabel("Integral Gain:"))
         gainLabelsVStack.addWidget(QLabel("Differential Gain:"))
+        gainLabelsVStack.addWidget(QLabel("Setpoint Value:"))
         gainHStack.addLayout(gainLabelsVStack)
 
         gainInputVStack = QVBoxLayout()
@@ -72,6 +75,11 @@ class PIDDetailView(QWidget):
         self.differentialGainSpinBox.setMinimum(1)
         self.differentialGainSpinBox.setMaximum(65535)
         gainInputVStack.addWidget(self.differentialGainSpinBox)
+
+        self.pidSetpointSpinBox = QSpinBox()
+        self.pidSetpointSpinBox.setMinimum(-10)
+        self.pidSetpointSpinBox.setMaximum(10)
+        gainInputVStack.addWidget(self.pidSetpointSpinBox)
         gainHStack.addLayout(gainInputVStack)
 
         gainSliderVStack = QVBoxLayout()
@@ -92,6 +100,12 @@ class PIDDetailView(QWidget):
         self.differentialGainSlider.setMinimum(1)
         self.differentialGainSlider.setMaximum(65535)
         gainSliderVStack.addWidget(self.differentialGainSlider)
+
+        self.pidSetpointSlider = QSlider()
+        self.pidSetpointSlider.setOrientation(Qt.Orientation.Horizontal)
+        self.pidSetpointSlider.setMinimum(-10)
+        self.pidSetpointSlider.setMaximum(10)
+        gainSliderVStack.addWidget(self.pidSetpointSlider)
         gainHStack.addLayout(gainSliderVStack)
 
         vStack.addLayout(gainHStack)
@@ -106,18 +120,25 @@ class PIDDetailView(QWidget):
         self.proportionalGainSpinBox.valueChanged.connect(self.syncValuesFromSpinBoxes)
         self.integralGainSpinBox.valueChanged.connect(self.syncValuesFromSpinBoxes)
         self.differentialGainSpinBox.valueChanged.connect(self.syncValuesFromSpinBoxes)
+        self.pidSetpointSpinBox.valueChanged.connect(self.syncValuesFromSpinBoxes)
 
         self.proportionalGainSlider.valueChanged.connect(self.syncValuesFromSliders)
         self.integralGainSlider.valueChanged.connect(self.syncValuesFromSliders)
         self.differentialGainSlider.valueChanged.connect(self.syncValuesFromSliders)
+        self.pidSetpointSlider.valueChanged.connect(self.syncValuesFromSliders)
 
         self.applyGainButton.clicked.connect(self.applyGain)
+
+        self.proportionalGainSpinBox.setValue(self.proportionalGain)
+        self.integralGainSpinBox.setValue(self.integralGain)
+        self.differentialGainSpinBox.setValue(self.differentialGain)
+        self.pidSetpointSpinBox.setValue(self.pidSetpoint)
 
         self.hide()
 
     def syncValuesFromSliders(self):
-        spinBoxes = [self.proportionalGainSpinBox, self.integralGainSpinBox, self.differentialGainSpinBox]
-        sliders = [self.proportionalGainSlider, self.integralGainSlider, self.differentialGainSlider]
+        spinBoxes = [self.proportionalGainSpinBox, self.integralGainSpinBox, self.differentialGainSpinBox, self.pidSetpointSpinBox]
+        sliders = [self.proportionalGainSlider, self.integralGainSlider, self.differentialGainSlider, self.pidSetpointSlider]
 
         i = 0
         while i < len(sliders):
@@ -125,8 +146,8 @@ class PIDDetailView(QWidget):
             i = i + 1
 
     def syncValuesFromSpinBoxes(self):
-        spinBoxes = [self.proportionalGainSpinBox, self.integralGainSpinBox, self.differentialGainSpinBox]
-        sliders = [self.proportionalGainSlider, self.integralGainSlider, self.differentialGainSlider]
+        spinBoxes = [self.proportionalGainSpinBox, self.integralGainSpinBox, self.differentialGainSpinBox, self.pidSetpointSpinBox]
+        sliders = [self.proportionalGainSlider, self.integralGainSlider, self.differentialGainSlider, self.pidSetpointSlider]
 
         i = 0
         while i < len(spinBoxes):
@@ -137,6 +158,7 @@ class PIDDetailView(QWidget):
         self.server.proportionalGain = self.proportionalGain
         self.server.integralGain = self.integralGain
         self.server.differentialGain = self.differentialGain
+        self.server.pidSetpoint = self.pidSetpoint
 
         print(f"Kp={self.server.proportionalGain}, Ki={self.server.integralGain}, Kd={self.server.differentialGain}")
 
@@ -144,9 +166,12 @@ class PIDDetailView(QWidget):
         self.proportionalGain = self.proportionalGainSpinBox.value()
         self.integralGain = self.integralGainSpinBox.value()
         self.differentialGain = self.differentialGainSpinBox.value()
+        self.pidSetpoint = self.pidSetpointSpinBox.value()
         self.sendGainToServer()
         pidFile = open("pid.txt", "w+")
         pidFile.write(f"""{self.proportionalGain}
 {self.integralGain}
-{self.differentialGain}""")
+{self.differentialGain}
+{self.pidSetpoint}
+{int(self.isPIDOnline)}""")
         pidFile.close()
