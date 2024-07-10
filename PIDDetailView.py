@@ -14,7 +14,6 @@ class PIDDetailView(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
 
-        # TODO: Manual vs Online exclusive checkbox (what does it do?)
         # TODO: CE and CV readout (Cross-Entropy? or like the Error? idk and Control Variable, which is the output of the PID summator)
 
         # Honestly idc I'm not touching any of that
@@ -108,6 +107,15 @@ class PIDDetailView(QWidget):
 
         vStack.addLayout(gainHStack)
 
+        autoHStack = QHBoxLayout()
+        autoHStack.addWidget(QLabel("Automatic PID Setup:"))
+        self.isPIDOnlineCheckBox = QCheckBox()
+        self.isPIDOnlineCheckBox.setChecked(self.isPIDOnline)
+        autoHStack.addStretch()
+        autoHStack.addWidget(self.isPIDOnlineCheckBox)
+
+        vStack.addLayout(autoHStack)
+
         self.applyGainButton = QPushButton("Apply")
         vStack.addWidget(self.applyGainButton)
 
@@ -131,6 +139,8 @@ class PIDDetailView(QWidget):
         self.integralGainSpinBox.setValue(self.integralGain)
         self.differentialGainSpinBox.setValue(self.differentialGain)
         self.pidSetpointSpinBox.setValue(self.pidSetpoint)
+
+        self.isPIDOnlineCheckBox.clicked.connect(self.isPIDOnlineToggle)
 
         self.hide()
 
@@ -161,8 +171,9 @@ class PIDDetailView(QWidget):
         self.server.integralGain = self.integralGain
         self.server.differentialGain = self.differentialGain
         self.server.pidSetpoint = self.pidSetpoint
+        self.server.isPIDOnline = self.isPIDOnline
 
-        logFileAppend(self.server.logFile, f"New PID settings applied: Kp: {self.proportionalGain}, Ki: {self.integralGain}, Kd: {self.differentialGain}, Setpoint: {self.pidSetpoint}, isOnline: {self.isPIDOnline}")
+        logFileAppend(self.server.logFile, f"New PID settings applied: Kp: {self.proportionalGain}, Ki: {self.integralGain}, Kd: {self.differentialGain}, pidSetpoint: {self.pidSetpoint}, isPIDOnline: {self.isPIDOnline}")
 
     def applyGain(self):
         self.proportionalGain = self.proportionalGainSpinBox.value()
@@ -177,3 +188,7 @@ class PIDDetailView(QWidget):
 {self.pidSetpoint}
 {int(self.isPIDOnline)}""")
         pidFile.close()
+
+    def isPIDOnlineToggle(self):
+        self.isPIDOnline = self.isPIDOnlineCheckBox.isChecked()
+        print(self.isPIDOnline)
