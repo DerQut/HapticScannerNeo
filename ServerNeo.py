@@ -3,6 +3,7 @@ import os
 import threading
 from datetime import datetime
 from PyQt6.QtCore import QObject, QThread, pyqtSignal
+from time import gmtime, strftime
 
 
 class ServerNeo(QObject):
@@ -22,6 +23,9 @@ class ServerNeo(QObject):
         self.differentialGain = 1
         self.pidSetpoint = 10
         self.isPIDOnline = True
+
+        self.logFile = f"log-{strftime("%Y-%m-%d_%H-%M-%S", gmtime())}.txt"
+        print(self.logFile)
 
         if os.path.isfile("config.txt"):
             print("Reading config.txt...")
