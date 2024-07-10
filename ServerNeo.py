@@ -24,7 +24,7 @@ class ServerNeo(QObject):
         self.pidSetpoint = 10
         self.isPIDOnline = True
 
-        self.logFile = f"log-{strftime("%Y-%m-%d_%H-%M-%S", gmtime())}.txt"
+        self.logFile = f"log-{strftime("%Y-%m-%d--%H-%M-%S", gmtime())}.txt"
         print(self.logFile)
 
         if os.path.isfile("config.txt"):
