@@ -44,7 +44,6 @@ class LogView(QWidget):
         yBuffer = self.scrollArea.verticalScrollBar().value()
 
         vStack = QVBoxLayout()
-        #vStack.setContentsMargins(5, 5, 5, 5)
         vStack.setSpacing(0)
         vStack.addStretch()
 
