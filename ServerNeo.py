@@ -68,7 +68,7 @@ class ServerNeo(QObject):
             self.fallbackPIDSetup()
 
         if list(self.saveDir)[len(self.saveDir)-1] != "/":
-            self.saveDir = self.saveDir + "/"
+            self.saveDir += "/"
 
         if not os.path.isdir(self.saveDir):
             os.mkdir(self.saveDir)
@@ -145,3 +145,5 @@ class ServerNeo(QObject):
 
     def waitForAnswer(self):
         ...
+
+# I'm afraid this project will become just as horribly written and unstable as HapticScanner-1. may god have me in his mercy.
