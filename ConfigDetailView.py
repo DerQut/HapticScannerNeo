@@ -236,7 +236,7 @@ class ConfigDetailView(QWidget):
 
         self.server.host = f"{self.ipField1.text()}.{self.ipField2.text()}.{self.ipField3.text()}.{self.ipField4.text()}"
         self.server.port = int(self.portField.text())
-        logFileAppend(self.server.logFile, f"\nEstablishing connection at {self.server.host}:{self.server.port}")
+        logFileAppend(self.server.logFile, f"Establishing connection at {self.server.host}:{self.server.port}")
         #self.server.run()
 
     def setSaveDir(self):
