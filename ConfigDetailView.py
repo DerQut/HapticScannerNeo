@@ -254,8 +254,4 @@ class ConfigDetailView(QWidget):
         self.reSetupServer()
 
     def reSetupServer(self):
-        self.server.autoDestruct()
-        self.server = None
-        self.parent().server = None
-        self.parent().server = ServerNeo()
-        self.server = self.parent().server
+        self.server.reSetup()

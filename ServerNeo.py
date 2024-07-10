@@ -93,8 +93,8 @@ class ServerNeo(QObject):
 
         self.waitingForAnswer = False
 
-    def autoDestruct(self):
-        print("\nServerNeo is dead. Long live ServerNeo.\n\n")
+    def reSetup(self):
+        self.__init__()
 
     def fallbackConfigSetup(self):
         configFile = open("config.txt", "w+")
