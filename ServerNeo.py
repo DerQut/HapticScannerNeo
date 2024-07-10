@@ -67,7 +67,7 @@ class ServerNeo(QObject):
                 self.proportionalGain = int(pidData[0])
                 self.integralGain = int(pidData[1])
                 self.differentialGain = int(pidData[2])
-                self.pidSetpoint = int(pidData[3])
+                self.pidSetpoint = float(pidData[3])
                 self.isPIDOnline = bool(int(pidData[4]))
         else:
             print("No pid.txt found. Creating...")

@@ -76,9 +76,10 @@ class PIDDetailView(QWidget):
         self.differentialGainSpinBox.setMaximum(65535)
         gainInputVStack.addWidget(self.differentialGainSpinBox)
 
-        self.pidSetpointSpinBox = QSpinBox()
-        self.pidSetpointSpinBox.setMinimum(-10)
-        self.pidSetpointSpinBox.setMaximum(10)
+        self.pidSetpointSpinBox = QDoubleSpinBox()
+        self.pidSetpointSpinBox.setMinimum(-10.0)
+        self.pidSetpointSpinBox.setMaximum(10.0)
+        self.pidSetpointSpinBox.setSingleStep(0.1)
         gainInputVStack.addWidget(self.pidSetpointSpinBox)
         gainHStack.addLayout(gainInputVStack)
 
@@ -103,8 +104,8 @@ class PIDDetailView(QWidget):
 
         self.pidSetpointSlider = QSlider()
         self.pidSetpointSlider.setOrientation(Qt.Orientation.Horizontal)
-        self.pidSetpointSlider.setMinimum(-10)
-        self.pidSetpointSlider.setMaximum(10)
+        self.pidSetpointSlider.setMinimum(0)
+        self.pidSetpointSlider.setMaximum(2000)
         gainSliderVStack.addWidget(self.pidSetpointSlider)
         gainHStack.addLayout(gainSliderVStack)
 
@@ -137,22 +138,26 @@ class PIDDetailView(QWidget):
         self.hide()
 
     def syncValuesFromSliders(self):
-        spinBoxes = [self.proportionalGainSpinBox, self.integralGainSpinBox, self.differentialGainSpinBox, self.pidSetpointSpinBox]
-        sliders = [self.proportionalGainSlider, self.integralGainSlider, self.differentialGainSlider, self.pidSetpointSlider]
+        spinBoxes = [self.proportionalGainSpinBox, self.integralGainSpinBox, self.differentialGainSpinBox]
+        sliders = [self.proportionalGainSlider, self.integralGainSlider, self.differentialGainSlider]
 
         i = 0
         while i < len(sliders):
             spinBoxes[i].setValue(sliders[i].value())
             i = i + 1
 
+        self.pidSetpointSpinBox.setValue(0.01*self.pidSetpointSlider.value()-10)
+
     def syncValuesFromSpinBoxes(self):
-        spinBoxes = [self.proportionalGainSpinBox, self.integralGainSpinBox, self.differentialGainSpinBox, self.pidSetpointSpinBox]
-        sliders = [self.proportionalGainSlider, self.integralGainSlider, self.differentialGainSlider, self.pidSetpointSlider]
+        spinBoxes = [self.proportionalGainSpinBox, self.integralGainSpinBox, self.differentialGainSpinBox]
+        sliders = [self.proportionalGainSlider, self.integralGainSlider, self.differentialGainSlider]
 
         i = 0
         while i < len(spinBoxes):
             sliders[i].setValue(spinBoxes[i].value())
             i = i + 1
+
+        self.pidSetpointSlider.setValue(int(100*(self.pidSetpointSpinBox.value()+10)))
 
     def sendGainToServer(self):
         self.server.proportionalGain = self.proportionalGain
