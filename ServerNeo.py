@@ -85,6 +85,20 @@ class ServerNeo(QObject):
                             enabled = bool(int(key.text))
                     self.channels.append(ScanChannel(name, enabled))
 
+        self.logFile = ""
+        self.reInitialiseLogFile()
+
+        self.receivedData = 0
+        self.sentCommand = None
+        self.logArray = ''
+
+        self.waitingForAnswer = False
+
+        self.socket: socket.socket = None
+        self.conn: socket.socket = None
+        self.addr = None
+
+    def reInitialiseLogFile(self):
         if list(self.saveDir)[len(self.saveDir)-1] != "/":
             self.saveDir += "/"
 
@@ -102,16 +116,6 @@ class ServerNeo(QObject):
         logFileAppend(self.logFile, f"Kp: {self.proportionalGain}, Ki: {self.integralGain}, Kd: {self.differentialGain}")
         logFileAppend(self.logFile, f"pidSetpoint: {self.pidSetpoint}")
         logFileAppend(self.logFile, f"isPIDOnline: {self.isPIDOnline}\n")
-
-        self.receivedData = 0
-        self.sentCommand = None
-        self.logArray = ''
-
-        self.waitingForAnswer = False
-
-        self.socket: socket.socket = None
-        self.conn: socket.socket = None
-        self.addr = None
 
     def run(self):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -149,6 +153,7 @@ class ServerNeo(QObject):
         ...
 
     def writeConfigXML(self):
+        logFileAppend(self.logFile, "Saving configuration to config.xml...")
         tree = ET.parse('config.xml')
         root = tree.getroot()
         for child in root:
@@ -170,6 +175,7 @@ class ServerNeo(QObject):
         tree.write("config.xml")
 
     def writePIDXML(self):
+        logFileAppend(self.logFile, "Saving PID settings to config.xml...")
         tree = ET.parse('config.xml')
         root = tree.getroot()
         for child in root:
@@ -209,4 +215,18 @@ class ServerNeo(QObject):
         tree.write("config.xml")
 
     def writeChannelsXML(self):
-        ...
+        logFileAppend(self.logFile, "Saving channel names to config.xml...")
+        tree = ET.parse('config.xml')
+        root = tree.getroot()
+        for child in root:
+            if child.tag != 'channels':
+                continue
+
+            for superchild in child:
+                for key in superchild:
+                    if key.tag == "name":
+                        key.text = self.channels[int(superchild.attrib.get("id"))-1].name
+                    elif key.tag == "enabled":
+                        key.text = str(int(self.channels[int(superchild.attrib.get("id"))-1].isEnabled))
+
+        tree.write("config.xml")

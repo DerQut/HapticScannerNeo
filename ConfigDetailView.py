@@ -250,5 +250,6 @@ class ConfigDetailView(QWidget):
         self.server.port = int(self.portField.text())
         self.server.configAutoSave = self.autoSaveCheck.isChecked()
         self.server.configCreateNewFolder = self.newFolderCheck.isChecked()
+        self.server.reInitialiseLogFile()
 
         self.server.writeConfigXML()

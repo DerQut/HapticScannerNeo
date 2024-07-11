@@ -6,7 +6,7 @@ from PyQt6.QtWidgets import *
 from assets import MacColoursDark
 from Color import *
 
-import ServerNeo
+from ServerNeo import *
 from ScanChannel import *
 import os
 
@@ -88,6 +88,8 @@ class ChannelsView(QWidget):
     def __init__(self, parent: ScanSettingsDetailView):
         super().__init__(parent)
 
+        self.server: ServerNeo = parent.server
+
         dummyLayout = QVBoxLayout()
         dummyLayout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(dummyLayout)
@@ -120,7 +122,7 @@ class ChannelsView(QWidget):
         self.scrollArea.setWidget(self.mainContainer)
 
     def saveNames(self):
-        ...
+        self.server.writeChannelsXML()
 
 
 class ChannelEntryView(QWidget):
