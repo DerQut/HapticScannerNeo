@@ -179,7 +179,6 @@ class ServerNeo(QObject):
             if rawList[-1] == "\n":
                 rawList.pop()
             lines.append(''.join(rawList))
-        print(lines)
 
         while len(self.channels) < 10:
             channel = ScanChannel()

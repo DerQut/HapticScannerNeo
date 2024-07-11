@@ -7,6 +7,7 @@ from assets import MacColoursDark
 from Color import *
 
 import ServerNeo
+from ScanChannel import *
 import os
 
 
@@ -16,26 +17,173 @@ class ScanSettingsDetailView(QWidget):
 
         self.server: ServerNeo = parent.server
 
+        self.scanMode = "Initial scan"
+
         zStack = QStackedLayout()
         zStack.setStackingMode(QStackedLayout.StackingMode.StackAll)
 
         zStack.addWidget(Color(MacColoursDark.bg_colour))
         vContainer = QWidget()
-        vStack = QVBoxLayout()
-        vContainer.setLayout(vStack)
+        self.vStack = QVBoxLayout()
+        vContainer.setLayout(self.vStack)
         zStack.addWidget(vContainer)
-        vStack.setSpacing(20)
+        self.vStack.setSpacing(20)
 
         firstSpacer = QWidget()
         firstSpacer.setFixedHeight(7)
-        vStack.addWidget(firstSpacer)
+        self.vStack.addWidget(firstSpacer)
 
         pidLabel = QLabel("Scan settings")
         pidLabel.setFont(QFont("Helvetica", 24))
-        vStack.addWidget(pidLabel)
+        self.vStack.addWidget(pidLabel)
 
-        vStack.addWidget(Divider(MacColoursDark.gray))
+        self.vStack.addWidget(Divider(MacColoursDark.gray))
 
-        vStack.addStretch()
+        scanModeHStack = QHBoxLayout()
+        scanModeHStack.addWidget(QLabel("Scan mode:"))
+        scanModeHStack.addStretch()
+        self.scanModePicker = QComboBox()
+        self.scanModePicker.addItems(["Initial scan", "Raster mode", "Haptic mode"])
+        self.scanModePicker.setFixedWidth(240)
+        self.scanModePicker.currentIndexChanged.connect(self.changeScanMode)
+        scanModeHStack.addWidget(self.scanModePicker)
+
+        self.vStack.addLayout(scanModeHStack)
+
+        self.initialScanView = InitialScanView(self)
+        self.rasterModeView = RasterModeView(self)
+        self.hapticModeView = HapticModeView(self)
+
+        self.hStack = QHBoxLayout()
+        self.vStack.addLayout(self.hStack)
+
+        self.channelsView = ChannelsView(self)
+        self.hStack.addWidget(self.channelsView)
+
+        self.hStack.addWidget(self.initialScanView)
+        self.hStack.addWidget(self.rasterModeView)
+        self.hStack.addWidget(self.hapticModeView)
+        self.initialScanView.show()
+
+        self.vStack.addStretch()
+
         self.setLayout(zStack)
+        self.hide()
+
+    def changeScanMode(self):
+        self.scanMode = self.scanModePicker.currentText()
+        self.rasterModeView.hide()
+        self.initialScanView.hide()
+        self.hapticModeView.hide()
+        if self.scanMode == "Initial scan":
+            self.initialScanView.show()
+        elif self.scanMode == "Raster mode":
+            self.rasterModeView.show()
+        elif self.scanMode == "Haptic mode":
+            self.hapticModeView.show()
+
+
+class ChannelsView(QWidget):
+    def __init__(self, parent: ScanSettingsDetailView):
+        super().__init__(parent)
+
+        dummyLayout = QVBoxLayout()
+        dummyLayout.setContentsMargins(0, 0, 0, 0)
+        self.setLayout(dummyLayout)
+
+        self.scrollArea = QScrollArea(self)
+        self.scrollArea.setFixedWidth(300)
+        self.scrollArea.setFixedHeight(350)
+        dummyLayout.addWidget(self.scrollArea)
+
+        self.setFixedHeight(400)
+        self.setFixedWidth(300)
+
+        self.mainContainer = QWidget(self)
+        self.mainContainer.setFixedWidth(280)
+
+        self.saveButton = QPushButton("Save")
+        self.saveButton.clicked.connect(self.saveNames)
+        dummyLayout.addWidget(self.saveButton)
+
+        mainVStack = QVBoxLayout()
+        mainVStack.setSpacing(0)
+        mainVStack.setContentsMargins(0, 0, 0, 0)
+
+        i = 0
+        while i < len(parent.server.channels):
+            mainVStack.addWidget(ChannelEntryView(parent, parent.server.channels[i], i))
+            i = i + 1
+
+        self.mainContainer.setLayout(mainVStack)
+        self.scrollArea.setWidget(self.mainContainer)
+
+    def saveNames(self):
+        ...
+
+
+class ChannelEntryView(QWidget):
+    def __init__(self, parent: ScanSettingsDetailView, channel: ScanChannel, id: int):
+        super().__init__(parent)
+        hStack = QHBoxLayout()
+        self.setLayout(hStack)
+
+        numberLabel = QLabel(str(id+1))
+        numberLabel.setFixedWidth(25)
+        hStack.addWidget(numberLabel)
+
+        textEntry = QLineEdit(channel.name)
+        hStack.addWidget(textEntry)
+        textEntry.setFixedWidth(175)
+
+        hStack.addStretch()
+
+        button = QPushButton("^")
+        button.clicked.connect(self.summonWindow)
+        button.setFixedSize(QSize(24, 24))
+        hStack.addWidget(button)
+
+    def summonWindow(self):
+        ...
+
+
+class InitialScanView(QWidget):
+    def __init__(self, parent: ScanSettingsDetailView):
+        super().__init__(parent)
+
+        vStack = QVBoxLayout()
+        vStack.setContentsMargins(0, 0, 0, 0)
+        vStack.addWidget(Color(MacColoursDark.green))
+        self.setLayout(vStack)
+
+        self.setFixedHeight(400)
+
+        self.hide()
+
+
+class RasterModeView(QWidget):
+    def __init__(self, parent: ScanSettingsDetailView):
+        super().__init__(parent)
+
+        vStack = QVBoxLayout()
+        vStack.setContentsMargins(0, 0, 0, 0)
+        vStack.addWidget(Color(MacColoursDark.red))
+        self.setLayout(vStack)
+
+        self.setFixedHeight(400)
+
+        self.hide()
+
+
+class HapticModeView(QWidget):
+    def __init__(self, parent: ScanSettingsDetailView):
+        super().__init__(parent)
+
+        vStack = QVBoxLayout()
+        vStack.setContentsMargins(0, 0, 0, 0)
+        vStack.addWidget(Color(MacColoursDark.cyan))
+        self.setLayout(vStack)
+
+        self.setFixedHeight(400)
+
         self.hide()
