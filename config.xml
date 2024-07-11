@@ -8,20 +8,22 @@
     </config>
 
     <pid>
-        <setpoint>0.0</setpoint>
-        <isonline>1</isonline>
+        <setpoint>31882</setpoint>
+        <setpointlowerlimit>-10</setpointlowerlimit>
+        <setpointupperlimit>10</setpointupperlimit>
+        <isonline>0</isonline>
         <gain name="proportional">
-            <value>47185</value>
+            <value>7208</value>
             <upperlimit>1.0</upperlimit>
             <lowerlimit>0.0</lowerlimit>
         </gain>
         <gain name="integral">
-            <value>41024</value>
+            <value>57539</value>
             <upperlimit>2.0</upperlimit>
             <lowerlimit>-3.0</lowerlimit>
         </gain>
         <gain name="differential">
-            <value>28034</value>
+            <value>6917</value>
             <upperlimit>10.0</upperlimit>
             <lowerlimit>1.0</lowerlimit>
         </gain>
