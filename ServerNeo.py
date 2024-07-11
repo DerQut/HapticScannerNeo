@@ -210,8 +210,3 @@ class ServerNeo(QObject):
 
     def writeChannelsXML(self):
         ...
-
-
-
-
-# I'm afraid this project will become just as horribly written and unstable as HapticScanner-1. may god have me in his mercy.
