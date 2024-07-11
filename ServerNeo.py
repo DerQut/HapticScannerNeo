@@ -105,12 +105,6 @@ class ServerNeo(QObject):
         self.conn: socket.socket = None
         self.addr = None
 
-    def reSetup(self):
-        if self.socket is not None:
-            self.socket.close()
-
-        self.__init__()
-
     def run(self):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.bind((self.host, self.port))
@@ -144,6 +138,33 @@ class ServerNeo(QObject):
         ...
 
     def waitForAnswer(self):
+        ...
+
+    def writeConfigXML(self):
+        tree = ET.parse('config.xml')
+        root = tree.getroot()
+        for child in root:
+            if child.tag != 'config':
+                continue
+
+            for key in child:
+                if key.tag == "savedir":
+                    key.text = self.saveDir
+                elif key.tag == "host":
+                    key.text = self.host
+                elif key.tag == "port":
+                    key.text = str(self.port)
+                elif key.tag == "createnewfolder":
+                    key.text = str(int(self.configCreateNewFolder))
+                elif key.tag == "autosave":
+                    key.text = str(int(self.configAutoSave))
+
+        tree.write("config.xml")
+
+    def writePIDXML(self):
+        ...
+
+    def writeChannelsXML(self):
         ...
 
 

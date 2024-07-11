@@ -244,14 +244,11 @@ class ConfigDetailView(QWidget):
         self.fileLineEdit.setText(self.saveDir)
 
     def saveAndApply(self):
-        configFile = open("config.txt", "w+")
-        configFile.write(f"""{self.saveDir}
-{self.ipField1.text()}.{self.ipField2.text()}.{self.ipField3.text()}.{self.ipField4.text()}
-{self.portField.text()}
-{str(int(self.newFolderCheck.isChecked()))}
-{str(int(self.autoSaveCheck.isChecked()))}""")
-        configFile.close()
-        self.reSetupServer()
 
-    def reSetupServer(self):
-        self.server.reSetup()
+        self.server.saveDir = self.saveDir
+        self.server.host = f"{self.ipField1.text()}.{self.ipField2.text()}.{self.ipField3.text()}.{self.ipField4.text()}"
+        self.server.port = int(self.portField.text())
+        self.server.configAutoSave = self.autoSaveCheck.isChecked()
+        self.server.configCreateNewFolder = self.newFolderCheck.isChecked()
+
+        self.server.writeConfigXML()
