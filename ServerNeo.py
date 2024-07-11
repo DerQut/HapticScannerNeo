@@ -19,11 +19,18 @@ class ServerNeo(QObject):
         self.configCreateNewFolder = True
         self.configAutoSave = True
 
-        self.proportionalGain = 1
-        self.integralGain = 1
-        self.differentialGain = 1
+        self.proportionalGain = 65535
+        self.integralGain = 65535
+        self.differentialGain = 65535
         self.pidSetpoint = 10
         self.isPIDOnline = True
+        self.proportionalGainLowerBound = 0
+        self.integralGainLowerBound = 0
+        self.differentialGainLowerBound = 0
+        self.proportionalGainUpperBound = 1
+        self.integralGainUpperBound = 1
+        self.differentialGainUpperBound = 1
+        self.pidPrepare()
 
         self.channels = []
         self.channelNamesPrepare()
@@ -48,28 +55,6 @@ class ServerNeo(QObject):
                 self.configAutoSave = bool(int(configData[4]))
         else:
             self.fallbackConfigSetup()
-
-        if os.path.isfile("pid.txt"):
-
-            pidFile = open("pid.txt", "r")
-            pidDataRaw = pidFile.readlines()
-            pidFile.close()
-
-            pidData = []
-
-            for line in pidDataRaw:
-                pidData.append(line.strip())
-
-            if len(pidData) < 5:
-                self.fallbackPIDSetup()
-            else:
-                self.proportionalGain = int(pidData[0])
-                self.integralGain = int(pidData[1])
-                self.differentialGain = int(pidData[2])
-                self.pidSetpoint = float(pidData[3])
-                self.isPIDOnline = bool(int(pidData[4]))
-        else:
-            self.fallbackPIDSetup()
 
         if list(self.saveDir)[len(self.saveDir)-1] != "/":
             self.saveDir += "/"
@@ -149,6 +134,62 @@ class ServerNeo(QObject):
 
     def waitForAnswer(self):
         ...
+
+    def pidPrepare(self):
+        if not os.path.isfile("pid.txt"):
+            channelNamesFIle = open("pid.txt", "w+")
+            channelNamesFIle.close()
+
+        pidFile = open("pid.txt", "r")
+        lines = pidFile.readlines()
+        pidFile.close()
+
+        if len(lines) < 16:
+            pidFile = open("pid.txt", "w+")
+            pidFile.write(f"""# PID GAINS
+1
+1
+1
+# PID LOWER BOUNDARIES
+0
+0
+0
+#PID UPPER BOUNDARIES
+1
+1
+1
+# PID SETPOINT
+5.0
+# PID ONLINE
+1""")
+            pidFile.close()
+
+        pidFile = open("pid.txt", "r")
+        linesRaw = pidFile.readlines()
+        pidFile.close()
+
+        lines = []
+        for raw in linesRaw:
+            rawList = list(raw)
+            if rawList[-1] == "\n":
+                rawList.pop()
+            lines.append(''.join(rawList))
+
+        self.proportionalGain = int(lines[1])
+        self.integralGain = int(lines[2])
+        self.differentialGain = int(lines[3])
+
+        self.proportionalGainLowerBound = float(lines[5])
+        self.integralGainLowerBound = float(lines[6])
+        self.differentialGainLowerBound = float(lines[7])
+
+        self.proportionalGainUpperBound = float(lines[9])
+        self.integralGainUpperBound = float(lines[10])
+        self.differentialGainUpperBound = float(lines[11])
+
+        self.pidSetpoint = float(lines[13])
+        self.isPIDOnline = bool(int(lines[15]))
+
 
     def channelNamesPrepare(self):
         if not os.path.isfile("channelNames.txt"):
