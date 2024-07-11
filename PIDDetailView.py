@@ -1,3 +1,5 @@
+import time
+
 from PyQt6 import QtCore, QtGui
 from PyQt6.QtGui import *
 from PyQt6.QtCore import *
@@ -19,10 +21,6 @@ class PIDDetailView(QWidget):
         # Honestly idc I'm not touching any of that
 
         self.server: ServerNeo = parent.server
-
-        self.proportionalGain = self.server.proportionalGain
-        self.integralGain = self.server.integralGain
-        self.differentialGain = self.server.differentialGain
 
         self.proportionalGainLowerBound = self.server.proportionalGainLowerBound
         self.integralGainLowerBound = self.server.integralGainLowerBound
@@ -95,21 +93,21 @@ class PIDDetailView(QWidget):
         self.proportionalGainSlider.setOrientation(Qt.Orientation.Horizontal)
         self.proportionalGainSlider.setMinimum(0)
         self.proportionalGainSlider.setMaximum(65535)
-        self.proportionalGainSlider.setValue(self.proportionalGain)
+        self.proportionalGainSlider.setValue(self.server.proportionalGain)
         gainSliderVStack.addWidget(self.proportionalGainSlider)
 
         self.integralGainSlider = QSlider()
         self.integralGainSlider.setOrientation(Qt.Orientation.Horizontal)
         self.integralGainSlider.setMinimum(0)
         self.integralGainSlider.setMaximum(65535)
-        self.integralGainSlider.setValue(self.integralGain)
+        self.integralGainSlider.setValue(self.server.integralGain)
         gainSliderVStack.addWidget(self.integralGainSlider)
 
         self.differentialGainSlider = QSlider()
         self.differentialGainSlider.setOrientation(Qt.Orientation.Horizontal)
         self.differentialGainSlider.setMinimum(0)
         self.differentialGainSlider.setMaximum(65535)
-        self.differentialGainSlider.setValue(self.differentialGain)
+        self.differentialGainSlider.setValue(self.server.differentialGain)
         gainSliderVStack.addWidget(self.differentialGainSlider)
 
         self.pidSetpointSlider = QSlider()
@@ -137,11 +135,6 @@ class PIDDetailView(QWidget):
 
         self.setLayout(zStack)
 
-        self.proportionalGainSpinBox.valueChanged.connect(self.syncValuesFromSpinBoxes)
-        self.integralGainSpinBox.valueChanged.connect(self.syncValuesFromSpinBoxes)
-        self.differentialGainSpinBox.valueChanged.connect(self.syncValuesFromSpinBoxes)
-        self.pidSetpointSpinBox.valueChanged.connect(self.syncValuesFromSpinBoxes)
-
         self.proportionalGainSlider.valueChanged.connect(self.syncValuesFromSliders)
         self.integralGainSlider.valueChanged.connect(self.syncValuesFromSliders)
         self.differentialGainSlider.valueChanged.connect(self.syncValuesFromSliders)
@@ -155,54 +148,32 @@ class PIDDetailView(QWidget):
         self.hide()
 
     def syncValuesFromSliders(self):
-        self.proportionalGainSpinBox.setValue(self.proportionalGainLowerBound + self.proportionalGainSlider.value() * (self.proportionalGainUpperBound - self.proportionalGainLowerBound) / 65535)
-        self.integralGainSpinBox.setValue(self.integralGainLowerBound + self.integralGainSlider.value() * (self.integralGainUpperBound - self.integralGainLowerBound) / 65535)
-        self.differentialGainSpinBox.setValue(self.differentialGainLowerBound + self.differentialGainSlider.value() * (self.differentialGainUpperBound - self.differentialGainLowerBound) / 65535)
-        self.pidSetpointSpinBox.setValue(-10 + self.pidSetpointSlider.value() * (10 + 10) / 65535)
+        self.proportionalGainSpinBox.setValue(self.server.proportionalGainLowerBound + (self.server.proportionalGainUpperBound - self.server.proportionalGainLowerBound) * self.proportionalGainSlider.value() / 65535)
+        self.integralGainSpinBox.setValue(self.server.integralGainLowerBound + (self.server.integralGainUpperBound - self.server.integralGainLowerBound) * self.integralGainSlider.value() / 65535)
+        self.differentialGainSpinBox.setValue(self.server.differentialGainLowerBound + (self.server.differentialGainUpperBound - self.server.differentialGainLowerBound) * self.differentialGainSlider.value() / 65535)
 
-        self.pidSetpoint = self.pidSetpointSpinBox.value()
+        self.proportionalGainSpinBox.valueChanged.connect(self.syncValuesFromSpinBoxes)
+        self.integralGainSpinBox.valueChanged.connect(self.syncValuesFromSpinBoxes)
+        self.differentialGainSpinBox.valueChanged.connect(self.syncValuesFromSpinBoxes)
 
     def syncValuesFromSpinBoxes(self):
         self.proportionalGainSlider.setValue(int(65535 * (self.proportionalGainSpinBox.value()-self.proportionalGainLowerBound) / (self.proportionalGainUpperBound - self.proportionalGainLowerBound)))
-        self.integralGainSlider.setValue(int(65535 * (self.integralGainSpinBox.value()-self.integralGainLowerBound) / (self.integralGainUpperBound - self.integralGainLowerBound)))
+        self.integralGainSlider.setValue(int(65535 * (self.integralGainSpinBox.value()-self.server.integralGainLowerBound) / (self.server.integralGainUpperBound - self.server.integralGainLowerBound)))
         self.differentialGainSlider.setValue(int(65535 * (self.differentialGainSpinBox.value()-self.differentialGainLowerBound) / (self.differentialGainUpperBound - self.differentialGainLowerBound)))
 
-        self.pidSetpointSlider.setValue(int(65535 * (self.pidSetpointSpinBox.value()+10) / (10 + 10)))
-
     def sendGainToServer(self):
-        self.server.proportionalGain = self.proportionalGain
-        self.server.integralGain = self.integralGain
-        self.server.differentialGain = self.differentialGain
-        self.server.pidSetpoint = self.pidSetpoint
+        self.server.proportionalGain = self.proportionalGainSlider.value()
+        self.server.integralGain = self.integralGainSlider.value()
+        self.server.differentialGain = self.differentialGainSlider.value()
+        self.server.pidSetpoint = self.pidSetpointSpinBox.value()
         self.server.isPIDOnline = self.isPIDOnline
 
-        logFileAppend(self.server.logFile, f"New PID settings applied: Kp: {self.proportionalGain}, Ki: {self.integralGain}, Kd: {self.differentialGain}, pidSetpoint: {self.pidSetpoint}, isPIDOnline: {self.isPIDOnline}")
+        logFileAppend(self.server.logFile, f"New PID settings applied: Kp: {self.server.proportionalGain}, Ki: {self.server.integralGain}, Kd: {self.server.differentialGain}, pidSetpoint: {self.server.pidSetpoint}, isPIDOnline: {self.server.isPIDOnline}")
 
     def applyGain(self):
 
-        self.proportionalGain = self.proportionalGainSlider.value()
-        self.integralGain = self.integralGainSlider.value()
-        self.differentialGain = self.differentialGainSlider.value()
-
         self.sendGainToServer()
-        pidFile = open("pid.txt", "w+")
-        pidFile.write(f"""# PID GAINS
-{self.proportionalGain}
-{self.integralGain}
-{self.differentialGain}
-# PID LOWER BOUNDARIES
-{self.proportionalGainLowerBound}
-{self.integralGainLowerBound}
-{self.differentialGainLowerBound}
-#PID UPPER BOUNDARIES
-{self.proportionalGainUpperBound}
-{self.integralGainUpperBound}
-{self.differentialGainUpperBound}
-# PID SETPOINT
-{self.pidSetpoint}
-# PID ONLINE
-{int(self.isPIDOnline)}""")
-        pidFile.close()
+        self.server.writePIDXML()
 
     def isPIDOnlineToggle(self):
         self.isPIDOnline = self.isPIDOnlineCheckBox.isChecked()

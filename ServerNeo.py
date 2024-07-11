@@ -162,7 +162,43 @@ class ServerNeo(QObject):
         tree.write("config.xml")
 
     def writePIDXML(self):
-        ...
+        tree = ET.parse('config.xml')
+        root = tree.getroot()
+        for child in root:
+            if child.tag != 'pid':
+                continue
+
+            for superchild in child:
+                if superchild.tag == 'setpoint':
+                    superchild.text = str(self.pidSetpoint)
+                elif superchild.tag == "isonline":
+                    superchild.text = str(int(self.isPIDOnline))
+                elif superchild.tag == 'gain':
+                    name = superchild.attrib.get("name")
+                    for key in superchild:
+                        if name == "proportional":
+                            if key.tag == "value":
+                                key.text = str(self.proportionalGain)
+                            elif key.tag == "upperlimit":
+                                key.text = str(self.proportionalGainUpperBound)
+                            elif key.tag == "lowerlimit":
+                                key.text = str(self.proportionalGainLowerBound)
+                        elif name == "integral":
+                            if key.tag == "value":
+                                key.text = str(self.integralGain)
+                            elif key.tag == "upperlimit":
+                                key.text = str(self.integralGainUpperBound)
+                            elif key.tag == "lowerlimit":
+                                key.text = str(self.integralGainLowerBound)
+                        elif name == "differential":
+                            if key.tag == "value":
+                                key.text = str(self.differentialGain)
+                            elif key.tag == "upperlimit":
+                                key.text = str(self.differentialGainUpperBound)
+                            elif key.tag == "lowerlimit":
+                                key.text = str(self.differentialGainLowerBound)
+
+        tree.write("config.xml")
 
     def writeChannelsXML(self):
         ...
