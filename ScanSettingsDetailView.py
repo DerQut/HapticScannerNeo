@@ -10,6 +10,7 @@ import ServerNeo
 from ScanChannel import *
 import os
 
+# TODO add checkboxes for individual channels for easy turn on/off
 
 class ScanSettingsDetailView(QWidget):
     def __init__(self, parent=None):
@@ -125,6 +126,9 @@ class ChannelsView(QWidget):
 class ChannelEntryView(QWidget):
     def __init__(self, parent: ScanSettingsDetailView, channel: ScanChannel, id: int):
         super().__init__(parent)
+
+        self.channel = channel
+
         hStack = QHBoxLayout()
         self.setLayout(hStack)
 
@@ -132,9 +136,10 @@ class ChannelEntryView(QWidget):
         numberLabel.setFixedWidth(25)
         hStack.addWidget(numberLabel)
 
-        textEntry = QLineEdit(channel.name)
-        hStack.addWidget(textEntry)
-        textEntry.setFixedWidth(175)
+        self.textEntry = QLineEdit(self.channel.name)
+        self.textEntry.textChanged.connect(self.sendName)
+        hStack.addWidget(self.textEntry)
+        self.textEntry.setFixedWidth(175)
 
         hStack.addStretch()
 
@@ -145,6 +150,9 @@ class ChannelEntryView(QWidget):
 
     def summonWindow(self):
         ...
+
+    def sendName(self):
+        self.channel.name = self.textEntry.text()
 
 
 class InitialScanView(QWidget):
