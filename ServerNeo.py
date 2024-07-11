@@ -8,53 +8,74 @@ from time import gmtime, strftime
 from logFileAppend import *
 from ScanChannel import *
 
+import xml.etree.ElementTree as ET
+
 
 class ServerNeo(QObject):
     def __init__(self):
         super().__init__()
 
-        self.host = '192.168.1.103'
-        self.port = 8881
-        self.saveDir = "C:/PomiaryHaptyczne"
-        self.configCreateNewFolder = True
-        self.configAutoSave = True
-
-        self.proportionalGain = 65535
-        self.integralGain = 65535
-        self.differentialGain = 65535
-        self.pidSetpoint = 10
-        self.isPIDOnline = True
-        self.proportionalGainLowerBound = 0
-        self.integralGainLowerBound = 0
-        self.differentialGainLowerBound = 0
-        self.proportionalGainUpperBound = 1
-        self.integralGainUpperBound = 1
-        self.differentialGainUpperBound = 1
-        self.pidPrepare()
-
         self.channels = []
-        self.channelNamesPrepare()
 
-        if os.path.isfile("config.txt"):
-            configFile = open("config.txt", "r")
-            configDataRaw = configFile.readlines()
-            configFile.close()
+        tree = ET.parse('config.xml')
+        root = tree.getroot()
+        for child in root:
+            if child.tag == 'pid':
 
-            configData = []
+                for superchild in child:
+                    if superchild.tag == 'setpoint':
+                        self.pidSetpoint = float(superchild.text)
+                    elif superchild.tag == 'isonline':
+                        self.isPIDOnline = bool(int(superchild.text))
+                    elif superchild.tag == 'gain':
 
-            for line in configDataRaw:
-                configData.append(line.strip())
+                        if superchild.attrib.get('name') == "proportional":
+                            for value in superchild.iter('value'):
+                                self.proportionalGain = int(value.text)
+                            for lowerBound in superchild.iter('lowerlimit'):
+                                self.proportionalGainLowerBound = float(lowerBound.text)
+                            for upperBound in superchild.iter('upperlimit'):
+                                self.proportionalGainUpperBound = float(upperBound.text)
 
-            if len(configData) < 5:
-                self.fallbackConfigSetup()
-            else:
-                self.saveDir = configData[0]
-                self.host = configData[1]
-                self.port = int(configData[2])
-                self.configCreateNewFolder = bool(int(configData[3]))
-                self.configAutoSave = bool(int(configData[4]))
-        else:
-            self.fallbackConfigSetup()
+                        elif superchild.attrib.get('name') == "integral":
+                            for value in superchild.iter('value'):
+                                self.integralGain = int(value.text)
+                            for lowerBound in superchild.iter('lowerlimit'):
+                                self.integralGainLowerBound = float(lowerBound.text)
+                            for upperBound in superchild.iter('upperlimit'):
+                                self.integralGainUpperBound = float(upperBound.text)
+
+                        elif superchild.attrib.get('name') == "differential":
+                            for value in superchild.iter('value'):
+                                self.differentialGain = int(value.text)
+                            for lowerBound in superchild.iter('lowerlimit'):
+                                self.differentialGainLowerBound = float(lowerBound.text)
+                            for upperBound in superchild.iter('upperlimit'):
+                                self.differentialGainUpperBound = float(upperBound.text)
+
+            elif child.tag == "config":
+                for superchild in child:
+                    if superchild.tag == "savedir":
+                        self.saveDir = superchild.text
+                    elif superchild.tag == "host":
+                        self.host = superchild.text
+                    elif superchild.tag == "port":
+                        self.port = int(superchild.text)
+                    elif superchild.tag == "createnewfolder":
+                        self.configCreateNewFolder = bool(int(superchild.text))
+                    elif superchild.tag == "autosave":
+                        self.configAutoSave = bool(int(superchild.text))
+
+            elif child.tag == "channels":
+                for superchild in child:
+                    enabled = None
+                    name = None
+                    for key in superchild:
+                        if key.tag == 'name':
+                            name = key.text
+                        elif key.tag == 'enabled':
+                            enabled = bool(int(key.text))
+                    self.channels.append(ScanChannel(name, enabled))
 
         if list(self.saveDir)[len(self.saveDir)-1] != "/":
             self.saveDir += "/"
@@ -89,16 +110,6 @@ class ServerNeo(QObject):
             self.socket.close()
 
         self.__init__()
-
-    def fallbackConfigSetup(self):
-        configFile = open("config.txt", "w+")
-        configFile.write("C:/PomiaryHaptyczne\n192.168.1.103\n8881\n1\n1")
-        configFile.close()
-
-    def fallbackPIDSetup(self):
-        pidFile = open("pid.txt", "w+")
-        pidFile.write("1\n1\n1\n10\n1")
-        pidFile.close()
 
     def run(self):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -135,96 +146,7 @@ class ServerNeo(QObject):
     def waitForAnswer(self):
         ...
 
-    def pidPrepare(self):
-        if not os.path.isfile("pid.txt"):
-            channelNamesFIle = open("pid.txt", "w+")
-            channelNamesFIle.close()
 
-        pidFile = open("pid.txt", "r")
-        lines = pidFile.readlines()
-        pidFile.close()
-
-        if len(lines) < 16:
-            pidFile = open("pid.txt", "w+")
-            pidFile.write(f"""# PID GAINS
-1
-1
-1
-# PID LOWER BOUNDARIES
-0
-0
-0
-#PID UPPER BOUNDARIES
-1
-1
-1
-# PID SETPOINT
-5.0
-# PID ONLINE
-1""")
-            pidFile.close()
-
-        pidFile = open("pid.txt", "r")
-        linesRaw = pidFile.readlines()
-        pidFile.close()
-
-        lines = []
-        for raw in linesRaw:
-            rawList = list(raw)
-            if rawList[-1] == "\n":
-                rawList.pop()
-            lines.append(''.join(rawList))
-
-        self.proportionalGain = int(lines[1])
-        self.integralGain = int(lines[2])
-        self.differentialGain = int(lines[3])
-
-        self.proportionalGainLowerBound = float(lines[5])
-        self.integralGainLowerBound = float(lines[6])
-        self.differentialGainLowerBound = float(lines[7])
-
-        self.proportionalGainUpperBound = float(lines[9])
-        self.integralGainUpperBound = float(lines[10])
-        self.differentialGainUpperBound = float(lines[11])
-
-        self.pidSetpoint = float(lines[13])
-        self.isPIDOnline = bool(int(lines[15]))
-
-
-    def channelNamesPrepare(self):
-        if not os.path.isfile("channelNames.txt"):
-            channelNamesFIle = open("channelNames.txt", "w+")
-            channelNamesFIle.close()
-
-        channelNamesFile = open("channelNames.txt", "r")
-        lines = channelNamesFile.readlines()
-        channelNamesFile.close()
-
-        if len(lines) < 10:
-            channelNamesFile = open("channelNames.txt", "w+")
-            i = 0
-            while i < 10:
-                channelNamesFile.write(f"Channel {i+1}")
-                if i != 9:
-                    channelNamesFile.write("\n")
-                i = i + 1
-            channelNamesFile.close()
-
-        channelNamesFile = open("channelNames.txt", "r")
-        linesRaw = channelNamesFile.readlines()
-        channelNamesFile.close()
-
-        lines = []
-        for raw in linesRaw:
-            rawList = list(raw)
-            if rawList[-1] == "\n":
-                rawList.pop()
-            lines.append(''.join(rawList))
-
-        while len(self.channels) < 10:
-            channel = ScanChannel()
-            channel.name = lines[len(self.channels)]
-            self.channels.append(channel)
 
 
 # I'm afraid this project will become just as horribly written and unstable as HapticScanner-1. may god have me in his mercy.
