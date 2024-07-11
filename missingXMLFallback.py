@@ -1,4 +1,6 @@
-<data>
+def missingXMLFallback():
+    f = open("config.xml", "w+")
+    f.write("""<data>
         <config>
             <savedir>C:/PomiaryHaptyczne/</savedir>
             <host>192.168.1.103</host>
@@ -72,4 +74,5 @@
             </channel>
         </channels>
 
-    </data>
+    </data>""")
+    f.close()

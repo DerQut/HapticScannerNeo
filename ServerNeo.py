@@ -7,6 +7,7 @@ from time import gmtime, strftime
 
 from logFileAppend import *
 from ScanChannel import *
+from missingXMLFallback import *
 
 import xml.etree.ElementTree as ET
 
@@ -16,6 +17,9 @@ class ServerNeo(QObject):
         super().__init__()
 
         self.channels = []
+
+        if not os.path.isfile("config.xml"):
+            missingXMLFallback()
 
         tree = ET.parse('config.xml')
         root = tree.getroot()
