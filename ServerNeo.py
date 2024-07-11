@@ -6,6 +6,7 @@ from PyQt6.QtCore import QObject, QThread, pyqtSignal
 from time import gmtime, strftime
 
 from logFileAppend import *
+from ScanChannel import *
 
 
 class ServerNeo(QObject):
@@ -23,6 +24,9 @@ class ServerNeo(QObject):
         self.differentialGain = 1
         self.pidSetpoint = 10
         self.isPIDOnline = True
+
+        self.channels = []
+        self.channelNamesPrepare()
 
         if os.path.isfile("config.txt"):
             configFile = open("config.txt", "r")
@@ -145,5 +149,42 @@ class ServerNeo(QObject):
 
     def waitForAnswer(self):
         ...
+
+    def channelNamesPrepare(self):
+        if not os.path.isfile("channelNames.txt"):
+            channelNamesFIle = open("channelNames.txt", "w+")
+            channelNamesFIle.close()
+
+        channelNamesFile = open("channelNames.txt", "r")
+        lines = channelNamesFile.readlines()
+        channelNamesFile.close()
+
+        if len(lines) < 10:
+            channelNamesFile = open("channelNames.txt", "w+")
+            i = 0
+            while i < 10:
+                channelNamesFile.write(f"Channel {i+1}")
+                if i != 9:
+                    channelNamesFile.write("\n")
+                i = i + 1
+            channelNamesFile.close()
+
+        channelNamesFile = open("channelNames.txt", "r")
+        linesRaw = channelNamesFile.readlines()
+        channelNamesFile.close()
+
+        lines = []
+        for raw in linesRaw:
+            rawList = list(raw)
+            if rawList[-1] == "\n":
+                rawList.pop()
+            lines.append(''.join(rawList))
+        print(lines)
+
+        while len(self.channels) < 10:
+            channel = ScanChannel()
+            channel.name = lines[len(self.channels)]
+            self.channels.append(channel)
+
 
 # I'm afraid this project will become just as horribly written and unstable as HapticScanner-1. may god have me in his mercy.
