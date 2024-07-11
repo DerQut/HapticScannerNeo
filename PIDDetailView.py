@@ -95,18 +95,21 @@ class PIDDetailView(QWidget):
         self.proportionalGainSlider.setOrientation(Qt.Orientation.Horizontal)
         self.proportionalGainSlider.setMinimum(0)
         self.proportionalGainSlider.setMaximum(65535)
+        self.proportionalGainSlider.setValue(self.proportionalGain)
         gainSliderVStack.addWidget(self.proportionalGainSlider)
 
         self.integralGainSlider = QSlider()
         self.integralGainSlider.setOrientation(Qt.Orientation.Horizontal)
         self.integralGainSlider.setMinimum(0)
         self.integralGainSlider.setMaximum(65535)
+        self.integralGainSlider.setValue(self.integralGain)
         gainSliderVStack.addWidget(self.integralGainSlider)
 
         self.differentialGainSlider = QSlider()
         self.differentialGainSlider.setOrientation(Qt.Orientation.Horizontal)
         self.differentialGainSlider.setMinimum(0)
         self.differentialGainSlider.setMaximum(65535)
+        self.differentialGainSlider.setValue(self.differentialGain)
         gainSliderVStack.addWidget(self.differentialGainSlider)
 
         self.pidSetpointSlider = QSlider()
@@ -146,24 +149,15 @@ class PIDDetailView(QWidget):
 
         self.applyGainButton.clicked.connect(self.applyGain)
 
-        self.proportionalGainSlider.setValue(self.proportionalGain)
-        self.integralGainSlider.setValue(self.integralGain)
-        self.differentialGainSlider.setValue(self.differentialGain)
-        self.pidSetpointSpinBox.setValue(self.pidSetpoint)
-
         self.isPIDOnlineCheckBox.clicked.connect(self.isPIDOnlineToggle)
 
         self.syncValuesFromSliders()
         self.hide()
 
     def syncValuesFromSliders(self):
-        self.proportionalGain = self.proportionalGainSlider.value()
-        self.integralGain = self.integralGainSlider.value()
-        self.differentialGain = self.differentialGainSlider.value()
-
-        self.proportionalGainSpinBox.setValue(self.proportionalGainLowerBound + self.proportionalGain * (self.proportionalGainUpperBound - self.proportionalGainLowerBound) / 65535)
-        self.integralGainSpinBox.setValue(self.integralGainLowerBound + self.integralGain * (self.integralGainUpperBound - self.integralGainLowerBound) / 65535)
-        self.differentialGainSpinBox.setValue(self.differentialGainLowerBound + self.differentialGain * (self.differentialGainUpperBound - self.differentialGainLowerBound) / 65535)
+        self.proportionalGainSpinBox.setValue(self.proportionalGainLowerBound + self.proportionalGainSlider.value() * (self.proportionalGainUpperBound - self.proportionalGainLowerBound) / 65535)
+        self.integralGainSpinBox.setValue(self.integralGainLowerBound + self.integralGainSlider.value() * (self.integralGainUpperBound - self.integralGainLowerBound) / 65535)
+        self.differentialGainSpinBox.setValue(self.differentialGainLowerBound + self.differentialGainSlider.value() * (self.differentialGainUpperBound - self.differentialGainLowerBound) / 65535)
         self.pidSetpointSpinBox.setValue(-10 + self.pidSetpointSlider.value() * (10 + 10) / 65535)
 
         self.pidSetpoint = self.pidSetpointSpinBox.value()
@@ -175,12 +169,6 @@ class PIDDetailView(QWidget):
 
         self.pidSetpointSlider.setValue(int(65535 * (self.pidSetpointSpinBox.value()+10) / (10 + 10)))
 
-        self.proportionalGain = self.proportionalGainSlider.value()
-        self.integralGain = self.integralGainSlider.value()
-        self.differentialGain = self.differentialGainSlider.value()
-        self.pidSetpoint = self.pidSetpointSpinBox.value()
-
-
     def sendGainToServer(self):
         self.server.proportionalGain = self.proportionalGain
         self.server.integralGain = self.integralGain
@@ -191,6 +179,11 @@ class PIDDetailView(QWidget):
         logFileAppend(self.server.logFile, f"New PID settings applied: Kp: {self.proportionalGain}, Ki: {self.integralGain}, Kd: {self.differentialGain}, pidSetpoint: {self.pidSetpoint}, isPIDOnline: {self.isPIDOnline}")
 
     def applyGain(self):
+
+        self.proportionalGain = self.proportionalGainSlider.value()
+        self.integralGain = self.integralGainSlider.value()
+        self.differentialGain = self.differentialGainSlider.value()
+
         self.sendGainToServer()
         pidFile = open("pid.txt", "w+")
         pidFile.write(f"""# PID GAINS
@@ -213,4 +206,3 @@ class PIDDetailView(QWidget):
 
     def isPIDOnlineToggle(self):
         self.isPIDOnline = self.isPIDOnlineCheckBox.isChecked()
-        print(self.isPIDOnline)
