@@ -11,9 +11,9 @@
         <setpoint>19922</setpoint>
         <setpointlowerlimit>-10</setpointlowerlimit>
         <setpointupperlimit>10</setpointupperlimit>
-        <isonline>1</isonline>
+        <isonline>0</isonline>
         <gain name="proportional">
-            <value>11218</value>
+            <value>11140</value>
             <upperlimit>1.0</upperlimit>
             <lowerlimit>0.0</lowerlimit>
         </gain>
@@ -23,7 +23,7 @@
             <lowerlimit>-3.0</lowerlimit>
         </gain>
         <gain name="differential">
-            <value>33786</value>
+            <value>65535</value>
             <upperlimit>10.0</upperlimit>
             <lowerlimit>1.0</lowerlimit>
         </gain>
