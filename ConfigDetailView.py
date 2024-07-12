@@ -22,7 +22,7 @@ class ConfigDetailView(QWidget):
         super().__init__(parent)
 
         self.COMPorts = []
-        self.saveDir = "C:/"
+        self.server: ServerNeo = parent.server
 
         zStack = QStackedLayout()
 
@@ -165,8 +165,6 @@ class ConfigDetailView(QWidget):
         fileButton.clicked.connect(self.setSaveDir)
 
         self.setLayout(zStack)
-
-        self.server: ServerNeo = parent.server
 
         self.portField.setText(str(self.server.port))
 
