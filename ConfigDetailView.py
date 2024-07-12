@@ -112,7 +112,7 @@ class ConfigDetailView(QWidget):
         fileHStack = QHBoxLayout()
         fileLabel = QLabel("Save directory:")
         fileHStack.addWidget(fileLabel)
-        self.fileLineEdit = QLineEdit(self.saveDir)
+        self.fileLineEdit = QLineEdit(self.server.saveDir)
         self.fileLineEdit.setEnabled(False)
         fileHStack.addWidget(self.fileLineEdit)
         fileButton = QPushButton("Change")
@@ -177,8 +177,7 @@ class ConfigDetailView(QWidget):
         self.ipField3.setText(ipParts[2])
         self.ipField4.setText(ipParts[3])
 
-        self.saveDir = self.server.saveDir
-        self.fileLineEdit.setText(str(self.saveDir))
+        self.fileLineEdit.setText(str(self.server.saveDir))
 
         vStack.setSpacing(20)
         tcpipHStack.setSpacing(6)
@@ -236,14 +235,15 @@ class ConfigDetailView(QWidget):
         #self.server.run()
 
     def setSaveDir(self):
-        self.saveDir = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
-        if list(self.saveDir)[len(list(self.saveDir)) - 1] != "/":
-            self.saveDir += "/"
-        self.fileLineEdit.setText(self.saveDir)
+        saveDir = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
+        if saveDir == "":
+            return -1
+        if list(saveDir)[len(list(saveDir)) - 1] != "/":
+            saveDir += "/"
+        self.fileLineEdit.setText(saveDir)
 
     def saveAndApply(self):
-
-        self.server.saveDir = self.saveDir
+        self.server.saveDir = self.fileLineEdit.text()
         self.server.host = f"{self.ipField1.text()}.{self.ipField2.text()}.{self.ipField3.text()}.{self.ipField4.text()}"
         self.server.port = int(self.portField.text())
         self.server.configAutoSave = self.autoSaveCheck.isChecked()
