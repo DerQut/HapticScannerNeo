@@ -96,10 +96,10 @@ class ChannelsView(QWidget):
 
         self.scrollArea = QScrollArea(self)
         self.scrollArea.setFixedWidth(300)
-        self.scrollArea.setFixedHeight(350)
+        self.scrollArea.setFixedHeight(250)
         dummyLayout.addWidget(self.scrollArea)
 
-        self.setFixedHeight(400)
+        self.setFixedHeight(300)
         self.setFixedWidth(300)
 
         self.mainContainer = QWidget(self)
@@ -166,7 +166,7 @@ class InitialScanView(QWidget):
         vStack.addWidget(Color(MacColoursDark.green))
         self.setLayout(vStack)
 
-        self.setFixedHeight(400)
+        self.setFixedHeight(300)
 
         self.hide()
 
@@ -180,7 +180,7 @@ class RasterModeView(QWidget):
         vStack.addWidget(Color(MacColoursDark.red))
         self.setLayout(vStack)
 
-        self.setFixedHeight(400)
+        self.setFixedHeight(300)
 
         self.hide()
 
@@ -194,6 +194,6 @@ class HapticModeView(QWidget):
         vStack.addWidget(Color(MacColoursDark.cyan))
         self.setLayout(vStack)
 
-        self.setFixedHeight(400)
+        self.setFixedHeight(300)
 
         self.hide()
