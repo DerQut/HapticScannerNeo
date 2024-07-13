@@ -1,3 +1,4 @@
+import random
 import socket
 import os
 import threading
@@ -230,3 +231,9 @@ class ServerNeo(QObject):
                         key.text = str(int(self.channels[int(superchild.attrib.get("id"))-1].isEnabled))
 
         tree.write("config.xml")
+
+    def getCE(self):
+        return random.randrange(0, 1000000, 1) / 10001
+
+    def getCV(self):
+        return random.randrange(0, 1000000, 1) / 10001

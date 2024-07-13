@@ -23,7 +23,7 @@
             <lowerlimit>-3.0</lowerlimit>
         </gain>
         <gain name="differential">
-            <value>65535</value>
+            <value>33058</value>
             <upperlimit>10.0</upperlimit>
             <lowerlimit>1.0</lowerlimit>
         </gain>

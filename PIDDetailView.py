@@ -16,10 +16,6 @@ class PIDDetailView(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
 
-        # TODO: CE and CV readout (Cross-Entropy? or like the Error? idk and Control Variable, which is the output of the PID summator)
-
-        # Honestly idc I'm not touching any of that
-
         self.server: ServerNeo = parent.server
 
         zStack = QStackedLayout()
@@ -120,6 +116,31 @@ class PIDDetailView(QWidget):
         self.applyGainButton = QPushButton("Apply")
         vStack.addWidget(self.applyGainButton)
 
+        vStack.addWidget(Divider(MacColoursDark.gray))
+
+        self.readoutTimer = QTimer()
+        self.readoutTimer.setInterval(250)
+        self.readoutTimer.timeout.connect(self.setReadout)
+
+        readoutHStack = QHBoxLayout()
+        readoutHStack.addStretch()
+
+        readoutHStack.addWidget(QLabel("CE:"))
+        self.CEReadout = QLabel()
+        self.CEReadout.setFixedWidth(250)
+        readoutHStack.addWidget(self.CEReadout)
+
+        readoutHStack.addStretch()
+        readoutHStack.addStretch()
+
+        readoutHStack.addWidget(QLabel("CV:"))
+        self.CVReadout = QLabel()
+        self.CVReadout.setFixedWidth(250)
+        readoutHStack.addWidget(self.CVReadout)
+
+        readoutHStack.addStretch()
+        vStack.addLayout(readoutHStack)
+
         vStack.addStretch()
 
         self.setLayout(zStack)
@@ -161,6 +182,17 @@ class PIDDetailView(QWidget):
         logFileAppend(self.server.logFile, f"New PID settings applied: Kp: {self.server.proportionalGain}, Ki: {self.server.integralGain}, Kd: {self.server.differentialGain}, pidSetpoint: {self.server.pidSetpoint}, isPIDOnline: {self.server.isPIDOnline}")
 
     def applyGain(self):
-
         self.sendGainToServer()
         self.server.writePIDXML()
+
+    def setReadout(self):
+        self.CEReadout.setText(str(self.server.getCE()))
+        self.CVReadout.setText(str(self.server.getCV()))
+
+    def hide(self):
+        super().hide()
+        self.readoutTimer.stop()
+
+    def show(self):
+        super().show()
+        self.readoutTimer.start()
