@@ -237,3 +237,14 @@ class ServerNeo(QObject):
 
     def getCV(self):
         return random.randrange(0, 1000000, 1) / 10001
+
+    def getOnlinePID(self):
+        kp = random.randrange(0, 65535, 1)
+        ki = random.randrange(0, 65535, 1)
+        kd = random.randrange(0, 65535, 1)
+
+        self.proportionalGain = kp
+        self.integralGain = ki
+        self.differentialGain = kd
+
+        return kp, ki, kd

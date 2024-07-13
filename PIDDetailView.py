@@ -113,7 +113,7 @@ class PIDDetailView(QWidget):
 
         vStack.addLayout(autoHStack)
 
-        self.applyGainButton = QPushButton("Apply")
+        self.applyGainButton = QPushButton("Save and apply")
         vStack.addWidget(self.applyGainButton)
 
         vStack.addWidget(Divider(MacColoursDark.gray))
@@ -152,8 +152,15 @@ class PIDDetailView(QWidget):
 
         self.applyGainButton.clicked.connect(self.applyGain)
 
+        self.isPIDOnlineCheckBox.clicked.connect(self.blockInputs)
+
         self.syncValuesFromSliders()
         self.hide()
+
+        self.onlinePIDTimer = QTimer()
+        self.onlinePIDTimer.setInterval(500)
+        self.onlinePIDTimer.timeout.connect(self.onlinePIDSetup)
+
 
     def syncValuesFromSliders(self):
         self.proportionalGainSpinBox.setValue(self.server.proportionalGainLowerBound + (self.server.proportionalGainUpperBound - self.server.proportionalGainLowerBound) * self.proportionalGainSlider.value() / 65535)
@@ -180,14 +187,33 @@ class PIDDetailView(QWidget):
         self.server.isPIDOnline = self.isPIDOnlineCheckBox.isChecked()
 
         logFileAppend(self.server.logFile, f"New PID settings applied: Kp: {self.server.proportionalGain}, Ki: {self.server.integralGain}, Kd: {self.server.differentialGain}, pidSetpoint: {self.server.pidSetpoint}, isPIDOnline: {self.server.isPIDOnline}")
+        if self.isPIDOnlineCheckBox.isChecked():
+            self.onlinePIDTimer.start()
+        else:
+            self.onlinePIDTimer.stop()
 
     def applyGain(self):
         self.sendGainToServer()
         self.server.writePIDXML()
 
+    def blockInputs(self):
+        self.proportionalGainSlider.setDisabled(self.isPIDOnlineCheckBox.isChecked())
+        self.integralGainSlider.setDisabled(self.isPIDOnlineCheckBox.isChecked())
+        self.differentialGainSlider.setDisabled(self.isPIDOnlineCheckBox.isChecked())
+
+        self.proportionalGainSpinBox.setDisabled(self.isPIDOnlineCheckBox.isChecked())
+        self.integralGainSpinBox.setDisabled(self.isPIDOnlineCheckBox.isChecked())
+        self.differentialGainSpinBox.setDisabled(self.isPIDOnlineCheckBox.isChecked())
+
     def setReadout(self):
         self.CEReadout.setText(str(self.server.getCE()))
         self.CVReadout.setText(str(self.server.getCV()))
+
+    def onlinePIDSetup(self):
+        kp, ki, kd = self.server.getOnlinePID()
+        self.proportionalGainSlider.setValue(kp)
+        self.integralGainSlider.setValue(ki)
+        self.differentialGainSlider.setValue(kd)
 
     def hide(self):
         super().hide()
