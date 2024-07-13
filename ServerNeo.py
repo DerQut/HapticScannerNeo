@@ -233,12 +233,15 @@ class ServerNeo(QObject):
         tree.write("config.xml")
 
     def getCE(self):
+        # THIS IS A TEMPORARY FUNCTION
         return random.randrange(0, 1000000, 1) / 10001
 
     def getCV(self):
+        # THIS IS A TEMPORARY FUNCTION
         return random.randrange(0, 1000000, 1) / 10001
 
     def getOnlinePID(self):
+        # THIS IS A TEMPORARY FUNCTION
         kp = random.randrange(0, 65535, 1)
         ki = random.randrange(0, 65535, 1)
         kd = random.randrange(0, 65535, 1)
