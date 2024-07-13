@@ -106,7 +106,7 @@ class PIDDetailView(QWidget):
         vStack.addLayout(gainHStack)
 
         autoHStack = QHBoxLayout()
-        autoHStack.addWidget(QLabel("Automatic PID Setup:"))
+        autoHStack.addWidget(QLabel("Online PID Setup:"))
         self.isPIDOnlineCheckBox = QCheckBox()
         autoHStack.addStretch()
         autoHStack.addWidget(self.isPIDOnlineCheckBox)
