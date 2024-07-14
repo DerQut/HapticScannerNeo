@@ -217,7 +217,7 @@ class PIDDetailView(QWidget):
         self.server.differentialGainUpperBound = self.differentialGainSpinBox.maximum()
         self.server.pidSetpointUpperBound = self.pidSetpointSpinBox.maximum()
 
-        logFileAppend(self.server.logFile, f"New PID settings applied: Kp: {self.server.proportionalGain} in range {self.server.proportionalGainLowerBound}-{self.server.proportionalGainUpperBound}, Ki: {self.server.integralGain} in range {self.server.integralGainLowerBound}-{self.server.integralGainUpperBound}, Kd: {self.server.differentialGain}, pidSetpoint: {self.server.pidSetpoint} in range {self.server.pidSetpointLowerBound}-{self.server.pidSetpointUpperBound}, isPIDOnline: {self.server.isPIDOnline}")
+        logFileAppend(self.server.logFile, f"New PID settings applied: Kp: {self.server.proportionalGain} in range ({self.server.proportionalGainLowerBound} ; {self.server.proportionalGainUpperBound}), Ki: {self.server.integralGain} in range ({self.server.integralGainLowerBound} ; {self.server.integralGainUpperBound}), Kd: {self.server.differentialGain} in range ({self.server.differentialGainLowerBound} ; {self.server.differentialGainUpperBound}), pidSetpoint: {self.server.pidSetpoint} in range ({self.server.pidSetpointLowerBound} ; {self.server.pidSetpointUpperBound}), isPIDOnline: {self.server.isPIDOnline}")
         if self.isPIDOnlineCheckBox.isChecked():
             self.onlinePIDTimer.start()
         else:
