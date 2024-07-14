@@ -145,7 +145,8 @@ class ChannelEntryView(QWidget):
 
         hStack.addStretch()
 
-        button = QPushButton("^")
+        button = QPushButton("⧉")
+        button.setFont(QFont("Helvetica", 10))
         button.clicked.connect(self.summonWindow)
         button.setFixedSize(QSize(24, 24))
         hStack.addWidget(button)
