@@ -23,7 +23,6 @@ class PIDDetailView(QWidget):
 
         zStack.addWidget(Color(MacColoursDark.bg_colour))
         vContainer = QWidget()
-        vContainer.setContentsMargins(5, 5, 5, 5)
         vStack = QVBoxLayout()
         vContainer.setLayout(vStack)
         zStack.addWidget(vContainer)
