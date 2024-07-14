@@ -11,8 +11,8 @@ def missingXMLFallback():
 
     <pid>
         <setpoint>19922</setpoint>
-        <setpointlowerlimit>-10</setpointlowerlimit>
-        <setpointupperlimit>10</setpointupperlimit>
+        <setpointlowerlimit>-10.0</setpointlowerlimit>
+        <setpointupperlimit>10.0</setpointupperlimit>
         <isonline>0</isonline>
         <gain name="proportional">
             <value>11140</value>
@@ -21,13 +21,13 @@ def missingXMLFallback():
         </gain>
         <gain name="integral">
             <value>12844</value>
-            <upperlimit>2.0</upperlimit>
-            <lowerlimit>-3.0</lowerlimit>
+            <upperlimit>1.0</upperlimit>
+            <lowerlimit>0.0</lowerlimit>
         </gain>
         <gain name="differential">
-            <value>65535</value>
-            <upperlimit>10.0</upperlimit>
-            <lowerlimit>1.0</lowerlimit>
+            <value>33058</value>
+            <upperlimit>1.0</upperlimit>
+            <lowerlimit>0.0</lowerlimit>
         </gain>
     </pid>
 
