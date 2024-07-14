@@ -186,6 +186,13 @@ class ServerNeo(QObject):
             for superchild in child:
                 if superchild.tag == 'setpoint':
                     superchild.text = str(self.pidSetpoint)
+
+                elif superchild.tag == "setpointlowerlimit":
+                    superchild.text = str(self.pidSetpointLowerBound)
+
+                elif superchild.tag == "setpointupperlimit":
+                    superchild.text = str(self.pidSetpointUpperBound)
+
                 elif superchild.tag == "isonline":
                     superchild.text = str(int(self.isPIDOnline))
                 elif superchild.tag == 'gain':
