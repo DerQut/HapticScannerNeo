@@ -104,7 +104,7 @@ class ChannelsView(QWidget):
         self.mainContainer = QWidget(self)
         self.mainContainer.setFixedWidth(280)
 
-        self.saveButton = QPushButton("Save")
+        self.saveButton = QPushButton("Save to config.xml")
         self.saveButton.clicked.connect(self.saveNames)
         dummyLayout.addWidget(self.saveButton)
 
