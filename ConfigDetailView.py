@@ -139,7 +139,7 @@ class ConfigDetailView(QWidget):
 
         vStack.addWidget(QWidget())
 
-        self.saveAndApplyButton = QPushButton("Save and apply")
+        self.saveAndApplyButton = QPushButton("Save to config.xml and apply")
         self.saveAndApplyButton.clicked.connect(self.saveAndApply)
         self.saveAndApplyButton.setStyleSheet(f"background-color: rgba{QPalette().accent().color().getRgb()};")
         vStack.addWidget(self.saveAndApplyButton)

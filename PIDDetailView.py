@@ -124,7 +124,7 @@ class PIDDetailView(QWidget):
         self.showPopupButton = QPushButton("Change PID value ranges")
         vStack.addWidget(self.showPopupButton)
 
-        self.applyGainButton = QPushButton("Save and apply")
+        self.applyGainButton = QPushButton("Save to config.xml and apply")
         self.applyGainButton.setStyleSheet(f"background-color: rgba{QPalette().accent().color().getRgb()};")
         vStack.addWidget(self.applyGainButton)
 
