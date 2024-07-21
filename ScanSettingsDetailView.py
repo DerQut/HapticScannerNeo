@@ -50,9 +50,9 @@ class ScanSettingsDetailView(QWidget):
 
         self.vStack.addLayout(scanModeHStack)
 
-        self.initialScanView = InitialScanView(self)
-        self.rasterModeView = RasterModeView(self)
-        self.hapticModeView = HapticModeView(self)
+        self.initialScanView = InitialScanTopView(self)
+        self.rasterModeView = RasterModeTopView(self)
+        self.hapticModeView = HapticModeTopView(self)
 
         self.hStack = QHBoxLayout()
         self.vStack.addLayout(self.hStack)
@@ -168,7 +168,7 @@ class ChannelEntryView(QWidget):
         self.channel.isEnabled = self.toggle.isChecked()
 
 
-class InitialScanView(QWidget):
+class InitialScanTopView(QWidget):
     def __init__(self, parent: ScanSettingsDetailView):
         super().__init__(parent)
 
@@ -182,7 +182,7 @@ class InitialScanView(QWidget):
         self.hide()
 
 
-class RasterModeView(QWidget):
+class RasterModeTopView(QWidget):
     def __init__(self, parent: ScanSettingsDetailView):
         super().__init__(parent)
 
@@ -196,7 +196,7 @@ class RasterModeView(QWidget):
         self.hide()
 
 
-class HapticModeView(QWidget):
+class HapticModeTopView(QWidget):
     def __init__(self, parent: ScanSettingsDetailView):
         super().__init__(parent)
 
