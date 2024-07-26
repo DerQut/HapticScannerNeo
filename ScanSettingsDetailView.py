@@ -142,7 +142,7 @@ class ChannelsView(QWidget):
 
 
 class ChannelEntryView(QWidget):
-    def __init__(self, parent: ScanSettingsDetailView, channel: ScanChannel, id: int):
+    def __init__(self, parent: ScanSettingsDetailView, channel: ScanChannel, number: int):
         super().__init__(parent)
 
         self.channel = channel
@@ -154,7 +154,7 @@ class ChannelEntryView(QWidget):
         self.toggle.setChecked(channel.isEnabled)
         hStack.addWidget(self.toggle)
 
-        numberLabel = QLabel(str(id+1))
+        numberLabel = QLabel(str(number + 1))
         numberLabel.setFixedWidth(25)
         hStack.addWidget(numberLabel)
 
