@@ -50,9 +50,13 @@ class ScanSettingsDetailView(QWidget):
 
         self.vStack.addLayout(scanModeHStack)
 
-        self.initialScanView = InitialScanTopView(self)
-        self.rasterModeView = RasterModeTopView(self)
-        self.hapticModeView = HapticModeTopView(self)
+        self.initialScanTopView = InitialScanTopView(self)
+        self.rasterModeTopView = RasterModeTopView(self)
+        self.hapticModeTopView = HapticModeTopView(self)
+
+        self.initialScanBottomView = InitialScanBottomView(self)
+        self.rasterModeBottomView = RasterModeBottomView(self)
+        self.hapticModeBottomView = HapticModeBottomView(self)
 
         self.hStack = QHBoxLayout()
         self.vStack.addLayout(self.hStack)
@@ -60,27 +64,38 @@ class ScanSettingsDetailView(QWidget):
         self.channelsView = ChannelsView(self)
         self.hStack.addWidget(self.channelsView)
 
-        self.hStack.addWidget(self.initialScanView)
-        self.hStack.addWidget(self.rasterModeView)
-        self.hStack.addWidget(self.hapticModeView)
-        self.initialScanView.show()
+        self.hStack.addWidget(self.initialScanTopView)
+        self.hStack.addWidget(self.rasterModeTopView)
+        self.hStack.addWidget(self.hapticModeTopView)
+        self.initialScanTopView.show()
 
-        self.vStack.addStretch()
+        self.vStack.addWidget(self.initialScanBottomView)
+        self.vStack.addWidget(self.rasterModeBottomView)
+        self.vStack.addWidget(self.hapticModeBottomView)
+        self.initialScanBottomView.show()
 
         self.setLayout(zStack)
         self.hide()
 
     def changeScanMode(self):
         self.scanMode = self.scanModePicker.currentText()
-        self.rasterModeView.hide()
-        self.initialScanView.hide()
-        self.hapticModeView.hide()
+
+        self.rasterModeTopView.hide()
+        self.rasterModeBottomView.hide()
+        self.initialScanTopView.hide()
+        self.initialScanBottomView.hide()
+        self.hapticModeTopView.hide()
+        self.hapticModeBottomView.hide()
+
         if self.scanMode == "Initial scan":
-            self.initialScanView.show()
+            self.initialScanTopView.show()
+            self.initialScanBottomView.show()
         elif self.scanMode == "Raster mode":
-            self.rasterModeView.show()
+            self.rasterModeTopView.show()
+            self.rasterModeBottomView.show()
         elif self.scanMode == "Haptic mode":
-            self.hapticModeView.show()
+            self.hapticModeTopView.show()
+            self.hapticModeBottomView.show()
 
 
 class ChannelsView(QWidget):
@@ -95,10 +110,10 @@ class ChannelsView(QWidget):
 
         self.scrollArea = QScrollArea(self)
         self.scrollArea.setFixedWidth(300)
-        self.scrollArea.setFixedHeight(250)
+        self.scrollArea.setFixedHeight(200)
         dummyLayout.addWidget(self.scrollArea)
 
-        self.setFixedHeight(300)
+        self.setFixedHeight(250)
         self.setFixedWidth(300)
 
         self.mainContainer = QWidget(self)
@@ -172,12 +187,46 @@ class InitialScanTopView(QWidget):
     def __init__(self, parent: ScanSettingsDetailView):
         super().__init__(parent)
 
-        vStack = QVBoxLayout()
-        vStack.setContentsMargins(0, 0, 0, 0)
-        vStack.addWidget(Color(MacColoursDark.green))
-        self.setLayout(vStack)
+        zStack = QStackedLayout()
+        zStack.setStackingMode(QStackedLayout.StackingMode.StackAll)
 
-        self.setFixedHeight(300)
+        zStack.addWidget(Color(MacColoursDark.green))
+
+        vContainer = QWidget()
+        vStack = QVBoxLayout()
+        vContainer.setLayout(vStack)
+
+        vStack.addWidget(QLabel("Initial Scan Top View"))
+        vStack.addStretch()
+
+        zStack.addWidget(vContainer)
+
+        self.setLayout(zStack)
+
+        self.setFixedHeight(250)
+
+        self.hide()
+
+
+class InitialScanBottomView(QWidget):
+    def __init__(self, parent: ScanSettingsDetailView):
+        super().__init__(parent)
+
+        zStack = QStackedLayout()
+        zStack.setStackingMode(QStackedLayout.StackingMode.StackAll)
+
+        zStack.addWidget(Color(MacColoursDark.green))
+
+        vContainer = QWidget()
+        vStack = QVBoxLayout()
+        vContainer.setLayout(vStack)
+
+        vStack.addWidget(QLabel("Initial Scan Bottom View"))
+        vStack.addStretch()
+
+        zStack.addWidget(vContainer)
+
+        self.setLayout(zStack)
 
         self.hide()
 
@@ -186,12 +235,46 @@ class RasterModeTopView(QWidget):
     def __init__(self, parent: ScanSettingsDetailView):
         super().__init__(parent)
 
-        vStack = QVBoxLayout()
-        vStack.setContentsMargins(0, 0, 0, 0)
-        vStack.addWidget(Color(MacColoursDark.red))
-        self.setLayout(vStack)
+        zStack = QStackedLayout()
+        zStack.setStackingMode(QStackedLayout.StackingMode.StackAll)
 
-        self.setFixedHeight(300)
+        zStack.addWidget(Color(MacColoursDark.red))
+
+        vContainer = QWidget()
+        vStack = QVBoxLayout()
+        vContainer.setLayout(vStack)
+
+        vStack.addWidget(QLabel("Raster Mode Top View"))
+        vStack.addStretch()
+
+        zStack.addWidget(vContainer)
+
+        self.setLayout(zStack)
+
+        self.setFixedHeight(250)
+
+        self.hide()
+
+
+class RasterModeBottomView(QWidget):
+    def __init__(self, parent: ScanSettingsDetailView):
+        super().__init__(parent)
+
+        zStack = QStackedLayout()
+        zStack.setStackingMode(QStackedLayout.StackingMode.StackAll)
+
+        zStack.addWidget(Color(MacColoursDark.red))
+
+        vContainer = QWidget()
+        vStack = QVBoxLayout()
+        vContainer.setLayout(vStack)
+
+        vStack.addWidget(QLabel("Raster Mode Bottom View"))
+        vStack.addStretch()
+
+        zStack.addWidget(vContainer)
+
+        self.setLayout(zStack)
 
         self.hide()
 
@@ -200,11 +283,45 @@ class HapticModeTopView(QWidget):
     def __init__(self, parent: ScanSettingsDetailView):
         super().__init__(parent)
 
-        vStack = QVBoxLayout()
-        vStack.setContentsMargins(0, 0, 0, 0)
-        vStack.addWidget(Color(MacColoursDark.cyan))
-        self.setLayout(vStack)
+        zStack = QStackedLayout()
+        zStack.setStackingMode(QStackedLayout.StackingMode.StackAll)
 
-        self.setFixedHeight(300)
+        zStack.addWidget(Color(MacColoursDark.cyan))
+
+        vContainer = QWidget()
+        vStack = QVBoxLayout()
+        vContainer.setLayout(vStack)
+
+        vStack.addWidget(QLabel("Haptic Mode Top View"))
+        vStack.addStretch()
+
+        zStack.addWidget(vContainer)
+
+        self.setLayout(zStack)
+
+        self.setFixedHeight(250)
+
+        self.hide()
+
+
+class HapticModeBottomView(QWidget):
+    def __init__(self, parent: ScanSettingsDetailView):
+        super().__init__(parent)
+
+        zStack = QStackedLayout()
+        zStack.setStackingMode(QStackedLayout.StackingMode.StackAll)
+
+        zStack.addWidget(Color(MacColoursDark.cyan))
+
+        vContainer = QWidget()
+        vStack = QVBoxLayout()
+        vContainer.setLayout(vStack)
+
+        vStack.addWidget(QLabel("Haptic Mode Bottom View"))
+        vStack.addStretch()
+
+        zStack.addWidget(vContainer)
+
+        self.setLayout(zStack)
 
         self.hide()
