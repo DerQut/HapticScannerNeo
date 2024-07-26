@@ -72,6 +72,8 @@ class ScanSettingsDetailView(QWidget):
         self.vStack.addWidget(self.initialScanBottomView)
         self.vStack.addWidget(self.rasterModeBottomView)
         self.vStack.addWidget(self.hapticModeBottomView)
+        self.vStack.addStretch()
+
         self.initialScanBottomView.show()
 
         self.setLayout(zStack)
@@ -220,16 +222,34 @@ class InitialScanBottomView(QWidget):
         mainView = QWidget(self)
         mainVStack = QVBoxLayout()
         mainView.setLayout(mainVStack)
-        mainView.setMinimumHeight(325)
+        mainView.setMinimumWidth(755)
 
-        mainVStack.addWidget(QLabel("Initial Scan Bottom View"))
-        mainVStack.addStretch()
+        nameHStack = QHBoxLayout()
+        nameHStack.addWidget(QLabel("Scan name:"))
+        nameHStack.addStretch()
+        self.nameField = QLineEdit()
+        nameHStack.addWidget(self.nameField)
+
+        buttonHStack = QHBoxLayout()
+        self.startButton = QPushButton("Start")
+        self.startButton.setStyleSheet(f"background-color: rgba{QPalette().accent().color().getRgb()};")
+        self.stopButton = QPushButton("Stop")
+        self.stopButton.setEnabled(False)
+        buttonHStack.addWidget(self.startButton)
+        buttonHStack.addWidget(self.stopButton)
+
+        mainVStack.addLayout(nameHStack)
+        spacer = QWidget()
+        spacer.setFixedHeight(20)
+        mainVStack.addWidget(spacer)
+        mainVStack.addLayout(buttonHStack)
 
         scrollArea = QScrollArea(self)
         scrollArea.setWidget(mainView)
 
         dummyLayout.addWidget(scrollArea)
         self.hide()
+        self.setFixedHeight(177)
 
 
 class RasterModeTopView(QWidget):
