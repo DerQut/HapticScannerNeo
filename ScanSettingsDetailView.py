@@ -42,7 +42,7 @@ class ScanSettingsDetailView(QWidget):
         scanModeHStack = QHBoxLayout()
         scanModeHStack.addWidget(QLabel("Scan mode:"))
         scanModeHStack.addStretch()
-        self.scanModePicker = QComboBox()
+        self.scanModePicker = QComboBox(self)
         self.scanModePicker.addItems(["Initial scan", "Raster mode", "Haptic mode"])
         self.scanModePicker.setFixedWidth(240)
         self.scanModePicker.currentIndexChanged.connect(self.changeScanMode)
@@ -159,7 +159,7 @@ class ChannelEntryView(QWidget):
         self.toggle.clicked.connect(self.sendEnabled)
 
     def summonWindow(self):
-        ...
+        print(self.channel.name)
 
     def sendName(self):
         self.channel.name = self.textEntry.text()
