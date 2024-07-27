@@ -215,6 +215,8 @@ class InitialScanBottomView(QWidget):
     def __init__(self, parent: ScanSettingsDetailView):
         super().__init__(parent)
 
+        self.parent = parent
+
         dummyLayout = QVBoxLayout()
         dummyLayout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(dummyLayout)
@@ -250,6 +252,21 @@ class InitialScanBottomView(QWidget):
         dummyLayout.addWidget(scrollArea)
         self.hide()
         self.setFixedHeight(177)
+
+        self.startButton.clicked.connect(self.startInitialScan)
+        self.stopButton.clicked.connect(self.stopInitialScan)
+
+    def startInitialScan(self):
+        self.parent.scanModePicker.setEnabled(False)
+        self.startButton.setEnabled(False)
+        self.stopButton.setEnabled(True)
+        self.nameField.setEnabled(False)
+
+    def stopInitialScan(self):
+        self.parent.scanModePicker.setEnabled(True)
+        self.startButton.setEnabled(True)
+        self.stopButton.setEnabled(False)
+        self.nameField.setEnabled(True)
 
 
 class RasterModeTopView(QWidget):
