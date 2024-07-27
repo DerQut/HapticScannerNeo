@@ -76,11 +76,43 @@ class ScanSettingsDetailView(QWidget):
 
         self.initialScanBottomView.show()
 
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.pollServerStatus)
+        self.timer.setInterval(500)
+
         self.setLayout(zStack)
         self.hide()
 
+    def hide(self):
+        super().hide()
+        self.timer.stop()
+
+    def show(self):
+        super().show()
+        self.timer.start()
+
+    def lockInputs(self):
+        self.scanModePicker.setEnabled(False)
+
+        self.initialScanBottomView.nameField.setEnabled(False)
+        self.initialScanBottomView.startButton.setEnabled(False)
+        self.initialScanBottomView.stopButton.setEnabled(True)
+        ...
+
+    def unlockInputs(self):
+        self.scanModePicker.setEnabled(True)
+
+        self.initialScanBottomView.nameField.setEnabled(True)
+        self.initialScanBottomView.startButton.setEnabled(True)
+        self.initialScanBottomView.stopButton.setEnabled(False)
+
+    def pollServerStatus(self):
+        if self.server.getBusy():
+            self.lockInputs()
+        else:
+            self.unlockInputs()
+
     def changeScanMode(self):
-        print(self.initialScanBottomView.size())
         self.scanMode = self.scanModePicker.currentText()
 
         self.rasterModeTopView.hide()
@@ -257,16 +289,12 @@ class InitialScanBottomView(QWidget):
         self.stopButton.clicked.connect(self.stopInitialScan)
 
     def startInitialScan(self):
-        self.parent.scanModePicker.setEnabled(False)
-        self.startButton.setEnabled(False)
-        self.stopButton.setEnabled(True)
-        self.nameField.setEnabled(False)
+        self.parent.lockInputs()
+        self.parent.server.startInitialScan()
 
     def stopInitialScan(self):
-        self.parent.scanModePicker.setEnabled(True)
-        self.startButton.setEnabled(True)
-        self.stopButton.setEnabled(False)
-        self.nameField.setEnabled(True)
+        self.parent.unlockInputs()
+        self.parent.server.stopInitialScan()
 
 
 class RasterModeTopView(QWidget):

@@ -19,6 +19,8 @@ class ServerNeo(QObject):
 
         self.channels = []
 
+        self.isBusy = False
+
         if not os.path.isfile("config.xml"):
             missingXMLFallback()
 
@@ -239,6 +241,14 @@ class ServerNeo(QObject):
 
         tree.write("config.xml")
 
+    def startInitialScan(self):
+        self.isBusy = True
+        ...
+
+    def stopInitialScan(self):
+        self.isBusy = False
+        ...
+
     def getCE(self):
         # THIS IS A TEMPORARY FUNCTION
         return random.randrange(0, 1000000, 1) / 10001
@@ -246,6 +256,10 @@ class ServerNeo(QObject):
     def getCV(self):
         # THIS IS A TEMPORARY FUNCTION
         return random.randrange(0, 1000000, 1) / 10001
+
+    def getBusy(self):
+        # THIS IS A TEMPORARY FUNCTION
+        return self.isBusy
 
     def getOnlinePID(self):
         # THIS IS A TEMPORARY FUNCTION
