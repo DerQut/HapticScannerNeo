@@ -221,24 +221,33 @@ class InitialScanTopView(QWidget):
     def __init__(self, parent: ScanSettingsDetailView):
         super().__init__(parent)
 
-        zStack = QStackedLayout()
-        zStack.setStackingMode(QStackedLayout.StackingMode.StackAll)
-
-        zStack.addWidget(Color(MacColoursDark.green))
-
-        vContainer = QWidget()
-        vStack = QVBoxLayout()
-        vContainer.setLayout(vStack)
-
-        vStack.addWidget(QLabel("Initial Scan Top View"))
-        vStack.addStretch()
-
-        zStack.addWidget(vContainer)
-
-        self.setLayout(zStack)
-
+        self.parent = parent
         self.setFixedHeight(250)
 
+        dummyLayout = QVBoxLayout()
+        dummyLayout.setContentsMargins(0, 0, 0, 0)
+        self.setLayout(dummyLayout)
+
+        mainView = QWidget(self)
+        mainVStack = QVBoxLayout()
+        mainView.setLayout(mainVStack)
+
+        modeHStack = QHBoxLayout()
+        modeHStack.addWidget(QLabel("Operating mode:"))
+        modeHStack.addStretch()
+        self.modePicker = QComboBox()
+        self.modePicker.addItems(["Lissajous curve", "Sine", "Other"])
+        self.modePicker.setFixedWidth(200)
+        modeHStack.addWidget(self.modePicker)
+        mainVStack.addLayout(modeHStack)
+
+        mainVStack.addStretch()
+
+        scrollArea = QScrollArea(self)
+        scrollArea.setWidgetResizable(True)
+        scrollArea.setWidget(mainView)
+
+        dummyLayout.addWidget(scrollArea)
         self.hide()
 
 
