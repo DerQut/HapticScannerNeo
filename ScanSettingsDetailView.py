@@ -72,7 +72,6 @@ class ScanSettingsDetailView(QWidget):
         self.vStack.addWidget(self.initialScanBottomView)
         self.vStack.addWidget(self.rasterModeBottomView)
         self.vStack.addWidget(self.hapticModeBottomView)
-        self.vStack.addStretch()
 
         self.initialScanBottomView.show()
 
@@ -256,7 +255,6 @@ class InitialScanBottomView(QWidget):
         mainView = QWidget(self)
         mainVStack = QVBoxLayout()
         mainView.setLayout(mainVStack)
-        mainView.setMinimumWidth(755)
 
         nameHStack = QHBoxLayout()
         nameHStack.addWidget(QLabel("Scan name:"))
@@ -273,17 +271,15 @@ class InitialScanBottomView(QWidget):
         buttonHStack.addWidget(self.stopButton)
 
         mainVStack.addLayout(nameHStack)
-        spacer = QWidget()
-        spacer.setFixedHeight(20)
-        mainVStack.addWidget(spacer)
+        mainVStack.addStretch()
         mainVStack.addLayout(buttonHStack)
 
         scrollArea = QScrollArea(self)
+        scrollArea.setWidgetResizable(True)
         scrollArea.setWidget(mainView)
 
         dummyLayout.addWidget(scrollArea)
         self.hide()
-        self.setFixedHeight(177)
 
         self.startButton.clicked.connect(self.startInitialScan)
         self.stopButton.clicked.connect(self.stopInitialScan)
