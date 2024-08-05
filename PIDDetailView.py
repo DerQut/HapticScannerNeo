@@ -219,8 +219,6 @@ class PIDDetailView(QWidget):
         logFileAppend(self.server.logFile, f"New PID settings applied: Kp: {self.server.proportionalGain} in range ({self.server.proportionalGainLowerBound} ; {self.server.proportionalGainUpperBound}), Ki: {self.server.integralGain} in range ({self.server.integralGainLowerBound} ; {self.server.integralGainUpperBound}), Kd: {self.server.differentialGain} in range ({self.server.differentialGainLowerBound} ; {self.server.differentialGainUpperBound}), pidSetpoint: {self.server.pidSetpoint} in range ({self.server.pidSetpointLowerBound} ; {self.server.pidSetpointUpperBound}), isPIDOnline: {self.server.isPIDOnline}")
         if self.isPIDOnlineCheckBox.isChecked():
             self.onlinePIDTimer.start()
-        else:
-            self.onlinePIDTimer.stop()
 
     def applyGain(self):
         self.sendGainToServer()
@@ -234,6 +232,9 @@ class PIDDetailView(QWidget):
         self.proportionalGainSpinBox.setDisabled(self.isPIDOnlineCheckBox.isChecked())
         self.integralGainSpinBox.setDisabled(self.isPIDOnlineCheckBox.isChecked())
         self.differentialGainSpinBox.setDisabled(self.isPIDOnlineCheckBox.isChecked())
+
+        if not self.isPIDOnlineCheckBox.isChecked():
+            self.onlinePIDTimer.stop()
 
     def setReadout(self):
         self.CEReadout.setText(str(self.server.getCE()))
