@@ -230,6 +230,7 @@ class InitialScanTopView(QWidget):
 
         mainView = QWidget(self)
         mainVStack = QVBoxLayout()
+        mainVStack.setSpacing(16)
         mainView.setLayout(mainVStack)
 
         modeHStack = QHBoxLayout()
@@ -240,6 +241,24 @@ class InitialScanTopView(QWidget):
         self.modePicker.setFixedWidth(200)
         modeHStack.addWidget(self.modePicker)
         mainVStack.addLayout(modeHStack)
+
+        mainVStack.addWidget(Divider(MacColoursDark.gray))
+
+        densityHStack = QHBoxLayout()
+        densityHStack.addWidget(QLabel("Curve density [%]:"))
+        self.densityStepper = QDoubleSpinBox()
+        self.densityStepper.setRange(0, 100)
+        self.densityStepper.setSingleStep(0.01)
+        densityHStack.addWidget(self.densityStepper)
+        mainVStack.addLayout(densityHStack)
+
+        speedHStack = QHBoxLayout()
+        speedHStack.addWidget(QLabel("Speed [%]:"))
+        self.speedStepper = QDoubleSpinBox()
+        self.speedStepper.setRange(0, 100)
+        self.speedStepper.setSingleStep(0.01)
+        speedHStack.addWidget(self.speedStepper)
+        mainVStack.addLayout(speedHStack)
 
         mainVStack.addStretch()
 
