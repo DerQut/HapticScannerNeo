@@ -90,6 +90,18 @@ class ScanSettingsDetailView(QWidget):
         super().show()
         self.timer.start()
 
+    def startInitialScan(self):
+        self.server.startInitialScan()
+
+    def stopInitialScan(self):
+        self.server.stopInitialScan()
+
+    def startRasterScan(self):
+        self.server.startRasterScan()
+
+    def stopRasterScan(self):
+        self.server.stopRasterScan()
+
     def lockInputs(self):
         self.scanModePicker.setEnabled(False)
 
@@ -314,11 +326,11 @@ class InitialScanBottomView(QWidget):
 
     def startInitialScan(self):
         self.parent.lockInputs()
-        self.parent.server.startInitialScan()
+        self.parent.startInitialScan()
 
     def stopInitialScan(self):
         self.parent.unlockInputs()
-        self.parent.server.stopInitialScan()
+        self.parent.stopInitialScan()
 
 
 class RasterModeTopView(QWidget):
@@ -348,7 +360,9 @@ class RasterModeTopView(QWidget):
 
 class RasterModeBottomView(QWidget):
     def __init__(self, parent: ScanSettingsDetailView):
-        super().__init__(parent)
+        super().__init__()
+
+        self.parent = parent
 
         dummyLayout = QVBoxLayout()
         dummyLayout.setContentsMargins(0, 0, 0, 0)
@@ -357,16 +371,42 @@ class RasterModeBottomView(QWidget):
         mainView = QWidget(self)
         mainVStack = QVBoxLayout()
         mainView.setLayout(mainVStack)
-        mainView.setMinimumHeight(325)
 
-        mainVStack.addWidget(QLabel("Raster Mode Bottom View"))
+        nameHStack = QHBoxLayout()
+        nameHStack.addWidget(QLabel("Scan name:"))
+        nameHStack.addStretch()
+        self.nameField = QLineEdit()
+        nameHStack.addWidget(self.nameField)
+
+        buttonHStack = QHBoxLayout()
+        self.startButton = QPushButton("Start")
+        self.startButton.setStyleSheet(f"background-color: rgba{QPalette().accent().color().getRgb()};")
+        self.stopButton = QPushButton("Stop")
+        self.stopButton.setEnabled(False)
+        buttonHStack.addWidget(self.startButton)
+        buttonHStack.addWidget(self.stopButton)
+
+        mainVStack.addLayout(nameHStack)
         mainVStack.addStretch()
+        mainVStack.addLayout(buttonHStack)
 
         scrollArea = QScrollArea(self)
+        scrollArea.setWidgetResizable(True)
         scrollArea.setWidget(mainView)
 
         dummyLayout.addWidget(scrollArea)
         self.hide()
+
+        self.startButton.clicked.connect(self.startRasterScan)
+        self.stopButton.clicked.connect(self.stopRasterScan)
+
+    def startRasterScan(self):
+        self.parent.lockInputs()
+        self.parent.startRasterScan()
+
+    def stopRasterScan(self):
+        self.parent.unlockInputs()
+        self.parent.stopRasterScan()
 
 
 class HapticModeTopView(QWidget):

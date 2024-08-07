@@ -249,6 +249,14 @@ class ServerNeo(QObject):
         self.isBusy = False
         ...
 
+    def startRasterScan(self):
+        self.isBusy = True
+        ...
+
+    def stopRasterScan(self):
+        self.isBusy = False
+        ...
+
     def getCE(self):
         # THIS IS A TEMPORARY FUNCTION
         return random.randrange(0, 1000000, 1) / 10001
