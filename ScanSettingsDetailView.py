@@ -417,6 +417,7 @@ class RasterModeBottomView(QWidget):
 
         mainView = QWidget(self)
         mainVStack = QVBoxLayout()
+        mainVStack.setSpacing(8)
         mainView.setLayout(mainVStack)
 
         nameHStack = QHBoxLayout()
@@ -432,6 +433,7 @@ class RasterModeBottomView(QWidget):
         self.progressBar = QProgressBar()
         self.progressBar.setMinimum(0)
         self.progressBar.setMaximum(100)
+        self.progressBar.setValue(0)
         self.progressBar.setFixedWidth(360)
         progressHStack.addWidget(self.progressBar)
 
@@ -444,6 +446,7 @@ class RasterModeBottomView(QWidget):
         buttonHStack.addWidget(self.stopButton)
 
         mainVStack.addLayout(nameHStack)
+        mainVStack.addWidget(Divider(MacColoursDark.gray))
         mainVStack.addLayout(progressHStack)
         mainVStack.addStretch()
         mainVStack.addLayout(buttonHStack)
