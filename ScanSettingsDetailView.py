@@ -239,6 +239,7 @@ class ChannelEntryView(QWidget):
 class ChannelPopupWindow(QMainWindow):
     def __init__(self, channelEntryView: ChannelEntryView):
         super().__init__()
+        self.hide()
 
         self.setWindowTitle(channelEntryView.channel.name)
         self.setFont(QFont("Helvetica", 12))
@@ -271,7 +272,6 @@ class ChannelPopupWindow(QMainWindow):
         zContainer.setLayout(zStack)
 
         self.setCentralWidget(zContainer)
-        self.hide()
 
 
 class InitialScanTopView(QWidget):
