@@ -192,6 +192,7 @@ class ChannelEntryView(QWidget):
         super().__init__(parent)
 
         self.channel = channel
+        self.number = number
 
         hStack = QHBoxLayout()
         self.setLayout(hStack)
@@ -217,16 +218,60 @@ class ChannelEntryView(QWidget):
         button.setFixedSize(QSize(24, 24))
         hStack.addWidget(button)
 
+        self.popupWindow = ChannelPopupWindow(self)
+
         self.toggle.clicked.connect(self.sendEnabled)
 
     def summonWindow(self):
-        print(self.channel.name)
+        self.popupWindow.show()
 
     def sendName(self):
         self.channel.name = self.textEntry.text()
+        if self.channel.name != "":
+            self.popupWindow.setWindowTitle(self.channel.name)
+        else:
+            self.popupWindow.setWindowTitle(f"Channel {self.number+1}")
 
     def sendEnabled(self):
         self.channel.isEnabled = self.toggle.isChecked()
+
+
+class ChannelPopupWindow(QMainWindow):
+    def __init__(self, channelEntryView: ChannelEntryView):
+        super().__init__()
+
+        self.setWindowTitle(channelEntryView.channel.name)
+        self.setFont(QFont("Helvetica", 12))
+
+        self.channelEntryView = channelEntryView
+        self.setFixedSize(QSize(400, 300))
+
+        zStack = QStackedLayout()
+        zStack.setStackingMode(QStackedLayout.StackingMode.StackAll)
+
+        color = Color(MacColoursDark.bg_colour)
+        zStack.addWidget(color)
+
+        vStack = QVBoxLayout()
+        vStack.setSpacing(15)
+
+        titleLabel = QLabel("ChannelPopupWindow")
+        titleLabel.setFont(QFont("Helvetica", 16))
+        vStack.addWidget(titleLabel)
+        vStack.addWidget(Divider(MacColoursDark.gray))
+
+        vStack.addStretch()
+
+        vContainer = QWidget(self)
+        vContainer.setLayout(vStack)
+
+        zStack.addWidget(vContainer)
+
+        zContainer = QWidget(self)
+        zContainer.setLayout(zStack)
+
+        self.setCentralWidget(zContainer)
+        self.hide()
 
 
 class InitialScanTopView(QWidget):
