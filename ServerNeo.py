@@ -274,6 +274,10 @@ class ServerNeo(QObject):
         # THIS IS A TEMPORARY FUNCTION
         return self.isBusy
 
+    def getRasterProgress(self):
+        # THIS IS A TEMPORARY FUNCTION
+        return random.randint(0, 100)
+
     def getOnlinePID(self):
         # THIS IS A TEMPORARY FUNCTION
         kp = random.randrange(0, 65535, 1)

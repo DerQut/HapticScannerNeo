@@ -102,26 +102,27 @@ class ScanSettingsDetailView(QWidget):
     def stopRasterScan(self):
         self.server.stopRasterScan()
 
-    def lockInputs(self):
-        self.scanModePicker.setEnabled(False)
+    def setInputsEnabled(self, enabled: bool):
+        self.scanModePicker.setEnabled(enabled)
 
-        self.initialScanBottomView.nameField.setEnabled(False)
-        self.initialScanBottomView.startButton.setEnabled(False)
-        self.initialScanBottomView.stopButton.setEnabled(True)
-        ...
+        self.initialScanBottomView.nameField.setEnabled(enabled)
+        self.initialScanBottomView.startButton.setEnabled(enabled)
+        self.initialScanBottomView.stopButton.setEnabled(not enabled)
 
-    def unlockInputs(self):
-        self.scanModePicker.setEnabled(True)
+        self.initialScanTopView.modePicker.setEnabled(enabled)
+        self.initialScanTopView.densityStepper.setEnabled(enabled)
+        self.initialScanTopView.speedStepper.setEnabled(enabled)
 
-        self.initialScanBottomView.nameField.setEnabled(True)
-        self.initialScanBottomView.startButton.setEnabled(True)
-        self.initialScanBottomView.stopButton.setEnabled(False)
+        self.rasterModeBottomView.nameField.setEnabled(enabled)
+        self.rasterModeBottomView.startButton.setEnabled(enabled)
+        self.rasterModeBottomView.stopButton.setEnabled(not enabled)
 
     def pollServerStatus(self):
         if self.server.getBusy():
-            self.lockInputs()
+            self.setInputsEnabled(False)
+            self.rasterModeBottomView.progressBar.setValue(self.server.getRasterProgress())
         else:
-            self.unlockInputs()
+            self.setInputsEnabled(True)
 
     def changeScanMode(self):
         self.scanMode = self.scanModePicker.currentText()
@@ -370,11 +371,11 @@ class InitialScanBottomView(QWidget):
         self.stopButton.clicked.connect(self.stopInitialScan)
 
     def startInitialScan(self):
-        self.parent.lockInputs()
+        self.parent.setInputsEnabled(False)
         self.parent.startInitialScan()
 
     def stopInitialScan(self):
-        self.parent.unlockInputs()
+        self.parent.setInputsEnabled(True)
         self.parent.stopInitialScan()
 
 
@@ -421,7 +422,17 @@ class RasterModeBottomView(QWidget):
         nameHStack.addWidget(QLabel("Scan name:"))
         nameHStack.addStretch()
         self.nameField = QLineEdit()
+        self.nameField.setFixedWidth(360)
         nameHStack.addWidget(self.nameField)
+
+        progressHStack = QHBoxLayout()
+        progressHStack.addWidget(QLabel("Progress:"))
+        progressHStack.addStretch()
+        self.progressBar = QProgressBar()
+        self.progressBar.setMinimum(0)
+        self.progressBar.setMaximum(100)
+        self.progressBar.setFixedWidth(360)
+        progressHStack.addWidget(self.progressBar)
 
         buttonHStack = QHBoxLayout()
         self.startButton = QPushButton("Start")
@@ -432,6 +443,7 @@ class RasterModeBottomView(QWidget):
         buttonHStack.addWidget(self.stopButton)
 
         mainVStack.addLayout(nameHStack)
+        mainVStack.addLayout(progressHStack)
         mainVStack.addStretch()
         mainVStack.addLayout(buttonHStack)
 
@@ -446,11 +458,11 @@ class RasterModeBottomView(QWidget):
         self.stopButton.clicked.connect(self.stopRasterScan)
 
     def startRasterScan(self):
-        self.parent.lockInputs()
+        self.parent.setInputsEnabled(False)
         self.parent.startRasterScan()
 
     def stopRasterScan(self):
-        self.parent.unlockInputs()
+        self.parent.setInputsEnabled(True)
         self.parent.stopRasterScan()
 
 
