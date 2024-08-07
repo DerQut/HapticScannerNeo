@@ -15,7 +15,7 @@ class DetailView(QWidget):
         zStack = QStackedLayout()
 
         vStack = QVBoxLayout()
-        logField = QLabel("Welcome to HapticScannerNeo! - Marcel Chołodecki")
+        logField = QLabel("Welcome to HapticScannerNeo! - Marcel Chołodecki 275818")
         logField.setWordWrap(True)
         vStack.addWidget(logField)
 
