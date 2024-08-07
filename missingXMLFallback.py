@@ -1,8 +1,12 @@
+import os
+
+
 def missingXMLFallback():
     f = open("config.xml", "w+")
-    f.write("""<data>
+    f.write(f"""<data>
     <config>
-        <savedir>C:/PomiaryHaptyczne/</savedir>
+        <winsavedir>C:/PomiaryHaptyczne/</winsavedir>
+        <nixsavedir>{os.path.expanduser('~/Desktop/PomiaryHaptyczne/')}</nixsavedir>
         <host>192.168.1.103</host>
         <port>8881</port>
         <createnewfolder>1</createnewfolder>

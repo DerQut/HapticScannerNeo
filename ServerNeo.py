@@ -1,6 +1,7 @@
 import random
 import socket
 import os
+from sys import platform
 import threading
 from datetime import datetime
 from PyQt6.QtCore import QObject, QThread, pyqtSignal
@@ -66,7 +67,9 @@ class ServerNeo(QObject):
 
             elif child.tag == "config":
                 for superchild in child:
-                    if superchild.tag == "savedir":
+                    if superchild.tag == "winsavedir" and platform == "win32":
+                        self.saveDir = superchild.text
+                    elif superchild.tag == "nixsavedir" and platform in ["linux", "darwin", "linux2"]:
                         self.saveDir = superchild.text
                     elif superchild.tag == "host":
                         self.host = superchild.text
@@ -164,7 +167,9 @@ class ServerNeo(QObject):
                 continue
 
             for key in child:
-                if key.tag == "savedir":
+                if key.tag == "nixsavedir" and platform in ["darwin", "linux", "linux2"]:
+                    key.text = self.saveDir
+                elif key.tag == "winsavedir" and platform == "win32":
                     key.text = self.saveDir
                 elif key.tag == "host":
                     key.text = self.host
