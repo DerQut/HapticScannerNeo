@@ -18,6 +18,7 @@ class LogView(QWidget):
         self.setLayout(self.vStack)
 
         self.scrollArea = QScrollArea()
+        self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setWidget(QLabel())
 
         self.vStack.addWidget(self.scrollArea)
@@ -57,7 +58,6 @@ class LogView(QWidget):
 
         container = QWidget()
         container.setLayout(vStack)
-        container.setFixedWidth(1600)
         self.scrollArea.setWidget(container)
         self.scrollArea.horizontalScrollBar().setValue(xBuffer)
         self.scrollArea.verticalScrollBar().setValue(self.scrollArea.widget().height() - self.scrollArea.verticalScrollBar().height() if shouldPush else yBuffer)
