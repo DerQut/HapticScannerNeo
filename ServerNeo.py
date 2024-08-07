@@ -89,6 +89,7 @@ class ServerNeo(QObject):
                             name = key.text
                         elif key.tag == 'gain':
                             gain = float(key.text)
+                            print(gain)
                     self.channels.append(ScanChannel(name, gain))
 
         self.logFile = ""
@@ -230,7 +231,7 @@ class ServerNeo(QObject):
         tree.write("config.xml")
 
     def writeChannelsXML(self):
-        logFileAppend(self.logFile, "Saving channel names and gains to config.xml...")
+        logFileAppend(self.logFile, "Saving channel names and gain settings to config.xml...")
         tree = ET.parse('config.xml')
         root = tree.getroot()
         for child in root:
@@ -242,7 +243,8 @@ class ServerNeo(QObject):
                     if key.tag == "name":
                         key.text = self.channels[int(superchild.attrib.get("id"))-1].name
                     elif key.tag == "gain":
-                        key.text = str(float(self.channels[int(superchild.attrib.get("id"))-1].gain))
+                        gain = self.channels[int(superchild.attrib.get("id"))-1].gain
+                        key.text = str(float(gain)) if gain < 1 else str(int(gain))
 
         tree.write("config.xml")
 

@@ -218,7 +218,13 @@ class ChannelEntryView(QWidget):
             "8x",
             "16x"
         ])
-        self.gainPicker.setCurrentText("Disabled" if self.channel.gain == 0 else f"{self.channel.gain}x")
+
+        if self.channel.gain < 1:
+            self.gainPicker.setCurrentText(f"{self.channel.gain}x" if self.channel.gain > 0 else "Disabled")
+        else:
+            self.gainPicker.setCurrentText(f"{int(self.channel.gain)}x")
+
+        self.gainPicker.setCurrentText("Disabled" if self.channel.gain == 0 else (f"{self.channel.gain}x") if self.channel.gain < 1 else f"{int(self.channel.gain)}x")
         self.gainPicker.currentIndexChanged.connect(self.setGain)
         hStack.addWidget(self.gainPicker)
 

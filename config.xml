@@ -32,7 +32,7 @@
 
     <channels>
         <channel id="1">
-            <gain>1.0</gain>
+            <gain>0.0</gain>
             <name>Channel 1</name>
         </channel>
         <channel id="2">
@@ -44,31 +44,31 @@
             <name>Channel 3</name>
         </channel>
         <channel id="4">
-            <gain>16.0</gain>
+            <gain>16</gain>
             <name>Channel 4</name>
         </channel>
         <channel id="5">
-            <gain>1.0</gain>
+            <gain>1</gain>
             <name>Channel 5</name>
         </channel>
         <channel id="6">
-            <gain>1.0</gain>
+            <gain>1</gain>
             <name>Channel 6</name>
         </channel>
         <channel id="7">
-            <gain>1.0</gain>
+            <gain>1</gain>
             <name>Channel 7</name>
         </channel>
         <channel id="8">
-            <gain>1.0</gain>
+            <gain>1</gain>
             <name>Channel 8</name>
         </channel>
         <channel id="9">
-            <gain>1.0</gain>
+            <gain>1</gain>
             <name>Channel 9</name>
         </channel>
         <channel id="10">
-            <gain>1.0</gain>
+            <gain>1</gain>
             <name>Channel 10</name>
         </channel>
     </channels>
