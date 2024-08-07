@@ -1,5 +1,5 @@
 class ScanChannel:
-    def __init__(self, name: str, isEnabled: bool):
+    def __init__(self, name: str, gain: float):
         self.name = name
-        self.isEnabled = isEnabled
+        self.gain = gain
         self.scanPoints = []

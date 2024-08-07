@@ -37,43 +37,43 @@ def missingXMLFallback():
 
     <channels>
         <channel id="1">
-            <enabled>1</enabled>
+            <gain>1</gain>
             <name>Channel 1</name>
         </channel>
         <channel id="2">
-            <enabled>1</enabled>
+            <gain>1</gain>
             <name>Channel 2</name>
         </channel>
         <channel id="3">
-            <enabled>1</enabled>
+            <gain>1</gain>
             <name>Channel 3</name>
         </channel>
         <channel id="4">
-            <enabled>1</enabled>
+            <gain>1</gain>
             <name>Channel 4</name>
         </channel>
         <channel id="5">
-            <enabled>1</enabled>
+            <gain>1</gain>
             <name>Channel 5</name>
         </channel>
         <channel id="6">
-            <enabled>1</enabled>
+            <gain>1</gain>
             <name>Channel 6</name>
         </channel>
         <channel id="7">
-            <enabled>1</enabled>
+            <gain>1</gain>
             <name>Channel 7</name>
         </channel>
         <channel id="8">
-            <enabled>1</enabled>
+            <gain>1</gain>
             <name>Channel 8</name>
         </channel>
         <channel id="9">
-            <enabled>1</enabled>
+            <gain>1</gain>
             <name>Channel 9</name>
         </channel>
         <channel id="10">
-            <enabled>1</enabled>
+            <gain>1</gain>
             <name>Channel 10</name>
         </channel>
     </channels>

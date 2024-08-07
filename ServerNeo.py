@@ -82,14 +82,14 @@ class ServerNeo(QObject):
 
             elif child.tag == "channels":
                 for superchild in child:
-                    enabled = None
+                    gain = None
                     name = None
                     for key in superchild:
                         if key.tag == 'name':
                             name = key.text
-                        elif key.tag == 'enabled':
-                            enabled = bool(int(key.text))
-                    self.channels.append(ScanChannel(name, enabled))
+                        elif key.tag == 'gain':
+                            gain = float(key.text)
+                    self.channels.append(ScanChannel(name, gain))
 
         self.logFile = ""
         self.reInitialiseLogFile()
@@ -230,7 +230,7 @@ class ServerNeo(QObject):
         tree.write("config.xml")
 
     def writeChannelsXML(self):
-        logFileAppend(self.logFile, "Saving channel names to config.xml...")
+        logFileAppend(self.logFile, "Saving channel names and gains to config.xml...")
         tree = ET.parse('config.xml')
         root = tree.getroot()
         for child in root:
@@ -241,24 +241,28 @@ class ServerNeo(QObject):
                 for key in superchild:
                     if key.tag == "name":
                         key.text = self.channels[int(superchild.attrib.get("id"))-1].name
-                    elif key.tag == "enabled":
-                        key.text = str(int(self.channels[int(superchild.attrib.get("id"))-1].isEnabled))
+                    elif key.tag == "gain":
+                        key.text = str(float(self.channels[int(superchild.attrib.get("id"))-1].gain))
 
         tree.write("config.xml")
 
     def startInitialScan(self):
+        logFileAppend(self.logFile, "Starting initial scan...")
         self.isBusy = True
         ...
 
     def stopInitialScan(self):
+        logFileAppend(self.logFile, "Stopping initial scan...")
         self.isBusy = False
         ...
 
     def startRasterScan(self):
+        logFileAppend(self.logFile, "Starting raster scan...")
         self.isBusy = True
         ...
 
     def stopRasterScan(self):
+        logFileAppend(self.logFile, "Stopping raster scan...")
         self.isBusy = False
         ...
 

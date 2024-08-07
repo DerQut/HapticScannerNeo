@@ -161,15 +161,15 @@ class ChannelsView(QWidget):
         self.setLayout(dummyLayout)
 
         self.scrollArea = QScrollArea(self)
-        self.scrollArea.setFixedWidth(300)
+        self.scrollArea.setFixedWidth(340)
         self.scrollArea.setFixedHeight(200)
         dummyLayout.addWidget(self.scrollArea)
 
         self.setFixedHeight(250)
-        self.setFixedWidth(300)
+        self.setFixedWidth(340)
 
         self.mainContainer = QWidget(self)
-        self.mainContainer.setFixedWidth(280)
+        self.mainContainer.setFixedWidth(315)
 
         dummyLayout.addStretch()
 
@@ -203,18 +203,29 @@ class ChannelEntryView(QWidget):
         hStack = QHBoxLayout()
         self.setLayout(hStack)
 
-        self.toggle = QCheckBox()
-        self.toggle.setChecked(channel.isEnabled)
-        hStack.addWidget(self.toggle)
-
         numberLabel = QLabel(str(number + 1))
         numberLabel.setFixedWidth(25)
         hStack.addWidget(numberLabel)
 
+        self.gainPicker = QComboBox()
+        self.gainPicker.addItems([
+            "Disabled",
+            "0.25x",
+            "0.5x",
+            "1x",
+            "2x",
+            "4x",
+            "8x",
+            "16x"
+        ])
+        self.gainPicker.setCurrentText("Disabled" if self.channel.gain == 0 else f"{self.channel.gain}x")
+        self.gainPicker.currentIndexChanged.connect(self.setGain)
+        hStack.addWidget(self.gainPicker)
+
         self.textEntry = QLineEdit(self.channel.name)
         self.textEntry.textChanged.connect(self.sendName)
         hStack.addWidget(self.textEntry)
-        self.textEntry.setFixedWidth(175)
+        self.textEntry.setFixedWidth(125)
 
         hStack.addStretch()
 
@@ -226,8 +237,6 @@ class ChannelEntryView(QWidget):
 
         self.popupWindow = ChannelPopupWindow(self)
 
-        self.toggle.clicked.connect(self.sendEnabled)
-
     def summonWindow(self):
         self.popupWindow.show()
 
@@ -238,8 +247,14 @@ class ChannelEntryView(QWidget):
         else:
             self.popupWindow.setWindowTitle(f"Channel {self.number+1}")
 
-    def sendEnabled(self):
-        self.channel.isEnabled = self.toggle.isChecked()
+    def setGain(self):
+        if self.gainPicker.currentText() == "Disabled":
+            self.channel.gain = 0
+        else:
+            transformedText = list(self.gainPicker.currentText())
+            transformedText.pop()
+            gain = float(''.join(transformedText))
+            self.channel.gain = gain
 
 
 class ChannelPopupWindow(QMainWindow):
