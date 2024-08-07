@@ -117,6 +117,11 @@ class ScanSettingsDetailView(QWidget):
         self.rasterModeBottomView.startButton.setEnabled(enabled)
         self.rasterModeBottomView.stopButton.setEnabled(not enabled)
 
+        self.rasterModeTopView.modePicker.setEnabled(enabled)
+        self.rasterModeTopView.traceTimeStepper.setEnabled(enabled)
+        self.rasterModeTopView.retraceTimeStepper.setEnabled(enabled)
+        self.rasterModeTopView.intervalStepper.setEnabled(enabled)
+
     def pollServerStatus(self):
         if self.server.getBusy():
             self.setInputsEnabled(False)
@@ -384,24 +389,60 @@ class RasterModeTopView(QWidget):
     def __init__(self, parent: ScanSettingsDetailView):
         super().__init__(parent)
 
-        zStack = QStackedLayout()
-        zStack.setStackingMode(QStackedLayout.StackingMode.StackAll)
-
-        zStack.addWidget(Color(MacColoursDark.red))
-
-        vContainer = QWidget()
-        vStack = QVBoxLayout()
-        vContainer.setLayout(vStack)
-
-        vStack.addWidget(QLabel("Raster Mode Top View"))
-        vStack.addStretch()
-
-        zStack.addWidget(vContainer)
-
-        self.setLayout(zStack)
-
+        self.parent = parent
         self.setFixedHeight(250)
 
+        dummyLayout = QVBoxLayout()
+        dummyLayout.setContentsMargins(0, 0, 0, 0)
+        self.setLayout(dummyLayout)
+
+        mainView = QWidget(self)
+        mainVStack = QVBoxLayout()
+        mainVStack.setSpacing(16)
+        mainView.setLayout(mainVStack)
+
+        modeHStack = QHBoxLayout()
+        modeHStack.addWidget(QLabel("Operating mode:"))
+        modeHStack.addStretch()
+        self.modePicker = QComboBox()
+        self.modePicker.addItems(["Trigger mode", "Continuous mode"])
+        self.modePicker.setFixedWidth(200)
+        modeHStack.addWidget(self.modePicker)
+        mainVStack.addLayout(modeHStack)
+
+        mainVStack.addWidget(Divider(MacColoursDark.gray))
+
+        traceTimeHStack = QHBoxLayout()
+        traceTimeHStack.addWidget(QLabel("Trace time [ms]:"))
+        self.traceTimeStepper = QSpinBox()
+        self.traceTimeStepper.setRange(1, 1000)
+        self.traceTimeStepper.setValue(1)
+        traceTimeHStack.addWidget(self.traceTimeStepper)
+        mainVStack.addLayout(traceTimeHStack)
+
+        retraceTimeHStack = QHBoxLayout()
+        retraceTimeHStack.addWidget(QLabel("Retrace time [ms]:"))
+        self.retraceTimeStepper = QSpinBox()
+        self.retraceTimeStepper.setRange(1, 1000)
+        self.retraceTimeStepper.setValue(1)
+        retraceTimeHStack.addWidget(self.retraceTimeStepper)
+        mainVStack.addLayout(retraceTimeHStack)
+
+        intervalHStack = QHBoxLayout()
+        intervalHStack.addWidget(QLabel("Interval [ms]:"))
+        self.intervalStepper = QSpinBox()
+        self.intervalStepper.setRange(1, 1000)
+        self.intervalStepper.setValue(1)
+        intervalHStack.addWidget(self.intervalStepper)
+        mainVStack.addLayout(intervalHStack)
+
+        mainVStack.addStretch()
+
+        scrollArea = QScrollArea(self)
+        scrollArea.setWidgetResizable(True)
+        scrollArea.setWidget(mainView)
+
+        dummyLayout.addWidget(scrollArea)
         self.hide()
 
 
