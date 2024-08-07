@@ -346,6 +346,7 @@ class InitialScanBottomView(QWidget):
         nameHStack.addWidget(QLabel("Scan name:"))
         nameHStack.addStretch()
         self.nameField = QLineEdit()
+        self.nameField.setFixedWidth(360)
         nameHStack.addWidget(self.nameField)
 
         buttonHStack = QHBoxLayout()
