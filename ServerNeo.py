@@ -89,7 +89,6 @@ class ServerNeo(QObject):
                             name = key.text
                         elif key.tag == 'gain':
                             gain = float(key.text)
-                            print(gain)
                     self.channels.append(ScanChannel(name, gain))
 
         self.logFile = ""
