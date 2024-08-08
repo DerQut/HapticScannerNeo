@@ -36,11 +36,11 @@
             <name>Channel 1</name>
         </channel>
         <channel id="2">
-            <gain>0.5</gain>
+            <gain>4</gain>
             <name>Channel 2</name>
         </channel>
         <channel id="3">
-            <gain>0.25</gain>
+            <gain>0.5</gain>
             <name>Channel 3</name>
         </channel>
         <channel id="4">

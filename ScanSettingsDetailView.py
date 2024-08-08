@@ -194,8 +194,11 @@ class ChannelsView(QWidget):
 
 
 class ChannelEntryView(QWidget):
-    def __init__(self, parent: ScanSettingsDetailView, channel: ScanChannel, number: int):
-        super().__init__(parent)
+    def __init__(self, scanSettingsDetailView: ScanSettingsDetailView, channel: ScanChannel, number: int):
+        super().__init__()
+
+        self.scanSettingsDetailView = scanSettingsDetailView
+        self.scanSettingsDetailView.scanModePicker.currentTextChanged.connect(self.setGainsEnabled)
 
         self.channel = channel
         self.number = number
@@ -218,6 +221,8 @@ class ChannelEntryView(QWidget):
             "8x",
             "16x"
         ])
+
+        self.setGainsEnabled()
 
         if self.channel.gain < 1:
             self.gainPicker.setCurrentText(f"{self.channel.gain}x" if self.channel.gain > 0 else "Disabled")
@@ -245,6 +250,10 @@ class ChannelEntryView(QWidget):
 
     def summonWindow(self):
         self.popupWindow.show()
+
+    def setGainsEnabled(self):
+        enabled = False if self.scanSettingsDetailView.scanModePicker.currentText() == "Initial scan" else True
+        self.gainPicker.setEnabled(enabled)
 
     def sendName(self):
         self.channel.name = self.textEntry.text()
