@@ -91,13 +91,13 @@ class ScanSettingsDetailView(QWidget):
         self.timer.start()
 
     def startInitialScan(self):
-        self.server.startInitialScan()
+        self.server.startInitialScan(self.initialScanBottomView.nameField.text(), self.initialScanTopView.modePicker.currentText(), self.initialScanTopView.densityStepper.value(), self.initialScanTopView.speedStepper.value())
 
     def stopInitialScan(self):
         self.server.stopInitialScan()
 
     def startRasterScan(self):
-        self.server.startRasterScan()
+        self.server.startRasterScan(self.rasterModeBottomView.nameField.text(), self.rasterModeTopView.modePicker.currentText(), self.rasterModeTopView.traceTimeStepper.value(), self.rasterModeTopView.retraceTimeStepper.value(), self.rasterModeTopView.intervalStepper.value())
 
     def stopRasterScan(self):
         self.server.stopRasterScan()

@@ -206,8 +206,8 @@ class ServerNeo(QObject):
 
         tree.write("config.xml")
 
-    def startInitialScan(self):
-        logFileAppend(self.logFile, "Starting initial scan...")
+    def startInitialScan(self, scanName: str, operatingMode: str, curveDensity: float, speed: float):
+        logFileAppend(self.logFile, f"Starting initial scan named \"{scanName}\" with given parameters: operatingMode=\"{operatingMode}\", curveDensity={curveDensity}%, speed={speed}%")
         self.isBusy = True
         ...
 
@@ -216,8 +216,8 @@ class ServerNeo(QObject):
         self.isBusy = False
         ...
 
-    def startRasterScan(self):
-        logFileAppend(self.logFile, "Starting raster scan...")
+    def startRasterScan(self, scanName: str, operatingMode: str, traceTime: int, retraceTime: int, interval: int):
+        logFileAppend(self.logFile, f"Starting raster scan named \"{scanName}\" with given parameters: operatingMode=\"{operatingMode}\", traceTime={traceTime}ms, retraceTime={retraceTime}ms, interval={interval}ms")
         self.isBusy = True
         ...
 
