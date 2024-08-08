@@ -18,87 +18,48 @@ class ServerNeo(QObject):
     def __init__(self):
         super().__init__()
 
-        self.channels = []
+        self.channels: [ScanChannel] = []
 
-        self.isBusy = False
+        self.isBusy: bool = False
+
+        self.port: int = 0
+        self.host: str = ""
+
+        self.configAutoSave: bool = False
+        self.configCreateNewFolder: bool = False
+
+        self.saveDir: str = ""
+
+        self.pidSetpoint: int = 0
+        self.pidSetpointLowerBound: int = 0
+        self.pidSetpointUpperBound: int = 0
+
+        self.proportionalGain: int = 0
+        self.proportionalGainLowerBound: int = 0
+        self.proportionalGainUpperBound: int = 0
+
+        self.integralGain: int = 0
+        self.integralGainLowerBound: int = 0
+        self.integralGainUpperBound: int = 0
+
+        self.differentialGain: int = 0
+        self.differentialGainLowerBound: int = 0
+        self.differentialGainUpperBound: int = 0
+
+        self.isPIDOnline: bool = False
 
         if not os.path.isfile("config.xml"):
             missingXMLFallback()
 
-        tree = ET.parse('config.xml')
-        root = tree.getroot()
-        for child in root:
-            if child.tag == 'pid':
-
-                for superchild in child:
-                    if superchild.tag == 'setpoint':
-                        self.pidSetpoint = int(superchild.text)
-                    elif superchild.tag == "setpointlowerlimit":
-                        self.pidSetpointLowerBound = float(superchild.text)
-                    elif superchild.tag == "setpointupperlimit":
-                        self.pidSetpointUpperBound = float(superchild.text)
-                    elif superchild.tag == 'isonline':
-                        self.isPIDOnline = bool(int(superchild.text))
-                    elif superchild.tag == 'gain':
-
-                        if superchild.attrib.get('name') == "proportional":
-                            for value in superchild.iter('value'):
-                                self.proportionalGain = int(value.text)
-                            for lowerBound in superchild.iter('lowerlimit'):
-                                self.proportionalGainLowerBound = float(lowerBound.text)
-                            for upperBound in superchild.iter('upperlimit'):
-                                self.proportionalGainUpperBound = float(upperBound.text)
-
-                        elif superchild.attrib.get('name') == "integral":
-                            for value in superchild.iter('value'):
-                                self.integralGain = int(value.text)
-                            for lowerBound in superchild.iter('lowerlimit'):
-                                self.integralGainLowerBound = float(lowerBound.text)
-                            for upperBound in superchild.iter('upperlimit'):
-                                self.integralGainUpperBound = float(upperBound.text)
-
-                        elif superchild.attrib.get('name') == "differential":
-                            for value in superchild.iter('value'):
-                                self.differentialGain = int(value.text)
-                            for lowerBound in superchild.iter('lowerlimit'):
-                                self.differentialGainLowerBound = float(lowerBound.text)
-                            for upperBound in superchild.iter('upperlimit'):
-                                self.differentialGainUpperBound = float(upperBound.text)
-
-            elif child.tag == "config":
-                for superchild in child:
-                    if superchild.tag == "winsavedir" and platform == "win32":
-                        self.saveDir = superchild.text
-                    elif superchild.tag == "nixsavedir" and platform in ["linux", "darwin", "linux2"]:
-                        self.saveDir = superchild.text
-                    elif superchild.tag == "host":
-                        self.host = superchild.text
-                    elif superchild.tag == "port":
-                        self.port = int(superchild.text)
-                    elif superchild.tag == "createnewfolder":
-                        self.configCreateNewFolder = bool(int(superchild.text))
-                    elif superchild.tag == "autosave":
-                        self.configAutoSave = bool(int(superchild.text))
-
-            elif child.tag == "channels":
-                for superchild in child:
-                    gain = None
-                    name = None
-                    for key in superchild:
-                        if key.tag == 'name':
-                            name = key.text
-                        elif key.tag == 'gain':
-                            gain = float(key.text)
-                    self.channels.append(ScanChannel(name, gain))
+        self.readXML()
 
         self.logFile = ""
         self.reInitialiseLogFile()
 
         self.receivedData = 0
         self.sentCommand = None
-        self.logArray = ''
 
-        self.waitingForAnswer = False
+        self.waitingForAnswer: bool = False
 
         self.socket: socket.socket = None
         self.conn: socket.socket = None
@@ -145,9 +106,7 @@ class ServerNeo(QObject):
         data = 0x00014841
         data = data.to_bytes(4, byteorder='big')
         self.sentCommand = b'\x00\x01'
-        now = datetime.now()
-        current_time = now.strftime("%H:%M:%S")
-        self.logArray = current_time + ': Trying to connect with microscope...'
+        logFileAppend(self.logFile, "Trying to connect with microscope...")
         self.conn.sendall(data)
         self.waitingForAnswer = True
         self.waitForAnswer()
@@ -294,3 +253,70 @@ class ServerNeo(QObject):
         self.differentialGain = kd
 
         return kp, ki, kd
+
+    def readXML(self):
+        tree = ET.parse('config.xml')
+        root = tree.getroot()
+        for child in root:
+            if child.tag == 'pid':
+
+                for superchild in child:
+                    if superchild.tag == 'setpoint':
+                        self.pidSetpoint = int(superchild.text)
+                    elif superchild.tag == "setpointlowerlimit":
+                        self.pidSetpointLowerBound = float(superchild.text)
+                    elif superchild.tag == "setpointupperlimit":
+                        self.pidSetpointUpperBound = float(superchild.text)
+                    elif superchild.tag == 'isonline':
+                        self.isPIDOnline = bool(int(superchild.text))
+                    elif superchild.tag == 'gain':
+
+                        if superchild.attrib.get('name') == "proportional":
+                            for value in superchild.iter('value'):
+                                self.proportionalGain = int(value.text)
+                            for lowerBound in superchild.iter('lowerlimit'):
+                                self.proportionalGainLowerBound = float(lowerBound.text)
+                            for upperBound in superchild.iter('upperlimit'):
+                                self.proportionalGainUpperBound = float(upperBound.text)
+
+                        elif superchild.attrib.get('name') == "integral":
+                            for value in superchild.iter('value'):
+                                self.integralGain = int(value.text)
+                            for lowerBound in superchild.iter('lowerlimit'):
+                                self.integralGainLowerBound = float(lowerBound.text)
+                            for upperBound in superchild.iter('upperlimit'):
+                                self.integralGainUpperBound = float(upperBound.text)
+
+                        elif superchild.attrib.get('name') == "differential":
+                            for value in superchild.iter('value'):
+                                self.differentialGain = int(value.text)
+                            for lowerBound in superchild.iter('lowerlimit'):
+                                self.differentialGainLowerBound = float(lowerBound.text)
+                            for upperBound in superchild.iter('upperlimit'):
+                                self.differentialGainUpperBound = float(upperBound.text)
+
+            elif child.tag == "config":
+                for superchild in child:
+                    if superchild.tag == "winsavedir" and platform == "win32":
+                        self.saveDir = superchild.text
+                    elif superchild.tag == "nixsavedir" and platform in ["linux", "darwin", "linux2"]:
+                        self.saveDir = superchild.text
+                    elif superchild.tag == "host":
+                        self.host = superchild.text
+                    elif superchild.tag == "port":
+                        self.port = int(superchild.text)
+                    elif superchild.tag == "createnewfolder":
+                        self.configCreateNewFolder = bool(int(superchild.text))
+                    elif superchild.tag == "autosave":
+                        self.configAutoSave = bool(int(superchild.text))
+
+            elif child.tag == "channels":
+                for superchild in child:
+                    gain = None
+                    name = None
+                    for key in superchild:
+                        if key.tag == 'name':
+                            name = key.text
+                        elif key.tag == 'gain':
+                            gain = float(key.text)
+                    self.channels.append(ScanChannel(name, gain))
