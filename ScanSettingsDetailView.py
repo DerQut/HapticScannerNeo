@@ -21,8 +21,6 @@ class ScanSettingsDetailView(QWidget):
 
         self.server: ServerNeo = parent.server
 
-        self.scanMode = "Initial scan"
-
         zStack = QStackedLayout()
         zStack.setStackingMode(QStackedLayout.StackingMode.StackAll)
 
@@ -136,7 +134,7 @@ class ScanSettingsDetailView(QWidget):
             self.setInputsEnabled(True)
 
     def changeScanMode(self):
-        self.scanMode = self.scanModePicker.currentText()
+        scanMode = self.scanModePicker.currentText()
 
         self.rasterModeTopView.hide()
         self.rasterModeBottomView.hide()
@@ -145,13 +143,13 @@ class ScanSettingsDetailView(QWidget):
         self.hapticModeTopView.hide()
         self.hapticModeBottomView.hide()
 
-        if self.scanMode == "Initial scan":
+        if scanMode == "Initial scan":
             self.initialScanTopView.show()
             self.initialScanBottomView.show()
-        elif self.scanMode == "Raster mode":
+        elif scanMode == "Raster mode":
             self.rasterModeTopView.show()
             self.rasterModeBottomView.show()
-        elif self.scanMode == "Haptic mode":
+        elif scanMode == "Haptic mode":
             self.hapticModeTopView.show()
             self.hapticModeBottomView.show()
 
