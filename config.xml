@@ -1,7 +1,7 @@
 <data>
     <config>
         <winsavedir>C:/PomiaryHaptyczne/</winsavedir>
-        <nixsavedir>C:\Users\Marcel/Desktop/PomiaryHaptyczne/</nixsavedir>
+        <nixsavedir>C:/DELETE-XML-FILE-FOR-NEW-NIXSAVEDIR/</nixsavedir>
         <host>192.168.1.103</host>
         <port>8881</port>
         <createnewfolder>1</createnewfolder>
