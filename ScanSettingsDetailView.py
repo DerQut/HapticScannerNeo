@@ -15,6 +15,10 @@ class ScanSettingsDetailView(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
 
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.pollServerStatus)
+        self.timer.setInterval(500)
+
         self.server: ServerNeo = parent.server
 
         self.scanMode = "Initial scan"
@@ -75,10 +79,6 @@ class ScanSettingsDetailView(QWidget):
 
         self.initialScanBottomView.show()
 
-        self.timer = QTimer()
-        self.timer.timeout.connect(self.pollServerStatus)
-        self.timer.setInterval(500)
-
         self.setLayout(zStack)
         self.hide()
 
@@ -122,6 +122,12 @@ class ScanSettingsDetailView(QWidget):
         self.rasterModeTopView.retraceTimeStepper.setEnabled(enabled)
         self.rasterModeTopView.intervalStepper.setEnabled(enabled)
 
+        if self.scanModePicker.currentText() == "Initial scan":
+            return 0
+
+        for channelEntryView in self.channelsView.channelEntryViews:
+            channelEntryView.gainPicker.setEnabled(enabled)
+
     def pollServerStatus(self):
         if self.server.getBusy():
             self.setInputsEnabled(False)
@@ -155,6 +161,7 @@ class ChannelsView(QWidget):
         super().__init__(parent)
 
         self.server: ServerNeo = parent.server
+        self.channelEntryViews: [ChannelsView] = []
 
         dummyLayout = QVBoxLayout()
         dummyLayout.setContentsMargins(0, 0, 0, 0)
@@ -183,7 +190,9 @@ class ChannelsView(QWidget):
 
         i = 0
         while i < len(parent.server.channels):
-            mainVStack.addWidget(ChannelEntryView(parent, parent.server.channels[i], i))
+            channelEntryView = ChannelEntryView(parent, parent.server.channels[i], i)
+            mainVStack.addWidget(channelEntryView)
+            self.channelEntryViews.append(channelEntryView)
             i = i + 1
 
         self.mainContainer.setLayout(mainVStack)
@@ -198,7 +207,7 @@ class ChannelEntryView(QWidget):
         super().__init__()
 
         self.scanSettingsDetailView = scanSettingsDetailView
-        self.scanSettingsDetailView.scanModePicker.currentTextChanged.connect(self.setGainsEnabled)
+        self.scanSettingsDetailView.scanModePicker.currentTextChanged.connect(self.setGainsEnabledDependingOnScanMode)
 
         self.channel = channel
         self.number = number
@@ -222,7 +231,7 @@ class ChannelEntryView(QWidget):
             "16x"
         ])
 
-        self.setGainsEnabled()
+        self.setGainsEnabledDependingOnScanMode()
 
         if self.channel.gain < 1:
             self.gainPicker.setCurrentText(f"{self.channel.gain}x" if self.channel.gain > 0 else "Disabled")
@@ -251,7 +260,7 @@ class ChannelEntryView(QWidget):
     def summonWindow(self):
         self.popupWindow.show()
 
-    def setGainsEnabled(self):
+    def setGainsEnabledDependingOnScanMode(self):
         enabled = False if self.scanSettingsDetailView.scanModePicker.currentText() == "Initial scan" else True
         self.gainPicker.setEnabled(enabled)
 
