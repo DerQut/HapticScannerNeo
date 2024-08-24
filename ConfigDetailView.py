@@ -1,6 +1,4 @@
-import serial
-import sys
-import glob
+from serial.tools.list_ports import comports
 
 from PyQt6 import QtCore, QtGui
 from PyQt6.QtGui import *
@@ -202,27 +200,9 @@ class ConfigDetailView(QWidget):
                 lineEdit.setText("65535")
 
     def findCOMs(self):
-
-        if sys.platform.startswith('win'):
-            ports = ['COM%s' % (i + 1) for i in range(256)]
-        elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
-            ports = glob.glob('/dev/tty[A-Za-z]*')
-        elif sys.platform.startswith('darwin'):
-            ports = glob.glob('/dev/tty.*')
-        else:
-            raise EnvironmentError('Unsupported platform')
-
-        self.COMPorts = []
-        for port in ports:
-            try:
-                s = serial.Serial(port)
-                s.close()
-                self.COMPorts.append(port)
-            except (OSError, serial.SerialException):
-                pass
-
+        print(comports(True))
         self.COMPortsCombo.clear()
-        self.COMPortsCombo.addItems(self.COMPorts)
+        self.COMPortsCombo.addItems(comports(True))
 
     def tcpipConnect(self):
         arr = [self.ipField1, self.ipField2, self.ipField3, self.ipField4, self.portField]
