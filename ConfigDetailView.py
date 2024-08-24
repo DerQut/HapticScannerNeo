@@ -8,10 +8,6 @@ from PyQt6.QtWidgets import *
 from assets import MacColoursDark
 from Color import *
 
-import platform
-import subprocess
-import os
-
 from ServerNeo import *
 
 
