@@ -200,9 +200,10 @@ class ConfigDetailView(QWidget):
                 lineEdit.setText("65535")
 
     def findCOMs(self):
-        print(comports(True))
         self.COMPortsCombo.clear()
-        self.COMPortsCombo.addItems(comports(True))
+        ports = comports()
+        for port in ports:
+            self.COMPortsCombo.addItem(port.name)
 
     def tcpipConnect(self):
         arr = [self.ipField1, self.ipField2, self.ipField3, self.ipField4, self.portField]
