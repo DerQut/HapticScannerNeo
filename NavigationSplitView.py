@@ -53,9 +53,7 @@ class NavigationSplitView(QWidget):
         logToggleHStack = QHBoxLayout()
         logToggleHStack.setContentsMargins(0, 0, 0, 0)
         logToggleHStack.setSpacing(0)
-        self.logToggleSpacerLeft = Color(assets.MacColoursDark.bg_colour)
-        self.logToggleSpacerLeft.setFixedWidth(800-50)
-        logToggleHStack.addWidget(self.logToggleSpacerLeft)
+        logToggleHStack.addStretch()
         logToggleHStack.addWidget(self.logToggleButton)
         self.dvVStack.addLayout(logToggleHStack)
         self.dvVStack.addWidget(self.logView)
@@ -94,7 +92,6 @@ class NavigationSplitView(QWidget):
     def animateSidebar(self):
         if self.sidebarView.width() != self.isSideBarVisible * 400:
             self.sidebarView.setFixedWidth(self.sidebarView.width()-10+20*self.isSideBarVisible)
-            self.logToggleSpacerLeft.setFixedWidth(self.logToggleSpacerLeft.width()+10-20*self.isSideBarVisible)
         else:
             self.sidebarTimer.stop()
 
