@@ -100,6 +100,12 @@ class ScanSettingsDetailView(QWidget):
     def stopRasterScan(self):
         self.server.stopRasterScan()
 
+    def startHapticScan(self):
+        self.server.startHapticScan()
+
+    def stopHapticScan(self):
+        self.server.stopHapticScan()
+
     def setInputsEnabled(self, enabled: bool):
         self.scanModePicker.setEnabled(enabled)
 
@@ -577,6 +583,8 @@ class HapticModeBottomView(QWidget):
     def __init__(self, parent: ScanSettingsDetailView):
         super().__init__(parent)
 
+        self.parent = parent
+
         dummyLayout = QVBoxLayout()
         dummyLayout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(dummyLayout)
@@ -584,13 +592,40 @@ class HapticModeBottomView(QWidget):
         mainView = QWidget(self)
         mainVStack = QVBoxLayout()
         mainView.setLayout(mainVStack)
-        mainView.setMinimumHeight(325)
 
-        mainVStack.addWidget(QLabel("Haptic Mode Bottom View"))
+        nameHStack = QHBoxLayout()
+        nameHStack.addWidget(QLabel("Scan name:"))
+        nameHStack.addStretch()
+        self.nameField = QLineEdit()
+        self.nameField.setFixedWidth(360)
+        nameHStack.addWidget(self.nameField)
+
+        buttonHStack = QHBoxLayout()
+        self.startButton = QPushButton("Start")
+        self.startButton.setStyleSheet(f"background-color: rgba{QPalette().accent().color().getRgb()};")
+        self.stopButton = QPushButton("Stop")
+        self.stopButton.setEnabled(False)
+        buttonHStack.addWidget(self.startButton)
+        buttonHStack.addWidget(self.stopButton)
+
+        mainVStack.addLayout(nameHStack)
         mainVStack.addStretch()
+        mainVStack.addLayout(buttonHStack)
 
         scrollArea = QScrollArea(self)
+        scrollArea.setWidgetResizable(True)
         scrollArea.setWidget(mainView)
 
         dummyLayout.addWidget(scrollArea)
         self.hide()
+
+        self.startButton.clicked.connect(self.startHapticScan)
+        self.stopButton.clicked.connect(self.stopHapticScan)
+
+    def startHapticScan(self):
+        self.parent.setInputsEnabled(False)
+        self.parent.startInitialScan()
+
+    def stopHapticScan(self):
+        self.parent.setInputsEnabled(True)
+        self.parent.stopInitialScan()
