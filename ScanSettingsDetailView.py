@@ -225,7 +225,6 @@ class ChannelEntryView(QWidget):
 
         self.gainPicker = QComboBox()
         self.gainPicker.addItems([
-            "Disabled",
             "0.25x",
             "0.5x",
             "1x",
@@ -237,16 +236,21 @@ class ChannelEntryView(QWidget):
 
         self.setGainsEnabledDependingOnScanMode()
 
-        if self.channel.gain < 1:
-            self.gainPicker.setCurrentText(f"{self.channel.gain}x" if self.channel.gain > 0 else "Disabled")
+        if self.channel.gain() < 1:
+            self.gainPicker.setCurrentText(f"{self.channel.gain()}x" if self.channel.gain() > 0 else "Disabled")
         else:
-            self.gainPicker.setCurrentText(f"{int(self.channel.gain)}x")
+            self.gainPicker.setCurrentText(f"{int(self.channel.gain())}x")
 
-        self.gainPicker.setCurrentText("Disabled" if self.channel.gain == 0 else (f"{self.channel.gain}x") if self.channel.gain < 1 else f"{int(self.channel.gain)}x")
-        self.gainPicker.currentIndexChanged.connect(self.setGain)
+        self.gainPicker.setCurrentText(f"{self.channel.gain()}x" if self.channel.gain() < 1 else f"{int(self.channel.gain())}x")
+        self.gainPicker.currentIndexChanged.connect(self.setChannelGain)
         hStack.addWidget(self.gainPicker)
 
-        self.textEntry = QLineEdit(self.channel.name)
+        self.enabledToggle = QCheckBox()
+        self.enabledToggle.setChecked(self.channel.enabled())
+        self.enabledToggle.clicked.connect(self.setChannelEnabled)
+        hStack.addWidget(self.enabledToggle)
+
+        self.textEntry = QLineEdit(self.channel.name())
         self.textEntry.textChanged.connect(self.sendName)
         hStack.addWidget(self.textEntry)
         self.textEntry.setFixedWidth(125)
@@ -269,20 +273,20 @@ class ChannelEntryView(QWidget):
         self.gainPicker.setEnabled(enabled)
 
     def sendName(self):
-        self.channel.name = self.textEntry.text()
-        if self.channel.name != "":
-            self.popupWindow.setWindowTitle(self.channel.name)
+        self.channel.setName(self.textEntry.text())
+        if self.channel.name() != "":
+            self.popupWindow.setWindowTitle(self.channel.name())
         else:
             self.popupWindow.setWindowTitle(f"Channel {self.number+1}")
 
-    def setGain(self):
-        if self.gainPicker.currentText() == "Disabled":
-            self.channel.gain = 0
-        else:
-            transformedText = list(self.gainPicker.currentText())
-            transformedText.pop()
-            gain = float(''.join(transformedText))
-            self.channel.gain = gain
+    def setChannelGain(self):
+        transformedText = list(self.gainPicker.currentText())
+        transformedText.pop()
+        gain = float(''.join(transformedText))
+        self.channel.setGain(gain)
+
+    def setChannelEnabled(self):
+        self.channel.setEnabled(bool(self.enabledToggle.isChecked()))
 
 
 class ChannelPopupWindow(QMainWindow):
@@ -290,7 +294,7 @@ class ChannelPopupWindow(QMainWindow):
         super().__init__()
         self.hide()
 
-        self.setWindowTitle(channelEntryView.channel.name)
+        self.setWindowTitle(channelEntryView.channel.name())
         self.setFont(QFont("Helvetica", 12))
 
         self.channelEntryView = channelEntryView
@@ -344,7 +348,7 @@ class InitialScanTopView(QWidget):
         modeHStack.addStretch()
         self.modePicker = QComboBox()
         self.modePicker.addItems(["Lissajous curve", "Sine", "Other"])
-        self.modePicker.setFixedWidth(200)
+        self.modePicker.setFixedWidth(180)
         modeHStack.addWidget(self.modePicker)
         mainVStack.addLayout(modeHStack)
 
@@ -448,8 +452,8 @@ class RasterModeTopView(QWidget):
         modeHStack.addWidget(QLabel("Operating mode:"))
         modeHStack.addStretch()
         self.modePicker = QComboBox()
-        self.modePicker.addItems(["Trigger mode", "Continuous mode"])
-        self.modePicker.setFixedWidth(200)
+        self.modePicker.addItems(["Trigger", "Continuous"])
+        self.modePicker.setFixedWidth(180)
         modeHStack.addWidget(self.modePicker)
         mainVStack.addLayout(modeHStack)
 
@@ -573,10 +577,24 @@ class HapticModeTopView(QWidget):
         modeHStack = QHBoxLayout()
         modeHStack.addWidget(QLabel("Operating mode:"))
         modeHStack.addStretch()
-        self.modePicker = QComboBox()
-        self.modePicker.addItems(["Trigger mode", "Continuous mode"])
-        self.modePicker.setFixedWidth(200)
-        modeHStack.addWidget(self.modePicker)
+        pickerVStack = QVBoxLayout()
+
+        self.modePicker1 = QComboBox()
+        self.modePicker1.addItems(["Trigger", "Continuous"])
+        self.modePicker1.setFixedWidth(180)
+        pickerVStack.addWidget(self.modePicker1)
+
+        self.modePicker2 = QComboBox()
+        self.modePicker2.addItems(["Cycloid", "Other", "Off"])
+        self.modePicker2.setFixedWidth(180)
+        pickerVStack.addWidget(self.modePicker2)
+
+        self.modePicker3 = QComboBox()
+        self.modePicker3.addItems(["Free mover", "Follower"])
+        self.modePicker3.setFixedWidth(180)
+        pickerVStack.addWidget(self.modePicker3)
+
+        modeHStack.addLayout(pickerVStack)
         mainVStack.addLayout(modeHStack)
 
         mainVStack.addWidget(Divider(MacColoursDark.gray))
@@ -601,7 +619,8 @@ class HapticModeTopView(QWidget):
         oversamplingHStack.addWidget(QLabel("Oversampling points:"))
         self.oversamplingStepper = QSpinBox()
         self.oversamplingStepper.setRange(1, 10000)
-        self.oversamplingStepper.setValue(1)
+        self.oversamplingStepper.setValue(10)
+        self.oversamplingStepper.setEnabled(False)
         oversamplingHStack.addWidget(self.oversamplingStepper)
         mainVStack.addLayout(oversamplingHStack)
 

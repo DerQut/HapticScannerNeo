@@ -327,4 +327,4 @@ class ServerNeo(QObject):
                             name = key.text
                         elif key.tag == 'gain':
                             gain = float(key.text)
-                    self.channels.append(ScanChannel(name, gain))
+                    self.channels.append(ScanChannel(name, gain, True))
