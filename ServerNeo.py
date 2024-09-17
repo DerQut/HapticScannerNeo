@@ -203,6 +203,8 @@ class ServerNeo(QObject):
                     elif key.tag == "gain":
                         gain = self.channels[int(superchild.attrib.get("id"))-1].gain()
                         key.text = str(float(gain)) if gain < 1 else str(int(gain))
+                    elif key.tag == "enabled":
+                        key.text = str(int(bool(self.channels[int(superchild.attrib.get("id"))-1].enabled())))
 
         tree.write("config.xml")
 
@@ -322,9 +324,12 @@ class ServerNeo(QObject):
                 for superchild in child:
                     gain = None
                     name = None
+                    enabled = None
                     for key in superchild:
                         if key.tag == 'name':
                             name = key.text
                         elif key.tag == 'gain':
                             gain = float(key.text)
-                    self.channels.append(ScanChannel(name, gain, True))
+                        elif key.tag == 'enabled':
+                            enabled = bool(int(key.text))
+                    self.channels.append(ScanChannel(name, gain, enabled))
