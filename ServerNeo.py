@@ -199,9 +199,9 @@ class ServerNeo(QObject):
             for superchild in child:
                 for key in superchild:
                     if key.tag == "name":
-                        key.text = self.channels[int(superchild.attrib.get("id"))-1].name
+                        key.text = self.channels[int(superchild.attrib.get("id"))-1].name()
                     elif key.tag == "gain":
-                        gain = self.channels[int(superchild.attrib.get("id"))-1].gain
+                        gain = self.channels[int(superchild.attrib.get("id"))-1].gain()
                         key.text = str(float(gain)) if gain < 1 else str(int(gain))
 
         tree.write("config.xml")
