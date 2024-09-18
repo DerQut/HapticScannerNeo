@@ -113,18 +113,22 @@ class ScanSettingsDetailView(QWidget):
         self.initialScanBottomView.startButton.setEnabled(enabled)
         self.initialScanBottomView.stopButton.setEnabled(not enabled)
 
-        self.initialScanTopView.modePicker.setEnabled(enabled)
-        self.initialScanTopView.densityStepper.setEnabled(enabled)
-        self.initialScanTopView.speedStepper.setEnabled(enabled)
+        #self.initialScanTopView.modePicker.setEnabled(enabled)
+        #self.initialScanTopView.densityStepper.setEnabled(enabled)
+        #self.initialScanTopView.speedStepper.setEnabled(enabled)
 
         self.rasterModeBottomView.nameField.setEnabled(enabled)
         self.rasterModeBottomView.startButton.setEnabled(enabled)
         self.rasterModeBottomView.stopButton.setEnabled(not enabled)
 
-        self.rasterModeTopView.modePicker.setEnabled(enabled)
-        self.rasterModeTopView.traceTimeStepper.setEnabled(enabled)
-        self.rasterModeTopView.retraceTimeStepper.setEnabled(enabled)
-        self.rasterModeTopView.intervalStepper.setEnabled(enabled)
+        #self.rasterModeTopView.modePicker.setEnabled(enabled)
+        #self.rasterModeTopView.traceTimeStepper.setEnabled(enabled)
+        #self.rasterModeTopView.retraceTimeStepper.setEnabled(enabled)
+        #self.rasterModeTopView.intervalStepper.setEnabled(enabled)
+
+        self.hapticModeBottomView.nameField.setEnabled(enabled)
+        self.hapticModeBottomView.startButton.setEnabled(enabled)
+        self.hapticModeBottomView.stopButton.setEnabled(not enabled)
 
         if self.scanModePicker.currentText() == "Initial scan":
             return 0
@@ -392,6 +396,7 @@ class InitialScanBottomView(QWidget):
 
         mainView = QWidget(self)
         mainVStack = QVBoxLayout()
+        mainVStack.setSpacing(8)
         mainView.setLayout(mainVStack)
 
         nameHStack = QHBoxLayout()
@@ -646,6 +651,7 @@ class HapticModeBottomView(QWidget):
 
         mainView = QWidget(self)
         mainVStack = QVBoxLayout()
+        mainVStack.setSpacing(8)
         mainView.setLayout(mainVStack)
 
         nameHStack = QHBoxLayout()
@@ -664,6 +670,21 @@ class HapticModeBottomView(QWidget):
         buttonHStack.addWidget(self.stopButton)
 
         mainVStack.addLayout(nameHStack)
+        mainVStack.addWidget(Divider(MacColoursDark.gray))
+
+        readoutVStack = QVBoxLayout()
+        avgTimeHStack = QHBoxLayout()
+        avgTimeHStack.addWidget(QLabel("Average time between points [s]:"))
+        avgTimeHStack.addStretch()
+        readoutVStack.addLayout(avgTimeHStack)
+
+        totalTimeHStack = QHBoxLayout()
+        totalTimeHStack.addWidget(QLabel("Total scan time [s]:"))
+        totalTimeHStack.addStretch()
+        readoutVStack.addLayout(totalTimeHStack)
+
+        mainVStack.addLayout(readoutVStack)
+
         mainVStack.addStretch()
         mainVStack.addLayout(buttonHStack)
 
@@ -679,8 +700,8 @@ class HapticModeBottomView(QWidget):
 
     def startHapticScan(self):
         self.parent.setInputsEnabled(False)
-        self.parent.startInitialScan()
+        self.parent.startHapticScan()
 
     def stopHapticScan(self):
         self.parent.setInputsEnabled(True)
-        self.parent.stopInitialScan()
+        self.parent.stopHapticScan()
