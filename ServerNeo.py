@@ -140,6 +140,7 @@ class ServerNeo(QObject):
                     key.text = str(int(self.configAutoSave))
 
         tree.write("config.xml")
+        logFileAppend(self.logFile, "Configuration successfully saved to config.xml.")
 
     def writePIDXML(self):
         logFileAppend(self.logFile, "Saving PID settings to config.xml...")
@@ -187,6 +188,7 @@ class ServerNeo(QObject):
                                 key.text = str(self.differentialGainLowerBound)
 
         tree.write("config.xml")
+        logFileAppend(self.logFile, "PID settings successfully saved to config.xml.")
 
     def writeChannelsXML(self):
         logFileAppend(self.logFile, "Saving channel names and gain settings to config.xml...")
@@ -207,6 +209,7 @@ class ServerNeo(QObject):
                         key.text = str(int(bool(self.channels[int(superchild.attrib.get("id"))-1].enabled())))
 
         tree.write("config.xml")
+        logFileAppend(self.logFile, "Channel names successfully saved to config.xml.")
 
     def startInitialScan(self, scanName: str, operatingMode: str, curveDensity: float, speed: float):
         logFileAppend(self.logFile, f"Starting initial scan named \"{scanName}\" with given parameters: operatingMode=\"{operatingMode}\", curveDensity={curveDensity}%, speed={speed}%")
