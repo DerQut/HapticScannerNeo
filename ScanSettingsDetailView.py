@@ -690,7 +690,6 @@ class HapticModeBottomView(QWidget):
         avgTimeHStack.addWidget(QLabel("Average time between points [s]:"))
         avgTimeHStack.addStretch()
         self.avgTimeReadout = QLabel("0.00")
-        #self.avgTimeReadout.setFixedWidth(360)
         avgTimeHStack.addWidget(self.avgTimeReadout)
         readoutVStack.addLayout(avgTimeHStack)
 
@@ -698,7 +697,6 @@ class HapticModeBottomView(QWidget):
         totalTimeHStack.addWidget(QLabel("Total scan time:"))
         totalTimeHStack.addStretch()
         self.totalTimeReadout = QLabel("00:00:00")
-        #self.totalTimeReadout.setFixedWidth(360)
         totalTimeHStack.addWidget(self.totalTimeReadout)
         readoutVStack.addLayout(totalTimeHStack)
 

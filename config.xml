@@ -1,6 +1,6 @@
 <data>
     <config>
-        <winsavedir>C:/PomiaryHaptyczne/</winsavedir>
+        <winsavedir>C:/Users/Marcel/Desktop/PomiaryHaptyczne/</winsavedir>
         <nixsavedir>C:\Users\Marcel/Desktop/PomiaryHaptyczne/</nixsavedir>
         <host>192.168.1.103</host>
         <port>8881</port>
@@ -9,22 +9,22 @@
     </config>
 
     <pid>
-        <setpoint>65535</setpoint>
+        <setpoint>19922</setpoint>
         <setpointlowerlimit>-10.0</setpointlowerlimit>
         <setpointupperlimit>10.0</setpointupperlimit>
         <isonline>0</isonline>
         <gain name="proportional">
-            <value>65535</value>
+            <value>11140</value>
             <upperlimit>1.0</upperlimit>
             <lowerlimit>0.0</lowerlimit>
         </gain>
         <gain name="integral">
-            <value>32767</value>
+            <value>12844</value>
             <upperlimit>1.0</upperlimit>
             <lowerlimit>0.0</lowerlimit>
         </gain>
         <gain name="differential">
-            <value>0</value>
+            <value>33058</value>
             <upperlimit>1.0</upperlimit>
             <lowerlimit>0.0</lowerlimit>
         </gain>

@@ -218,7 +218,7 @@ class ConfigDetailView(QWidget):
             return -1
         if list(saveDir)[len(list(saveDir)) - 1] != "/":
             saveDir += "/"
-        self.fileLineEdit.setText(saveDir)
+        self.fileLineEdit.setText(saveDir.replace("\\", "/"))
 
     def saveAndApply(self):
         self.server.saveDir = self.fileLineEdit.text()

@@ -51,7 +51,10 @@ class ServerNeo(QObject):
         if not os.path.isfile("config.xml"):
             missingXMLFallback()
 
-        self.readXML()
+        try:
+            self.readXML()
+        except Exception as e:
+            print(e)
 
         self.logFile = ""
         self.reInitialiseLogFile()
@@ -66,6 +69,8 @@ class ServerNeo(QObject):
         self.addr = None
 
     def reInitialiseLogFile(self):
+        if not self.saveDir:
+            self.saveDir = os.get
         if list(self.saveDir)[len(self.saveDir)-1] != "/":
             self.saveDir += "/"
 
@@ -129,7 +134,7 @@ class ServerNeo(QObject):
                 if key.tag == "nixsavedir" and platform in ["darwin", "linux", "linux2"]:
                     key.text = self.saveDir
                 elif key.tag == "winsavedir" and platform == "win32":
-                    key.text = self.saveDir
+                    key.text = self.saveDir.replace("\\", "/")
                 elif key.tag == "host":
                     key.text = self.host
                 elif key.tag == "port":
@@ -256,7 +261,10 @@ class ServerNeo(QObject):
         return random.randint(0, 100)
 
     def getAvgHapticTime(self):
-        # THIS IS A TEMPORARY FUNCTION
+        """
+        THIS IS A TEMPORARY FUNCTION
+        :return: Average time between points when the microscope is in Haptic mode
+        """
         return random.randint(0, 100000000)
 
     def getTotalHapticTime(self):
