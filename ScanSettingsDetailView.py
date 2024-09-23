@@ -20,7 +20,7 @@ class ScanSettingsDetailView(QWidget):
 
         self.timer = QTimer()
         self.timer.timeout.connect(self.pollServerStatus)
-        self.timer.setInterval(500)
+        self.timer.setInterval(250)
 
         self.server: ServerNeo = parent.server
 
@@ -142,7 +142,6 @@ class ScanSettingsDetailView(QWidget):
     def pollServerStatus(self):
         if self.server.getBusy():
             self.setInputsEnabled(False)
-            self.rasterModeBottomView.progressBar.setValue(self.server.getRasterProgress())
         else:
             self.setInputsEnabled(True)
 
@@ -512,6 +511,9 @@ class RasterModeBottomView(QWidget):
         super().__init__()
 
         self.parent = parent
+        self.timer = QTimer()
+        self.timer.setInterval(250)
+        self.timer.timeout.connect(self.pollProgress)
 
         dummyLayout = QVBoxLayout()
         dummyLayout.setContentsMargins(0, 0, 0, 0)
@@ -570,6 +572,17 @@ class RasterModeBottomView(QWidget):
     def stopRasterScan(self):
         self.parent.setInputsEnabled(True)
         self.parent.stopRasterScan()
+
+    def pollProgress(self):
+        self.progressBar.setValue(self.server.getRasterProgress())
+
+    def show(self):
+        self.timer.start()
+        super().show()
+
+    def hide(self):
+        self.timer.stop()
+        super().hide()
 
 
 class HapticModeTopView(QWidget):
@@ -655,7 +668,7 @@ class HapticModeBottomView(QWidget):
         self.parent = parent
 
         self.timer = QTimer()
-        self.timer.setInterval(500)
+        self.timer.setInterval(250)
         self.timer.timeout.connect(self.pollTimes)
 
         dummyLayout = QVBoxLayout()
