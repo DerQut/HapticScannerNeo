@@ -548,10 +548,28 @@ class RasterModeBottomView(QWidget):
         buttonHStack.addWidget(self.startButton)
         buttonHStack.addWidget(self.stopButton)
 
+        statsVStack = QVBoxLayout()
+        statsVStack.setSpacing(8)
+
+        speedHStack = QHBoxLayout()
+        speedHStack.addWidget(QLabel("Scan speed:"))
+        statsVStack.addLayout(speedHStack)
+
+        avgTimeHStack = QHBoxLayout()
+        avgTimeHStack.addWidget(QLabel("Average time [ms]:"))
+        statsVStack.addLayout(avgTimeHStack)
+
+        totalTimeHStack = QHBoxLayout()
+        totalTimeHStack.addWidget(QLabel("Total time [ms]:"))
+        statsVStack.addLayout(totalTimeHStack)
+
         mainVStack.addLayout(nameHStack)
         mainVStack.addWidget(Divider(MacColoursDark.gray))
         mainVStack.addLayout(progressHStack)
+        mainVStack.addWidget(Divider(MacColoursDark.gray))
+        mainVStack.addLayout(statsVStack)
         mainVStack.addStretch()
+        mainVStack.addWidget(QWidget())
         mainVStack.addLayout(buttonHStack)
 
         scrollArea = QScrollArea(self)
