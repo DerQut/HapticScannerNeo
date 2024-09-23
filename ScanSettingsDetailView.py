@@ -687,7 +687,6 @@ class HapticModeBottomView(QWidget):
         avgTimeHStack.addStretch()
         self.avgTimeReadout = QLabel("0.00")
         self.avgTimeReadout.setFixedWidth(360)
-        #self.avgTimeReadout.setEnabled(False)
         avgTimeHStack.addWidget(self.avgTimeReadout)
         readoutVStack.addLayout(avgTimeHStack)
 
@@ -696,7 +695,6 @@ class HapticModeBottomView(QWidget):
         totalTimeHStack.addStretch()
         self.totalTimeReadout = QLabel("00:00:00")
         self.totalTimeReadout.setFixedWidth(360)
-        #self.totalTimeReadout.setEnabled(False)
         totalTimeHStack.addWidget(self.totalTimeReadout)
         readoutVStack.addLayout(totalTimeHStack)
 
