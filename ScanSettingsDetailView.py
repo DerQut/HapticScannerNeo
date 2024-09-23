@@ -513,7 +513,6 @@ class RasterModeBottomView(QWidget):
         self.parent = parent
         self.timer = QTimer()
         self.timer.setInterval(250)
-        self.timer.timeout.connect(self.pollProgress)
 
         dummyLayout = QVBoxLayout()
         dummyLayout.setContentsMargins(0, 0, 0, 0)
@@ -564,6 +563,7 @@ class RasterModeBottomView(QWidget):
 
         self.startButton.clicked.connect(self.startRasterScan)
         self.stopButton.clicked.connect(self.stopRasterScan)
+        self.timer.timeout.connect(self.pollProgress)
 
     def startRasterScan(self):
         self.parent.setInputsEnabled(False)
@@ -574,7 +574,7 @@ class RasterModeBottomView(QWidget):
         self.parent.stopRasterScan()
 
     def pollProgress(self):
-        self.progressBar.setValue(self.server.getRasterProgress())
+        self.progressBar.setValue(self.parent.server.getRasterProgress())
 
     def show(self):
         self.timer.start()
