@@ -260,17 +260,31 @@ class ServerNeo(QObject):
         # THIS IS A TEMPORARY FUNCTION
         return random.randint(0, 100)
 
+    def getAvgRasterTime(self) -> int:
+        """
+        THIS IS A TEMPORARY FUNCTION
+        :return: Average time between lines when the microscope is in Raster mode (in milliseconds)
+        """
+        return random.randint(0, 100)
+
+    def getTotalRasterTime(self) -> int:
+        """
+        THIS IS A TEMPORARY FUNCTION
+        :return: Total duration of the last scan conducted in Raster mode (in seconds)
+        """
+        return random.randint(0, 100)
+
     def getAvgHapticTime(self) -> int:
         """
         THIS IS A TEMPORARY FUNCTION
         :return: Average time between points when the microscope is in Haptic mode (in milliseconds)
         """
-        return random.randint(0, 100000000)
+        return random.randint(0, 100)
 
     def getTotalHapticTime(self) -> int:
         """
         THIS IS A TEMPORARY FUNCTION
-        :return: Total time of the last scan conducted in Haptic mode (in seconds)
+        :return: Total duration of the last scan conducted in Haptic mode (in seconds)
         """
         return random.randint(0, 100)
 

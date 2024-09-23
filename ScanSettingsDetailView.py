@@ -556,11 +556,17 @@ class RasterModeBottomView(QWidget):
         statsVStack.addLayout(speedHStack)
 
         avgTimeHStack = QHBoxLayout()
-        avgTimeHStack.addWidget(QLabel("Average time [ms]:"))
+        avgTimeHStack.addWidget(QLabel("Average time between lines [s]:"))
+        avgTimeHStack.addStretch()
+        self.avgTimeReadout = QLabel()
+        avgTimeHStack.addWidget(self.avgTimeReadout)
         statsVStack.addLayout(avgTimeHStack)
 
         totalTimeHStack = QHBoxLayout()
-        totalTimeHStack.addWidget(QLabel("Total time [ms]:"))
+        totalTimeHStack.addWidget(QLabel("Total scan duration [s]:"))
+        totalTimeHStack.addStretch()
+        self.totalTimeReadout = QLabel()
+        totalTimeHStack.addWidget(self.totalTimeReadout)
         statsVStack.addLayout(totalTimeHStack)
 
         mainVStack.addLayout(nameHStack)
@@ -592,7 +598,12 @@ class RasterModeBottomView(QWidget):
         self.parent.stopRasterScan()
 
     def pollProgress(self):
+        if not self.parent.server.getBusy():
+            return -1
+
         self.progressBar.setValue(self.parent.server.getRasterProgress())
+        self.avgTimeReadout.setText(str(self.parent.server.getAvgRasterTime()))
+        self.totalTimeReadout.setText(str(self.parent.server.getTotalRasterTime()))
 
     def show(self):
         self.timer.start()
@@ -755,6 +766,9 @@ class HapticModeBottomView(QWidget):
         self.parent.stopHapticScan()
 
     def pollTimes(self):
+        if not self.parent.server.getBusy():
+            return -1
+
         avgTime = self.parent.server.getAvgHapticTime()
         totTime = self.parent.server.getTotalHapticTime()
 
