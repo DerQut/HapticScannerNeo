@@ -260,19 +260,25 @@ class ServerNeo(QObject):
         # THIS IS A TEMPORARY FUNCTION
         return random.randint(0, 100)
 
-    def getAvgHapticTime(self):
+    def getAvgHapticTime(self) -> int:
         """
         THIS IS A TEMPORARY FUNCTION
-        :return: Average time between points when the microscope is in Haptic mode
+        :return: Average time between points when the microscope is in Haptic mode (in milliseconds)
         """
         return random.randint(0, 100000000)
 
-    def getTotalHapticTime(self):
-        # THIS IS A TEMPORARY FUNCTION
+    def getTotalHapticTime(self) -> int:
+        """
+        THIS IS A TEMPORARY FUNCTION
+        :return: Total time of the last scan conducted in Haptic mode (in seconds)
+        """
         return random.randint(0, 100)
 
-    def getOnlinePID(self):
-        # THIS IS A TEMPORARY FUNCTION
+    def getOnlinePID(self) -> (int, int, int):
+        """
+        THIS IS A TEMPORARY FUNCTION
+        :return: PID settings arranged in a tuple containing integers in range from 0 to 65535: (kp, ki, kd)
+        """
         kp = random.randrange(0, 65535, 1)
         ki = random.randrange(0, 65535, 1)
         kd = random.randrange(0, 65535, 1)
