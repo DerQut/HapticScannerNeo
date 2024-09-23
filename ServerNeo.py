@@ -255,6 +255,14 @@ class ServerNeo(QObject):
         # THIS IS A TEMPORARY FUNCTION
         return random.randint(0, 100)
 
+    def getAvgHapticTime(self):
+        # THIS IS A TEMPORARY FUNCTION
+        return random.randint(0, 100000000)
+
+    def getTotalHapticTime(self):
+        # THIS IS A TEMPORARY FUNCTION
+        return random.randint(0, 100)
+
     def getOnlinePID(self):
         # THIS IS A TEMPORARY FUNCTION
         kp = random.randrange(0, 65535, 1)

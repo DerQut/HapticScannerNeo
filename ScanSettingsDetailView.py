@@ -654,6 +654,10 @@ class HapticModeBottomView(QWidget):
 
         self.parent = parent
 
+        self.timer = QTimer()
+        self.timer.setInterval(500)
+        self.timer.timeout.connect(self.pollTimes)
+
         dummyLayout = QVBoxLayout()
         dummyLayout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(dummyLayout)
@@ -686,7 +690,7 @@ class HapticModeBottomView(QWidget):
         avgTimeHStack.addWidget(QLabel("Average time between points [s]:"))
         avgTimeHStack.addStretch()
         self.avgTimeReadout = QLabel("0.00")
-        self.avgTimeReadout.setFixedWidth(360)
+        #self.avgTimeReadout.setFixedWidth(360)
         avgTimeHStack.addWidget(self.avgTimeReadout)
         readoutVStack.addLayout(avgTimeHStack)
 
@@ -694,7 +698,7 @@ class HapticModeBottomView(QWidget):
         totalTimeHStack.addWidget(QLabel("Total scan time:"))
         totalTimeHStack.addStretch()
         self.totalTimeReadout = QLabel("00:00:00")
-        self.totalTimeReadout.setFixedWidth(360)
+        #self.totalTimeReadout.setFixedWidth(360)
         totalTimeHStack.addWidget(self.totalTimeReadout)
         readoutVStack.addLayout(totalTimeHStack)
 
@@ -720,3 +724,18 @@ class HapticModeBottomView(QWidget):
     def stopHapticScan(self):
         self.parent.setInputsEnabled(True)
         self.parent.stopHapticScan()
+
+    def pollTimes(self):
+        avgTime = self.parent.server.getAvgHapticTime()
+        totTime = self.parent.server.getTotalHapticTime()
+
+        self.avgTimeReadout.setText(str(avgTime))
+        self.totalTimeReadout.setText(str(totTime))
+
+    def hide(self):
+        self.timer.stop()
+        super().hide()
+
+    def show(self):
+        self.timer.start()
+        super().show()
