@@ -551,9 +551,19 @@ class RasterModeBottomView(QWidget):
         statsVStack = QVBoxLayout()
         statsVStack.setSpacing(8)
 
-        speedHStack = QHBoxLayout()
-        speedHStack.addWidget(QLabel("Scan speed:"))
-        statsVStack.addLayout(speedHStack)
+        speedLHStack = QHBoxLayout()
+        speedLHStack.addWidget(QLabel("Scan speed (L) [lines/s]:"))
+        speedLHStack.addStretch()
+        self.speedLReadout = QLabel("0")
+        speedLHStack.addWidget(self.speedLReadout)
+        statsVStack.addLayout(speedLHStack)
+
+        speedRHStack = QHBoxLayout()
+        speedRHStack.addWidget(QLabel("Scan speed (R) [lines/s]:"))
+        speedRHStack.addStretch()
+        self.speedRReadout = QLabel("0")
+        speedRHStack.addWidget(self.speedRReadout)
+        statsVStack.addLayout(speedRHStack)
 
         avgTimeHStack = QHBoxLayout()
         avgTimeHStack.addWidget(QLabel("Average time between lines [s]:"))
@@ -587,7 +597,7 @@ class RasterModeBottomView(QWidget):
 
         self.startButton.clicked.connect(self.startRasterScan)
         self.stopButton.clicked.connect(self.stopRasterScan)
-        self.timer.timeout.connect(self.pollProgress)
+        self.timer.timeout.connect(self.pollStats)
 
     def startRasterScan(self):
         self.parent.setInputsEnabled(False)
@@ -597,13 +607,15 @@ class RasterModeBottomView(QWidget):
         self.parent.setInputsEnabled(True)
         self.parent.stopRasterScan()
 
-    def pollProgress(self):
+    def pollStats(self):
         if not self.parent.server.getBusy():
             return -1
 
         self.progressBar.setValue(self.parent.server.getRasterProgress())
         self.avgTimeReadout.setText(str(self.parent.server.getAvgRasterTime()))
         self.totalTimeReadout.setText(str(self.parent.server.getTotalRasterTime()))
+        self.speedRReadout.setText(str(self.parent.server.getRasterRSpeed()))
+        self.speedLReadout.setText(str(self.parent.server.getRasterLSpeed()))
 
     def show(self):
         self.timer.start()

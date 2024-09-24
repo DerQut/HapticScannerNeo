@@ -257,8 +257,25 @@ class ServerNeo(QObject):
         return self.isBusy
 
     def getRasterProgress(self):
-        # THIS IS A TEMPORARY FUNCTION
+        """
+        THIS IS A TEMPORARY FUNCTION
+        :return: The progress of the current scan when the microscope is in Raster mode (in percents)
+        """
         return random.randint(0, 100)
+
+    def getRasterLSpeed(self):
+        """
+        THIS IS A TEMPORARY FUNCTION
+        :return: Average speed for lines scanned from the left when the microscope is in Raster mode (in lines per second)
+        """
+        return random.randint(0, 50)
+
+    def getRasterRSpeed(self):
+        """
+        THIS IS A TEMPORARY FUNCTION
+        :return: Average speed for lines scanned from the right when the microscope is in Raster mode (in lines per second)
+        """
+        return random.randint(50, 100)
 
     def getAvgRasterTime(self) -> int:
         """
