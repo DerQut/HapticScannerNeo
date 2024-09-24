@@ -793,6 +793,19 @@ class HapticModeBottomView(QWidget):
         self.startButton.clicked.connect(self.startHapticScan)
         self.stopButton.clicked.connect(self.stopHapticScan)
 
+        self.forceToggle.clicked.connect(self.updateHapticModeParams)
+        self.LEDToggle.clicked.connect(self.updateHapticModeParams)
+        self.heatToggle.clicked.connect(self.updateHapticModeParams)
+        self.vibrationsToggle.clicked.connect(self.updateHapticModeParams)
+
+        self.updateHapticModeParams()
+
+    def updateHapticModeParams(self):
+        self.parent.server.updateHapticModeParams(ledFeedback=self.LEDToggle.isChecked())
+        self.parent.server.updateHapticModeParams(forceFeedback=self.forceToggle.isChecked())
+        self.parent.server.updateHapticModeParams(vibrationsFeedback=self.vibrationsToggle.isChecked())
+        self.parent.server.updateHapticModeParams(heatFeedback=self.heatToggle.isChecked())
+
     def startHapticScan(self):
         self.parent.setInputsEnabled(False)
         self.parent.startHapticScan()

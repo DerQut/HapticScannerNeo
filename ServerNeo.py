@@ -48,6 +48,26 @@ class ServerNeo(QObject):
 
         self.isPIDOnline: bool = False
 
+        self.initialScanOperatingMode: str = ""
+        self.initialScanCurveDensity: float = 0.0
+        self.initialScanSpeed: float = 0.0
+
+        self.rasterModeOperatingMode: str = ""
+        self.rasterModeTraceTime: int = 0
+        self.rasterModeRetraceTime: int = 0
+        self.rasterModeInterval: int = 0
+
+        self.hapticModeOperatingMode1: str = ""
+        self.hapticModeOperatingMode2: str = ""
+        self.hapticModeOperatingMode3: str = ""
+        self.hapticModeScanWidth: int = 0
+        self.hapticModeTipSpeed: int = 0
+        self.hapticModeOversamplingPoints: int = 0
+        self.hapticModeForceFeedback: bool = False
+        self.hapticModeHeatFeedback: bool = False
+        self.hapticModeLEDFeedback: bool = False
+        self.hapticModeVibrationsFeedback: bool = False
+
         if not os.path.isfile("config.xml"):
             missingXMLFallback()
 
@@ -243,6 +263,30 @@ class ServerNeo(QObject):
     def stopHapticScan(self):
         logFileAppend(self.logFile, "Stopping haptic scan...")
         self.isBusy = False
+
+    def updateInitialScanParams(self, **kwargs):
+        self.initialScanOperatingMode = kwargs["operatingMode"]
+        self.initialScanCurveDensity = kwargs["curveDensity"]
+        self.initialScanSpeed = kwargs["speed"]
+
+    def updateRasterModeParams(self, **kwargs):
+        self.rasterModeOperatingMode = kwargs["operatingMode"]
+        self.rasterModeTraceTime = kwargs["traceTime"]
+        self.rasterModeRetraceTime = kwargs["retraceTime"]
+        self.rasterModeInterval = kwargs["interval"]
+
+    def updateHapticModeParams(self, **kwargs):
+        print(kwargs)
+        self.hapticModeOperatingMode1 = kwargs["operatingMode1"]
+        self.hapticModeOperatingMode2 = kwargs["operatingMode2"]
+        self.hapticModeOperatingMode3 = kwargs["operatingMode3"]
+        self.hapticModeScanWidth = kwargs["scanWidth"]
+        self.hapticModeTipSpeed = kwargs["tipSpeed"]
+        self.hapticModeOversamplingPoints = kwargs["oversamplingPoints"]
+        self.hapticModeForceFeedback = kwargs["forceFeedback"]
+        self.hapticModeHeatFeedback = kwargs["heatFeedback"]
+        self.hapticModeLEDFeedback = kwargs["ledFeedback"]
+        self.hapticModeVibrationsFeedback = kwargs["vibrationsFeedback"]
 
     def getCE(self):
         # THIS IS A TEMPORARY FUNCTION
