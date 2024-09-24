@@ -325,6 +325,46 @@ class ServerNeo(QObject):
         """
         return random.randint(0, 100)
 
+    def setHapticModeForceFeedback(self, forceFeedback: bool):
+        self.hapticModeForceFeedback = forceFeedback
+        ...
+
+    def setHapticModeHeatFeedback(self, heatFeedback: bool):
+        self.hapticModeHeatFeedback = heatFeedback
+        ...
+
+    def setHapticModeVibrationsFeedback(self, vibrationsFeedback: bool):
+        self.hapticModeVibrationsFeedback = vibrationsFeedback
+        ...
+
+    def setHapticModeLEDFeedback(self, ledFeedback: bool):
+        self.hapticModeLEDFeedback = ledFeedback
+        ...
+
+    def setHapticModeOperatingMode1(self, operatingMode1: str):
+        self.hapticModeOperatingMode1 = operatingMode1
+        ...
+
+    def setHapticModeOperatingMode2(self, operatingMode2: str):
+        self.hapticModeOperatingMode2 = operatingMode2
+        ...
+
+    def setHapticModeOperatingMode3(self, operatingMode3: str):
+        self.hapticModeOperatingMode3 = operatingMode3
+        ...
+
+    def setHapticModeScanWidth(self, scanWidth: int):
+        self.hapticModeScanWidth = scanWidth
+        ...
+
+    def setHapticModeTipSpeed(self, tipSpeed: int):
+        self.hapticModeTipSpeed = tipSpeed
+        ...
+
+    def setHapticModeOversamplingPoints(self, oversamplingPoints: int):
+        self.hapticModeOversamplingPoints = oversamplingPoints
+        ...
+
     def getOnlinePID(self) -> (int, int, int):
         """
         THIS IS A TEMPORARY FUNCTION

@@ -652,16 +652,19 @@ class HapticModeTopView(QWidget):
 
         self.modePicker1 = QComboBox()
         self.modePicker1.addItems(["Trigger", "Continuous"])
+        self.modePicker1.currentTextChanged.connect(self.sendOperatingMode1)
         self.modePicker1.setFixedWidth(180)
         pickerVStack.addWidget(self.modePicker1)
 
         self.modePicker2 = QComboBox()
         self.modePicker2.addItems(["Cycloid", "Other", "Off"])
+        self.modePicker2.currentTextChanged.connect(self.sendOperatingMode2)
         self.modePicker2.setFixedWidth(180)
         pickerVStack.addWidget(self.modePicker2)
 
         self.modePicker3 = QComboBox()
         self.modePicker3.addItems(["Free mover", "Follower"])
+        self.modePicker3.currentTextChanged.connect(self.sendOperatingMode3)
         self.modePicker3.setFixedWidth(180)
         pickerVStack.addWidget(self.modePicker3)
 
@@ -674,6 +677,7 @@ class HapticModeTopView(QWidget):
         widthHStack.addWidget(QLabel("Scan width:"))
         self.widthStepper = QSpinBox()
         self.widthStepper.setRange(1, 10000)
+        self.widthStepper.valueChanged.connect(self.sendScanWidth)
         self.widthStepper.setValue(1)
         widthHStack.addWidget(self.widthStepper)
         mainVStack.addLayout(widthHStack)
@@ -682,6 +686,7 @@ class HapticModeTopView(QWidget):
         speedHStack.addWidget(QLabel("Tip speed:"))
         self.speedStepper = QSpinBox()
         self.speedStepper.setRange(1, 10000)
+        self.speedStepper.valueChanged.connect(self.sendTipSpeed)
         self.speedStepper.setValue(1)
         speedHStack.addWidget(self.speedStepper)
         mainVStack.addLayout(speedHStack)
@@ -690,6 +695,7 @@ class HapticModeTopView(QWidget):
         oversamplingHStack.addWidget(QLabel("Oversampling points:"))
         self.oversamplingStepper = QSpinBox()
         self.oversamplingStepper.setRange(1, 10000)
+        self.oversamplingStepper.valueChanged.connect(self.sendOversamplingPoints)
         self.oversamplingStepper.setValue(10)
         self.oversamplingStepper.setEnabled(False)
         oversamplingHStack.addWidget(self.oversamplingStepper)
@@ -702,7 +708,33 @@ class HapticModeTopView(QWidget):
         scrollArea.setWidget(mainView)
 
         dummyLayout.addWidget(scrollArea)
+
+        self.sendOperatingMode1()
+        self.sendOperatingMode2()
+        self.sendOperatingMode3()
+        self.sendScanWidth()
+        self.sendTipSpeed()
+        self.sendOversamplingPoints()
+
         self.hide()
+
+    def sendOperatingMode1(self):
+        self.parent.server.setHapticModeOperatingMode1(self.modePicker1.currentText())
+
+    def sendOperatingMode2(self):
+        self.parent.server.setHapticModeOperatingMode2(self.modePicker2.currentText())
+
+    def sendOperatingMode3(self):
+        self.parent.server.setHapticModeOperatingMode3(self.modePicker3.currentText())
+
+    def sendScanWidth(self):
+        self.parent.server.setHapticModeScanWidth(self.widthStepper.value())
+
+    def sendTipSpeed(self):
+        self.parent.server.setHapticModeTipSpeed(self.speedStepper.value())
+
+    def sendOversamplingPoints(self):
+        self.parent.server.setHapticModeOversamplingPoints(self.oversamplingStepper.value())
 
 
 class HapticModeBottomView(QWidget):
@@ -764,18 +796,22 @@ class HapticModeBottomView(QWidget):
         mainVStack.addWidget(QLabel("Feedback options:"))
         feedbackHStack = QHBoxLayout()
         self.forceToggle = QCheckBox("Force")
+        self.forceToggle.clicked.connect(self.sendForceFeedback)
         feedbackHStack.addWidget(self.forceToggle)
         feedbackHStack.addStretch()
 
         self.vibrationsToggle = QCheckBox("Vibrations")
+        self.vibrationsToggle.clicked.connect(self.sendVibrationsFeedback)
         feedbackHStack.addWidget(self.vibrationsToggle)
         feedbackHStack.addStretch()
 
         self.heatToggle = QCheckBox("Heat")
+        self.heatToggle.clicked.connect(self.sendHeatFeedback)
         feedbackHStack.addWidget(self.heatToggle)
         feedbackHStack.addStretch()
 
         self.LEDToggle = QCheckBox("LED")
+        self.LEDToggle.clicked.connect(self.sendLEDFeedback)
         feedbackHStack.addWidget(self.LEDToggle)
 
         mainVStack.addLayout(feedbackHStack)
@@ -792,6 +828,11 @@ class HapticModeBottomView(QWidget):
 
         self.startButton.clicked.connect(self.startHapticScan)
         self.stopButton.clicked.connect(self.stopHapticScan)
+
+        self.sendForceFeedback()
+        self.sendVibrationsFeedback()
+        self.sendHeatFeedback()
+        self.sendLEDFeedback()
 
     def startHapticScan(self):
         self.parent.setInputsEnabled(False)
@@ -810,6 +851,18 @@ class HapticModeBottomView(QWidget):
 
         self.avgTimeReadout.setText(str(avgTime))
         self.totalTimeReadout.setText(str(totTime))
+
+    def sendHeatFeedback(self):
+        self.parent.server.setHapticModeHeatFeedback(self.heatToggle.isChecked())
+
+    def sendLEDFeedback(self):
+        self.parent.server.setHapticModeLEDFeedback(self.LEDToggle.isChecked())
+
+    def sendVibrationsFeedback(self):
+        self.parent.server.setHapticModeVibrationsFeedback(self.vibrationsToggle.isChecked())
+
+    def sendForceFeedback(self):
+        self.parent.server.setHapticModeForceFeedback(self.forceToggle.isChecked())
 
     def hide(self):
         self.timer.stop()
