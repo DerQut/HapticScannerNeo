@@ -360,6 +360,7 @@ class InitialScanTopView(QWidget):
         modeHStack.addStretch()
         self.modePicker = QComboBox()
         self.modePicker.addItems(["Lissajous curve", "Sine", "Other"])
+        self.modePicker.currentTextChanged.connect(self.sendInitialScanOperatingMode)
         self.modePicker.setFixedWidth(180)
         modeHStack.addWidget(self.modePicker)
         mainVStack.addLayout(modeHStack)
@@ -370,6 +371,7 @@ class InitialScanTopView(QWidget):
         densityHStack.addWidget(QLabel("Curve density [%]:"))
         self.densityStepper = QDoubleSpinBox()
         self.densityStepper.setRange(0, 100)
+        self.densityStepper.valueChanged.connect(self.sendInitialScanCurveDensity)
         self.densityStepper.setSingleStep(0.01)
         densityHStack.addWidget(self.densityStepper)
         mainVStack.addLayout(densityHStack)
@@ -377,6 +379,7 @@ class InitialScanTopView(QWidget):
         speedHStack = QHBoxLayout()
         speedHStack.addWidget(QLabel("Speed [%]:"))
         self.speedStepper = QDoubleSpinBox()
+        self.speedStepper.valueChanged.connect(self.sendInitialScanSpeed)
         self.speedStepper.setRange(0, 100)
         self.speedStepper.setSingleStep(0.01)
         speedHStack.addWidget(self.speedStepper)
@@ -389,7 +392,21 @@ class InitialScanTopView(QWidget):
         scrollArea.setWidget(mainView)
 
         dummyLayout.addWidget(scrollArea)
+
+        self.sendInitialScanCurveDensity()
+        self.sendInitialScanSpeed()
+        self.sendInitialScanOperatingMode()
+
         self.hide()
+
+    def sendInitialScanOperatingMode(self):
+        self.parent.server.setInitialScanOperatingMode(self.modePicker.currentText())
+
+    def sendInitialScanCurveDensity(self):
+        self.parent.server.setInitialScanCurveDensity(self.densityStepper.value())
+
+    def sendInitialScanSpeed(self):
+        self.parent.server.setInitialScanSpeed(self.speedStepper.value())
 
 
 class InitialScanBottomView(QWidget):
@@ -815,7 +832,7 @@ class HapticModeBottomView(QWidget):
 
         mainVStack.addWidget(Divider(MacColoursDark.gray))
 
-        mainVStack.addWidget(QLabel("Feedback options:"))
+        mainVStack.addWidget(QLabel("Haptic feedback options:"))
         feedbackHStack = QHBoxLayout()
         self.forceToggle = QCheckBox("Force")
         self.forceToggle.clicked.connect(self.sendForceFeedback)

@@ -276,6 +276,18 @@ class ServerNeo(QObject):
         # THIS IS A TEMPORARY FUNCTION
         return self.isBusy
 
+    def setInitialScanOperatingMode(self, operatingMode: str):
+        self.initialScanOperatingMode = operatingMode
+        ...
+
+    def setInitialScanSpeed(self, speed: float):
+        self.initialScanSpeed = speed
+        ...
+
+    def setInitialScanCurveDensity(self, curveDensity: float):
+        self.initialScanCurveDensity = curveDensity
+        ...
+
     def getRasterProgress(self):
         """
         THIS IS A TEMPORARY FUNCTION
