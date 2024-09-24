@@ -466,6 +466,7 @@ class RasterModeTopView(QWidget):
         modeHStack.addStretch()
         self.modePicker = QComboBox()
         self.modePicker.addItems(["Trigger", "Continuous"])
+        self.modePicker.currentTextChanged.connect(self.sendRasterModeOperatingMode)
         self.modePicker.setFixedWidth(180)
         modeHStack.addWidget(self.modePicker)
         mainVStack.addLayout(modeHStack)
@@ -476,6 +477,7 @@ class RasterModeTopView(QWidget):
         traceTimeHStack.addWidget(QLabel("Trace time [ms]:"))
         self.traceTimeStepper = QSpinBox()
         self.traceTimeStepper.setRange(1, 1000)
+        self.traceTimeStepper.valueChanged.connect(self.sendRasterModeTraceTime)
         self.traceTimeStepper.setValue(1)
         traceTimeHStack.addWidget(self.traceTimeStepper)
         mainVStack.addLayout(traceTimeHStack)
@@ -484,6 +486,7 @@ class RasterModeTopView(QWidget):
         retraceTimeHStack.addWidget(QLabel("Retrace time [ms]:"))
         self.retraceTimeStepper = QSpinBox()
         self.retraceTimeStepper.setRange(1, 1000)
+        self.retraceTimeStepper.valueChanged.connect(self.sendRasterModeRetraceTime)
         self.retraceTimeStepper.setValue(1)
         retraceTimeHStack.addWidget(self.retraceTimeStepper)
         mainVStack.addLayout(retraceTimeHStack)
@@ -492,6 +495,7 @@ class RasterModeTopView(QWidget):
         intervalHStack.addWidget(QLabel("Interval [ms]:"))
         self.intervalStepper = QSpinBox()
         self.intervalStepper.setRange(1, 1000)
+        self.intervalStepper.valueChanged.connect(self.sendRasterModeInterval)
         self.intervalStepper.setValue(1)
         intervalHStack.addWidget(self.intervalStepper)
         mainVStack.addLayout(intervalHStack)
@@ -503,7 +507,25 @@ class RasterModeTopView(QWidget):
         scrollArea.setWidget(mainView)
 
         dummyLayout.addWidget(scrollArea)
+
+        self.sendRasterModeTraceTime()
+        self.sendRasterModeRetraceTime()
+        self.sendRasterModeOperatingMode()
+        self.sendRasterModeInterval()
+
         self.hide()
+
+    def sendRasterModeOperatingMode(self):
+        self.parent.server.setRasterModeOperatingMode(self.modePicker.currentText())
+
+    def sendRasterModeTraceTime(self):
+        self.parent.server.setRasterModeTraceTime(self.traceTimeStepper.value())
+
+    def sendRasterModeRetraceTime(self):
+        self.parent.server.setRasterModeRetraceTime(self.retraceTimeStepper.value())
+
+    def sendRasterModeInterval(self):
+        self.parent.server.setRasterModeInterval(self.intervalStepper.value())
 
 
 class RasterModeBottomView(QWidget):

@@ -311,6 +311,22 @@ class ServerNeo(QObject):
         """
         return random.randint(0, 100)
 
+    def setRasterModeOperatingMode(self, operatingMode: str):
+        self.rasterModeOperatingMode = operatingMode
+        ...
+
+    def setRasterModeTraceTime(self, traceTime: int):
+        self.rasterModeTraceTime = traceTime
+        ...
+
+    def setRasterModeRetraceTime(self, retraceTime: int):
+        self.rasterModeRetraceTime = retraceTime
+        ...
+
+    def setRasterModeInterval(self, interval: int):
+        self.rasterModeInterval = interval
+        ...
+
     def getAvgHapticTime(self) -> int:
         """
         THIS IS A TEMPORARY FUNCTION
