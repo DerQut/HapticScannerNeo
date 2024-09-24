@@ -736,7 +736,7 @@ class HapticModeBottomView(QWidget):
         readoutVStack.addLayout(avgTimeHStack)
 
         totalTimeHStack = QHBoxLayout()
-        totalTimeHStack.addWidget(QLabel("Total scan duration:"))
+        totalTimeHStack.addWidget(QLabel("Total scan duration [s]:"))
         totalTimeHStack.addStretch()
         self.totalTimeReadout = QLabel("00:00:00")
         totalTimeHStack.addWidget(self.totalTimeReadout)
