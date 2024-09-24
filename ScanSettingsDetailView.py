@@ -558,14 +558,14 @@ class RasterModeBottomView(QWidget):
         avgTimeHStack = QHBoxLayout()
         avgTimeHStack.addWidget(QLabel("Average time between lines [s]:"))
         avgTimeHStack.addStretch()
-        self.avgTimeReadout = QLabel()
+        self.avgTimeReadout = QLabel("0")
         avgTimeHStack.addWidget(self.avgTimeReadout)
         statsVStack.addLayout(avgTimeHStack)
 
         totalTimeHStack = QHBoxLayout()
         totalTimeHStack.addWidget(QLabel("Total scan duration [s]:"))
         totalTimeHStack.addStretch()
-        self.totalTimeReadout = QLabel()
+        self.totalTimeReadout = QLabel("0")
         totalTimeHStack.addWidget(self.totalTimeReadout)
         statsVStack.addLayout(totalTimeHStack)
 
