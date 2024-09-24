@@ -643,7 +643,10 @@ class HapticModeTopView(QWidget):
         mainView.setLayout(mainVStack)
 
         modeHStack = QHBoxLayout()
-        modeHStack.addWidget(QLabel("Operating mode:"))
+        modeLabelVStack = QVBoxLayout()
+        modeLabelVStack.addWidget(QLabel("Operating mode:"))
+        modeLabelVStack.addStretch()
+        modeHStack.addLayout(modeLabelVStack)
         modeHStack.addStretch()
         pickerVStack = QVBoxLayout()
 
@@ -755,6 +758,27 @@ class HapticModeBottomView(QWidget):
         readoutVStack.addLayout(totalTimeHStack)
 
         mainVStack.addLayout(readoutVStack)
+
+        mainVStack.addWidget(Divider(MacColoursDark.gray))
+
+        mainVStack.addWidget(QLabel("Feedback options:"))
+        feedbackHStack = QHBoxLayout()
+        self.forceToggle = QCheckBox("Force")
+        feedbackHStack.addWidget(self.forceToggle)
+        feedbackHStack.addStretch()
+
+        self.vibrationsToggle = QCheckBox("Vibrations")
+        feedbackHStack.addWidget(self.vibrationsToggle)
+        feedbackHStack.addStretch()
+
+        self.heatToggle = QCheckBox("Heat")
+        feedbackHStack.addWidget(self.heatToggle)
+        feedbackHStack.addStretch()
+
+        self.LEDToggle = QCheckBox("LED")
+        feedbackHStack.addWidget(self.LEDToggle)
+
+        mainVStack.addLayout(feedbackHStack)
 
         mainVStack.addStretch()
         mainVStack.addLayout(buttonHStack)
