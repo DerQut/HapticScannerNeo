@@ -264,30 +264,6 @@ class ServerNeo(QObject):
         logFileAppend(self.logFile, "Stopping haptic scan...")
         self.isBusy = False
 
-    def updateInitialScanParams(self, **kwargs):
-        self.initialScanOperatingMode = kwargs["operatingMode"]
-        self.initialScanCurveDensity = kwargs["curveDensity"]
-        self.initialScanSpeed = kwargs["speed"]
-
-    def updateRasterModeParams(self, **kwargs):
-        self.rasterModeOperatingMode = kwargs["operatingMode"]
-        self.rasterModeTraceTime = kwargs["traceTime"]
-        self.rasterModeRetraceTime = kwargs["retraceTime"]
-        self.rasterModeInterval = kwargs["interval"]
-
-    def updateHapticModeParams(self, **kwargs):
-        print(kwargs)
-        self.hapticModeOperatingMode1 = kwargs["operatingMode1"]
-        self.hapticModeOperatingMode2 = kwargs["operatingMode2"]
-        self.hapticModeOperatingMode3 = kwargs["operatingMode3"]
-        self.hapticModeScanWidth = kwargs["scanWidth"]
-        self.hapticModeTipSpeed = kwargs["tipSpeed"]
-        self.hapticModeOversamplingPoints = kwargs["oversamplingPoints"]
-        self.hapticModeForceFeedback = kwargs["forceFeedback"]
-        self.hapticModeHeatFeedback = kwargs["heatFeedback"]
-        self.hapticModeLEDFeedback = kwargs["ledFeedback"]
-        self.hapticModeVibrationsFeedback = kwargs["vibrationsFeedback"]
-
     def getCE(self):
         # THIS IS A TEMPORARY FUNCTION
         return random.randrange(0, 1000000, 1) / 10001
