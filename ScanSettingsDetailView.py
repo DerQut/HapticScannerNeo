@@ -324,19 +324,11 @@ class ChannelPopupWindow(QMainWindow):
         vStack = QVBoxLayout()
         vStack.setSpacing(15)
 
-        points = self.channelEntryView.channel.scanPoints
-        spots = []
-        for point in points:
-            spot = {"symbol": "s", "pos": (point[0], point[1]), "size": 1, 'pen': {'color': (0, 0, 0, 0), 'width': 0}, 'brush': (point[2], point[2], point[2])}
-            spots.append(spot)
-
         self.plot = pg.plot()
-        scatter = pg.ScatterPlotItem(pxMode=False)
-        scatter.addPoints(spots)
-        self.plot.addItem(scatter)
         self.plot.setBackground(MacColoursDark.bg_colour)
         self.plot.setTitle(self.channelEntryView.channel.name(), color="white", size="16pt")
-
+        self.plot.setLabel("bottom", "x", color="white")
+        self.plot.setLabel("left", "y", color="white")
 
         vStack.addWidget(self.plot)
 
@@ -349,6 +341,26 @@ class ChannelPopupWindow(QMainWindow):
         zContainer.setLayout(zStack)
 
         self.setCentralWidget(zContainer)
+
+        self.timer = QTimer()
+        self.timer.setInterval(100)
+        self.timer.timeout.connect(self.randomize)
+        self.timer.start()
+
+    def randomize(self):
+        self.channelEntryView.channel.randomize()
+        self.plot.clear()
+
+        points = self.channelEntryView.channel.scanPoints
+        spots = []
+        for point in points:
+            spot = {"symbol": "s", "pos": (point[0], point[1]), "size": 1, 'pen': {'color': (0, 0, 0, 0), 'width': 0},
+                    'brush': (point[2], point[2], point[2])}
+            spots.append(spot)
+
+        scatter = pg.ScatterPlotItem(pxMode=False)
+        scatter.addPoints(spots)
+        self.plot.addItem(scatter)
 
 
 class InitialScanTopView(QWidget):
