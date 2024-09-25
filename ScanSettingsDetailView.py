@@ -351,11 +351,11 @@ class ChannelPopupWindow(QMainWindow):
         self.setCentralWidget(zContainer)
 
     def rePlot(self):
-        if not self.channelEntryView.channel.enabled():
-            return -1
-
-        self.channelEntryView.channel.randomize()
+        print("calling!")
         self.plot.clear()
+
+        if self.channelEntryView.channel.enabled():
+            self.channelEntryView.channel.randomize()
 
         points = self.channelEntryView.channel.scanPoints
         spots = []
@@ -375,6 +375,9 @@ class ChannelPopupWindow(QMainWindow):
     def show(self):
         super().show()
         self.timer.start()
+
+    def closeEvent(self, a0):
+        self.timer.stop()
 
 
 class InitialScanTopView(QWidget):

@@ -7,7 +7,7 @@ class ScanChannel:
         self.__gain = gain
         self.__enabled = enabled
         self.scanPoints = []
-        self.randomize()
+        self.preload()
 
     def name(self):
         return self.__name
@@ -45,8 +45,25 @@ class ScanChannel:
             zList.append(point[2])
         return zList
 
+    def preload(self):
+        self.scanPoints = []
+        i = 0
+        j = 0
+        while j < 32:
+            while i < 32:
+                i = i + 1
+                self.scanPoints.append([i, j, i*j/32/32*255])
+            j = j + 1
+            i = 0
+
     def randomize(self):
         self.scanPoints = []
-        while len(self.scanPoints) < 18*18:
-            self.scanPoints.append((random.randint(0, 16), random.randint(0, 16), random.randint(0, 255)))
+        i = 0
+        j = 0
+        while j < 32:
+            while i < 32:
+                i = i + 1
+                self.scanPoints.append([i, j, random.randint(0,255)])
+            j = j + 1
+            i = 0
 
