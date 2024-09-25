@@ -71,10 +71,7 @@ class ServerNeo(QObject):
         if not os.path.isfile("config.xml"):
             missingXMLFallback()
 
-        try:
-            self.readXML()
-        except Exception as e:
-            print(e)
+        self.readXML()
 
         self.logFile = ""
         self.reInitialiseLogFile()
