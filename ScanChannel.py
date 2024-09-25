@@ -7,8 +7,8 @@ class ScanChannel:
         self.__gain = gain
         self.__enabled = enabled
         self.scanPoints = []
-        while len(self.scanPoints) < 255:
-            self.scanPoints.append((random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+        while len(self.scanPoints) < 2137:
+            self.scanPoints.append((random.randint(0, 32), random.randint(0, 32), random.randint(0, 255)))
 
     def name(self):
         return self.__name

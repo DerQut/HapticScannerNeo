@@ -313,7 +313,7 @@ class ChannelPopupWindow(QMainWindow):
         self.setFont(QFont("Helvetica", 12))
 
         self.channelEntryView = channelEntryView
-        self.setFixedSize(QSize(400, 300))
+        self.setFixedSize(QSize(400, 400))
 
         zStack = QStackedLayout()
         zStack.setStackingMode(QStackedLayout.StackingMode.StackAll)
@@ -325,17 +325,14 @@ class ChannelPopupWindow(QMainWindow):
         vStack.setSpacing(15)
 
         points = self.channelEntryView.channel.scanPoints
-        dots = []
-        i = 0
-        while i < len(points):
-            dot = {"pos": (points[i][0], points[i][1]), "size": 2, 'pen': {'color': (0, 0, 0, 0), 'width': 0}, 'brush': (points[i][2], points[i][2], points[i][2])}
-            dots.append(dot)
-            i = i + 1
+        spots = []
+        for point in points:
+            spot = {"symbol": "s", "pos": (point[0], point[1]), "size": 1, 'pen': {'color': (0, 0, 0, 0), 'width': 0}, 'brush': (point[2], point[2], point[2])}
+            spots.append(spot)
 
         self.plot = pg.plot()
-        self.plot.setFixedSize(250, 250)
         scatter = pg.ScatterPlotItem(pxMode=False)
-        scatter.addPoints(dots)
+        scatter.addPoints(spots)
         self.plot.addItem(scatter)
         self.plot.setBackground(MacColoursDark.bg_colour)
         self.plot.setTitle(self.channelEntryView.channel.name(), color="white", size="16pt")
