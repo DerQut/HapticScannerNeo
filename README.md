@@ -8,7 +8,7 @@ Wymagane pakiety: PyQt6, pyserial, pyqtgraph, ... (TBD)
 
 ## Funkcjonalność
 
-(TBD)
+Czego nie ma: zakładki Tools, całego backendu, dokończonego ChannelPopupWindow, ... (TBD)
 
 ## Galeria
 
