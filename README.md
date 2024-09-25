@@ -4,7 +4,7 @@ HapticScannerNeo to program swtorzony przy współpracy z Katedrą Nanometrologi
 
 ## Instalacja
 
-(TBD)
+Wymagane pakiety: PyQt6, pyserial, pyqtgraph, ... (TBD)
 
 ## Funkcjonalność
 
