@@ -3,6 +3,9 @@ from PyQt6.QtGui import *
 from PyQt6.QtCore import *
 from PyQt6.QtWidgets import *
 
+import pyqtgraph as pg
+import numpy as np
+
 from assets import MacColoursDark
 from Color import *
 
@@ -12,7 +15,7 @@ import os
 
 
 # Improve load time by disabling ChannelEntryView.popupWindow
-NEODEBUG = True
+NEODEBUG = False
 
 class ScanSettingsDetailView(QWidget):
     def __init__(self, parent=None):
@@ -321,12 +324,24 @@ class ChannelPopupWindow(QMainWindow):
         vStack = QVBoxLayout()
         vStack.setSpacing(15)
 
-        titleLabel = QLabel("ChannelPopupWindow")
-        titleLabel.setFont(QFont("Helvetica", 16))
-        vStack.addWidget(titleLabel)
-        vStack.addWidget(Divider(MacColoursDark.gray))
+        points = self.channelEntryView.channel.scanPoints
+        dots = []
+        i = 0
+        while i < len(points):
+            dot = {"pos": (points[i][0], points[i][1]), "size": 2, 'pen': {'color': (0, 0, 0, 0), 'width': 0}, 'brush': (points[i][2], points[i][2], points[i][2])}
+            dots.append(dot)
+            i = i + 1
 
-        vStack.addStretch()
+        self.plot = pg.plot()
+        self.plot.setFixedSize(250, 250)
+        scatter = pg.ScatterPlotItem(pxMode=False)
+        scatter.addPoints(dots)
+        self.plot.addItem(scatter)
+        self.plot.setBackground(MacColoursDark.bg_colour)
+        self.plot.setTitle(self.channelEntryView.channel.name(), color="white", size="16pt")
+
+
+        vStack.addWidget(self.plot)
 
         vContainer = QWidget(self)
         vContainer.setLayout(vStack)
