@@ -3,6 +3,8 @@ import sys
 import PyQt6
 from PyQt6.QtWidgets import QApplication, QWidget
 
+# from theme import set_theme
+
 from ContentView import *
 
 
@@ -16,7 +18,7 @@ def main():
     contentView.setWindowTitle("HapticScannerNeo")
 
     app.setStyle("fusion")
-
+    # set_theme(app, "dark")
     app.exec()
 
     return 0
