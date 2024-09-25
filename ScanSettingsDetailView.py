@@ -309,7 +309,7 @@ class ChannelPopupWindow(QMainWindow):
 
         self.timer = QTimer()
         self.timer.setInterval(100)
-        self.timer.timeout.connect(self.randomize)
+        self.timer.timeout.connect(self.rePlot)
         self.timer.start()
 
         super().__init__()
