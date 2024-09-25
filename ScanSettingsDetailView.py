@@ -291,8 +291,10 @@ class ChannelEntryView(QWidget):
         self.channel.setName(self.textEntry.text())
         if self.channel.name() != "":
             self.popupWindow.setWindowTitle(self.channel.name())
+            self.popupWindow.plot.setTitle(self.channel.name())
         else:
             self.popupWindow.setWindowTitle(f"Channel {self.number+1}")
+            self.popupWindow.plot.setTitle(f"Channel {self.number+1}")
 
     def setChannelGain(self):
         transformedText = list(self.gainPicker.currentText())
