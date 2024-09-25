@@ -351,7 +351,6 @@ class ChannelPopupWindow(QMainWindow):
         self.setCentralWidget(zContainer)
 
     def rePlot(self):
-        print("calling!")
         self.plot.clear()
 
         if self.channelEntryView.channel.enabled():
