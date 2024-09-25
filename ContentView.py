@@ -14,6 +14,7 @@ class ContentView(QMainWindow):
         super().__init__()
 
         self.server = ServerNeo()
+        self.windowsToKillIfNeeded: [QMainWindow] = []
 
         self.sidebarView = SidebarView(self)
         self.detailView = DetailView(self)
@@ -24,3 +25,8 @@ class ContentView(QMainWindow):
 
         self.setFixedHeight(800)
         self.setFixedWidth(1200)
+
+
+    def closeEvent(self, a0):
+        for window in self.windowsToKillIfNeeded:
+            window.close()

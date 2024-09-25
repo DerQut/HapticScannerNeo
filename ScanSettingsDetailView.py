@@ -21,6 +21,8 @@ class ScanSettingsDetailView(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
 
+        self.parent = parent
+
         self.timer = QTimer()
         self.timer.timeout.connect(self.pollServerStatus)
         self.timer.setInterval(250)
@@ -349,6 +351,8 @@ class ChannelPopupWindow(QMainWindow):
         zContainer.setLayout(zStack)
 
         self.setCentralWidget(zContainer)
+
+        self.channelEntryView.scanSettingsDetailView.parent.windowsToKillIfNeeded.append(self)
 
     def rePlot(self):
         self.plot.clear()
