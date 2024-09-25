@@ -306,6 +306,12 @@ class ChannelEntryView(QWidget):
 
 class ChannelPopupWindow(QMainWindow):
     def __init__(self, channelEntryView: ChannelEntryView):
+
+        self.timer = QTimer()
+        self.timer.setInterval(100)
+        self.timer.timeout.connect(self.randomize)
+        self.timer.start()
+
         super().__init__()
         self.hide()
 
@@ -342,12 +348,7 @@ class ChannelPopupWindow(QMainWindow):
 
         self.setCentralWidget(zContainer)
 
-        self.timer = QTimer()
-        self.timer.setInterval(100)
-        self.timer.timeout.connect(self.randomize)
-        self.timer.start()
-
-    def randomize(self):
+    def rePlot(self):
         self.channelEntryView.channel.randomize()
         self.plot.clear()
 
@@ -361,6 +362,14 @@ class ChannelPopupWindow(QMainWindow):
         scatter = pg.ScatterPlotItem(pxMode=False)
         scatter.addPoints(spots)
         self.plot.addItem(scatter)
+
+    def hide(self):
+        self.timer.stop()
+        super().hide()
+
+    def show(self):
+        super().show()
+        self.timer.start()
 
 
 class InitialScanTopView(QWidget):
