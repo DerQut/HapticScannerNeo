@@ -351,6 +351,9 @@ class ChannelPopupWindow(QMainWindow):
         self.setCentralWidget(zContainer)
 
     def rePlot(self):
+        if not self.channelEntryView.channel.enabled():
+            return -1
+
         self.channelEntryView.channel.randomize()
         self.plot.clear()
 
