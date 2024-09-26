@@ -1,4 +1,5 @@
 import random
+import numpy as np
 
 
 class ScanChannel:
@@ -8,7 +9,7 @@ class ScanChannel:
         self.__enabled = enabled
         self.scanPoints = set()
         self.__isLoopRunning = False
-        self.resolution = 96
+        self.resolution = 128
         self.preload()
 
     def name(self):
@@ -37,19 +38,25 @@ class ScanChannel:
 
     def getXValues(self):
         xList = []
-        for point in self.scanPoints:
+        scanPointsLocal = set()
+        scanPointsLocal.update(self.scanPoints)
+        for point in scanPointsLocal:
             xList.append(point[0])
         return xList
 
     def getYValues(self):
         yList = []
-        for point in self.scanPoints:
+        scanPointsLocal = set()
+        scanPointsLocal.update(self.scanPoints)
+        for point in scanPointsLocal:
             yList.append(point[1])
         return yList
 
     def getZValues(self):
         zList = []
-        for point in self.scanPoints:
+        scanPointsLocal = set()
+        scanPointsLocal.update(self.scanPoints)
+        for point in scanPointsLocal:
             zList.append(point[2])
         return zList
 
@@ -57,11 +64,23 @@ class ScanChannel:
         xList = []
         yList = []
         zList = []
-        for point in self.scanPoints:
+        scanPointsLocal = set()
+        scanPointsLocal.update(self.scanPoints)
+        for point in scanPointsLocal:
             xList.append(point[0])
             yList.append(point[1])
             zList.append(point[2])
         return xList, yList, zList
+
+    def getArray(self):
+        array = np.zeros((self.resolution+1, self.resolution+1))
+        scanPointsLocal = set()
+        scanPointsLocal.update(self.scanPoints)
+
+        for point in scanPointsLocal:
+            array[point[0]][point[1]] = point[2]
+
+        return array
 
     def preload(self):
         self.scanPoints = set()
@@ -70,7 +89,7 @@ class ScanChannel:
         while j < self.resolution:
             while i < self.resolution:
                 i = i + 1
-                self.scanPoints.add((i/self.resolution, j/self.resolution, i*j/self.resolution/self.resolution*255))
+                self.scanPoints.add((i, j, i*j/self.resolution/self.resolution*255))
             j = j + 1
             i = 0
 
@@ -88,6 +107,5 @@ class ScanChannel:
     def addRandomDot(self, count=1):
         i = 0
         while i < count:
-            self.scanPoints.add((random.randint(0, self.resolution)/self.resolution, random.randint(0, self.resolution)/self.resolution, random.randint(0,255)))
+            self.scanPoints.add((random.randint(0, self.resolution), random.randint(0, self.resolution), random.randint(0,255)))
             i = i + 1
-        print(len(self.scanPoints))

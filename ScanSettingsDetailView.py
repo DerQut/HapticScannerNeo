@@ -3,9 +3,6 @@ from PyQt6.QtGui import *
 from PyQt6.QtCore import *
 from PyQt6.QtWidgets import *
 
-import pyqtgraph as pg
-import numpy as np
-
 from assets import MacColoursDark
 from Color import *
 
@@ -15,6 +12,18 @@ import os
 
 import threading
 import time
+
+
+import matplotlib
+matplotlib.use('QtAgg')
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT as NavigationToolbar
+from matplotlib.figure import Figure
+
+class MplCanvas(FigureCanvasQTAgg):
+    def __init__(self, parent=None, width=5, height=4, dpi=100):
+        fig = Figure(figsize=(width, height), dpi=dpi)
+        self.axes = fig.add_subplot(111)
+        super(MplCanvas, self).__init__(fig)
 
 
 # Improve load time by disabling ChannelEntryView.popupWindow
@@ -327,7 +336,7 @@ class ChannelPopupWindow(QMainWindow):
         self.setFont(QFont("Helvetica", 12))
 
         self.channelEntryView = channelEntryView
-        self.setFixedSize(QSize(400, 400))
+        self.setFixedSize(QSize(600, 400))
 
         zStack = QStackedLayout()
         zStack.setStackingMode(QStackedLayout.StackingMode.StackAll)
@@ -335,19 +344,31 @@ class ChannelPopupWindow(QMainWindow):
         color = Color(MacColoursDark.bg_colour)
         zStack.addWidget(color)
 
-        vStack = QVBoxLayout()
-        vStack.setSpacing(15)
+        hStack = QHBoxLayout()
+        hStack.setSpacing(15)
 
-        self.plot = pg.plot()
-        self.plot.setBackground(MacColoursDark.bg_colour)
-        self.plot.setTitle(self.channelEntryView.channel.name(), color="white", size="16pt")
-        self.plot.setLabel("bottom", "x", color="white")
-        self.plot.setLabel("left", "y", color="white")
+        dummyLayout = QHBoxLayout()
+        plotVStack = QVBoxLayout()
 
-        vStack.addWidget(self.plot)
+        x, y, z = self.channelEntryView.channel.getAllValues()
+
+        self.plot = MplCanvas(self, width=100, height=100, dpi=100)
+        self.plot.axes.imshow(self.channelEntryView.channel.getArray(), cmap="hot", interpolation="nearest")
+
+        toolbar = NavigationToolbar(self.plot, self)
+
+        dummyLayout.addWidget(self.plot)
+        dummyWidget = QWidget()
+        dummyWidget.setLayout(dummyLayout)
+        dummyWidget.setFixedSize(300, 300)
+
+        plotVStack.addWidget(toolbar)
+        plotVStack.addWidget(dummyWidget)
+
+        hStack.addLayout(plotVStack)
 
         vContainer = QWidget(self)
-        vContainer.setLayout(vStack)
+        vContainer.setLayout(hStack)
 
         zStack.addWidget(vContainer)
 
@@ -357,9 +378,8 @@ class ChannelPopupWindow(QMainWindow):
         self.setCentralWidget(zContainer)
 
         self.channelEntryView.scanSettingsDetailView.cv.windowsToKillIfNeeded.append(self)
-        self.scatter = pg.ScatterPlotItem(pxMode=False)
         self.pointsOnScatter = set()
-        self.plot.addItem(self.scatter)
+
 
         x = threading.Thread(target=prePlot, args=(self,), daemon=True)
         x.start()
@@ -367,7 +387,7 @@ class ChannelPopupWindow(QMainWindow):
     def rePlot(self):
 
         if self.channelEntryView.channel.enabled():
-            self.channelEntryView.channel.addRandomDot(48)
+            self.channelEntryView.channel.addRandomDot(1)
 
     def hide(self):
         self.timer.stop()
@@ -956,32 +976,14 @@ class HapticModeBottomView(QWidget):
 
 def prePlot(channelPopupWindow: ChannelPopupWindow):
     while True:
-        time.sleep(1 + channelPopupWindow.channelEntryView.scanSettingsDetailView.runningLoops/2)
+        time.sleep(0.01)
         if not channelPopupWindow.isVisible():
             time.sleep(2)
             continue
 
-        if channelPopupWindow.channelEntryView.channel.isLoopRunning():
-            continue
+        x, y, z = channelPopupWindow.channelEntryView.channel.getAllValues()
+        channelPopupWindow.plot.axes.cla()
+        channelPopupWindow.plot.axes.imshow(channelPopupWindow.channelEntryView.channel.getArray(), cmap="hot", interpolation="nearest")
+        channelPopupWindow.plot.draw()
 
-        channelPopupWindow.channelEntryView.channel.setLoopRunning(True)
-        channelPopupWindow.channelEntryView.scanSettingsDetailView.runningLoops += 1
-
-        points = set()
-        points.update(channelPopupWindow.channelEntryView.channel.scanPoints)
-        spots = []
-        pointsOnScatter = set()
-        pointsOnScatter.update(channelPopupWindow.pointsOnScatter)
-
-        for point in points:
-            if point in pointsOnScatter:
-                continue
-
-            spot = {"symbol": "s", "pos": (point[0], point[1]), "size": float(1/channelPopupWindow.channelEntryView.channel.resolution), 'pen': {'color': (0, 0, 0, 0), 'width': 0},
-                    'brush': (point[2], point[2], point[2])}
-            spots.append(spot)
-
-        channelPopupWindow.scatter.addPoints(spots)
-        channelPopupWindow.pointsOnScatter.update(points)
-        channelPopupWindow.channelEntryView.channel.setLoopRunning(False)
         channelPopupWindow.channelEntryView.scanSettingsDetailView.runningLoops -= 1
