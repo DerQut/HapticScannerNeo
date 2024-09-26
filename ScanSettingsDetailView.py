@@ -966,7 +966,7 @@ def prePlot(channelPopupWindow: ChannelPopupWindow):
         points = set()
         points.update(channelPopupWindow.channelEntryView.channel.scanPoints)
         spots = []
-        pointsOnScatter = set(channelPopupWindow.pointsOnScatter)
+        pointsOnScatter = channelPopupWindow.pointsOnScatter
 
         for point in points:
             if point in pointsOnScatter:
