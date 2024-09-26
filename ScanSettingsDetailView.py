@@ -13,6 +13,9 @@ from ServerNeo import *
 from ScanChannel import *
 import os
 
+import threading
+import time
+
 
 # Improve load time by disabling ChannelEntryView.popupWindow
 NEODEBUG = False
@@ -353,23 +356,20 @@ class ChannelPopupWindow(QMainWindow):
         self.setCentralWidget(zContainer)
 
         self.channelEntryView.scanSettingsDetailView.cv.windowsToKillIfNeeded.append(self)
+        self.scatter = pg.ScatterPlotItem(pxMode=False)
+        self.pointsOnScatter = set()
+        self.plot.addItem(self.scatter)
+
+        x = threading.Thread(target=prePlot, args=(self,), daemon=True)
+        x.start()
 
     def rePlot(self):
-        self.plot.clear()
 
         if self.channelEntryView.channel.enabled():
-            self.channelEntryView.channel.randomize()
+            self.channelEntryView.channel.addRandomDot()
 
-        points = self.channelEntryView.channel.scanPoints
-        spots = []
-        for point in points:
-            spot = {"symbol": "s", "pos": (point[0], point[1]), "size": 1, 'pen': {'color': (0, 0, 0, 0), 'width': 0},
-                    'brush': (point[2], point[2], point[2])}
-            spots.append(spot)
-
-        scatter = pg.ScatterPlotItem(pxMode=False)
-        scatter.addPoints(spots)
-        self.plot.addItem(scatter)
+        self.plot.removeItem(self.plot.getPlotItem())
+        self.plot.addItem(self.scatter)
 
     def hide(self):
         self.timer.stop()
@@ -954,3 +954,27 @@ class HapticModeBottomView(QWidget):
     def show(self):
         self.timer.start()
         super().show()
+
+
+def prePlot(channelPopupWindow: ChannelPopupWindow):
+    while True:
+        time.sleep(1)
+        if not channelPopupWindow.isVisible():
+            time.sleep(2)
+            continue
+
+        points = set()
+        points.update(channelPopupWindow.channelEntryView.channel.scanPoints)
+        spots = []
+        pointsOnScatter = set(channelPopupWindow.pointsOnScatter)
+
+        for point in points:
+            if point in pointsOnScatter:
+                continue
+
+            spot = {"symbol": "s", "pos": (point[0], point[1]), "size": 1, 'pen': {'color': (0, 0, 0, 0), 'width': 0},
+                    'brush': (point[2], point[2], point[2])}
+            spots.append(spot)
+
+        channelPopupWindow.scatter.addPoints(spots)
+        channelPopupWindow.pointsOnScatter.update(points)
