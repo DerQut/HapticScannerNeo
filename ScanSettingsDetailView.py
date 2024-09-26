@@ -369,9 +369,6 @@ class ChannelPopupWindow(QMainWindow):
         if self.channelEntryView.channel.enabled():
             self.channelEntryView.channel.addRandomDot()
 
-        self.plot.removeItem(self.plot.getPlotItem())
-        self.plot.addItem(self.scatter)
-
     def hide(self):
         self.timer.stop()
         super().hide()
