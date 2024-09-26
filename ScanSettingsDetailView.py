@@ -367,7 +367,7 @@ class ChannelPopupWindow(QMainWindow):
     def rePlot(self):
 
         if self.channelEntryView.channel.enabled():
-            self.channelEntryView.channel.addRandomDot()
+            self.channelEntryView.channel.addRandomDot(48)
 
     def hide(self):
         self.timer.stop()
@@ -977,7 +977,7 @@ def prePlot(channelPopupWindow: ChannelPopupWindow):
             if point in pointsOnScatter:
                 continue
 
-            spot = {"symbol": "s", "pos": (point[0], point[1]), "size": 1, 'pen': {'color': (0, 0, 0, 0), 'width': 0},
+            spot = {"symbol": "s", "pos": (point[0], point[1]), "size": float(1/channelPopupWindow.channelEntryView.channel.resolution), 'pen': {'color': (0, 0, 0, 0), 'width': 0},
                     'brush': (point[2], point[2], point[2])}
             spots.append(spot)
 
