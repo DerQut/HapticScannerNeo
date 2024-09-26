@@ -53,6 +53,16 @@ class ScanChannel:
             zList.append(point[2])
         return zList
 
+    def getAllValues(self):
+        xList = []
+        yList = []
+        zList = []
+        for point in self.scanPoints:
+            xList.append(point[0])
+            yList.append(point[1])
+            zList.append(point[2])
+        return xList, yList, zList
+
     def preload(self):
         self.scanPoints = set()
         i = 0
