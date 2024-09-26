@@ -25,6 +25,7 @@ class ScanSettingsDetailView(QWidget):
         super().__init__(parent)
 
         self.cv = parent
+        self.runningLoops = 0
 
         self.timer = QTimer()
         self.timer.timeout.connect(self.pollServerStatus)
@@ -958,15 +959,22 @@ class HapticModeBottomView(QWidget):
 
 def prePlot(channelPopupWindow: ChannelPopupWindow):
     while True:
-        time.sleep(1)
+        time.sleep(1 + channelPopupWindow.channelEntryView.scanSettingsDetailView.runningLoops/2)
         if not channelPopupWindow.isVisible():
             time.sleep(2)
             continue
 
+        if channelPopupWindow.channelEntryView.channel.isLoopRunning():
+            continue
+
+        channelPopupWindow.channelEntryView.channel.setLoopRunning(True)
+        channelPopupWindow.channelEntryView.scanSettingsDetailView.runningLoops += 1
+
         points = set()
         points.update(channelPopupWindow.channelEntryView.channel.scanPoints)
         spots = []
-        pointsOnScatter = channelPopupWindow.pointsOnScatter
+        pointsOnScatter = set()
+        pointsOnScatter.update(channelPopupWindow.pointsOnScatter)
 
         for point in points:
             if point in pointsOnScatter:
@@ -978,3 +986,5 @@ def prePlot(channelPopupWindow: ChannelPopupWindow):
 
         channelPopupWindow.scatter.addPoints(spots)
         channelPopupWindow.pointsOnScatter.update(points)
+        channelPopupWindow.channelEntryView.channel.setLoopRunning(False)
+        channelPopupWindow.channelEntryView.scanSettingsDetailView.runningLoops -= 1

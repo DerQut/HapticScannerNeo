@@ -7,6 +7,7 @@ class ScanChannel:
         self.__gain = gain
         self.__enabled = enabled
         self.scanPoints = set()
+        self.__isLoopRunning = False
         self.preload()
 
     def name(self):
@@ -26,6 +27,12 @@ class ScanChannel:
 
     def setName(self, name: str):
         self.__name = name
+
+    def isLoopRunning(self):
+        return self.__isLoopRunning
+
+    def setLoopRunning(self, isRunning: bool):
+        self.__isLoopRunning = isRunning
 
     def getXValues(self):
         xList = []
