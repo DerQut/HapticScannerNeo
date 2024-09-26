@@ -8,7 +8,7 @@ class ScanChannel:
         self.__enabled = enabled
         self.scanPoints = set()
         self.__isLoopRunning = False
-        self.preload()
+        self.preload(resolution=128)
 
     def name(self):
         return self.__name
@@ -52,14 +52,14 @@ class ScanChannel:
             zList.append(point[2])
         return zList
 
-    def preload(self):
+    def preload(self, resolution: int):
         self.scanPoints = set()
         i = 0
         j = 0
-        while j < 128:
-            while i < 128:
+        while j < resolution:
+            while i < resolution:
                 i = i + 1
-                self.scanPoints.add((i, j, i*j/128/128*255))
+                self.scanPoints.add((i, j, i*j/resolution/resolution*255))
             j = j + 1
             i = 0
 
