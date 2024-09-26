@@ -68,5 +68,4 @@ class ScanChannel:
             i = 0
 
     def addRandomDot(self):
-        print(self.name())
         self.scanPoints.add((random.randint(0,128), random.randint(0,128), random.randint(0,255)))
