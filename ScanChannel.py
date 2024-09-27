@@ -41,8 +41,14 @@ class ScanChannel:
     def setName(self, name: str):
         self.__name = name
 
-    def setZCutMin(self, zCutMin: float, zCutMax: float):
+    def setZCut(self, zCutMin: float, zCutMax: float):
         self.__zCutMin = zCutMin
+        self.__zCutMax = zCutMax
+
+    def setZCutMin(self, zCutMin: float):
+        self.__zCutMin = zCutMin
+
+    def setZCutMax(self, zCutMax: float):
         self.__zCutMax = zCutMax
 
     def getXValues(self):
