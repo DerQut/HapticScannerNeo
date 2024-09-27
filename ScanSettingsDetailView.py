@@ -335,6 +335,8 @@ class ChannelPopupWindow(QMainWindow):
         self.setFont(QFont("Helvetica", 12))
 
         self.channelEntryView = channelEntryView
+        self.channel = self.channelEntryView.channel
+
         self.setFixedSize(QSize(600, 400))
 
         zStack = QStackedLayout()
@@ -350,8 +352,8 @@ class ChannelPopupWindow(QMainWindow):
         plotVStack = QVBoxLayout()
 
         self.plot = MplCanvas(self, width=100, height=100, dpi=100)
-        self.plot.axes.imshow(self.channelEntryView.channel.getArray(), cmap="hot", interpolation="nearest")
-        self.plot.axes.set_ylim([0, max(channelEntryView.channel.getYValues())])
+        self.plot.axes.imshow(self.channel.getArray(), cmap="hot", interpolation="nearest")
+        self.plot.axes.set_ylim([0, max(self.channel.getYValues())])
 
         toolbar = NavigationToolbar(self.plot, self)
 
@@ -384,8 +386,8 @@ class ChannelPopupWindow(QMainWindow):
 
     def rePlot(self):
 
-        if self.channelEntryView.channel.enabled():
-            self.channelEntryView.channel.addRandomDot(1)
+        if self.channel.enabled():
+            self.channel.addRandomDot(1)
 
     def hide(self):
         self.timer.stop()
@@ -979,5 +981,5 @@ def prePlot(channelPopupWindow: ChannelPopupWindow):
             time.sleep(2)
             continue
 
-        channelPopupWindow.plot.axes.imshow(channelPopupWindow.channelEntryView.channel.getArray(), cmap="hot", interpolation="nearest")
+        channelPopupWindow.plot.axes.imshow(channelPopupWindow.channel.getArray(), cmap="hot", interpolation="nearest")
         channelPopupWindow.plot.draw()
