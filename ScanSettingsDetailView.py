@@ -976,13 +976,11 @@ class HapticModeBottomView(QWidget):
 
 def prePlot(channelPopupWindow: ChannelPopupWindow):
     while True:
-        time.sleep(0.01)
+        time.sleep(0.5)
         if not channelPopupWindow.isVisible():
             time.sleep(2)
             continue
 
-        x, y, z = channelPopupWindow.channelEntryView.channel.getAllValues()
-        channelPopupWindow.plot.axes.cla()
         channelPopupWindow.plot.axes.imshow(channelPopupWindow.channelEntryView.channel.getArray(), cmap="hot", interpolation="nearest")
         channelPopupWindow.plot.draw()
 

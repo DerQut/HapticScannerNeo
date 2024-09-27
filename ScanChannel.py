@@ -73,12 +73,16 @@ class ScanChannel:
         return xList, yList, zList
 
     def getArray(self):
-        array = np.zeros((self.resolution+1, self.resolution+1))
+
+        xResolution = max(self.getXValues())
+        yResolution = max(self.getYValues())
+
+        array = np.zeros((yResolution+1, xResolution+1))
         scanPointsLocal = set()
         scanPointsLocal.update(self.scanPoints)
 
         for point in scanPointsLocal:
-            array[point[0]][point[1]] = point[2]
+            array[point[1]][point[0]] = point[2]
 
         return array
 
@@ -106,6 +110,8 @@ class ScanChannel:
 
     def addRandomDot(self, count=1):
         i = 0
+        xResolution = max(self.getXValues())
+        yResolution = max(self.getYValues())
         while i < count:
-            self.scanPoints.add((random.randint(0, self.resolution), random.randint(0, self.resolution), random.randint(0,255)))
+            self.scanPoints.add((random.randint(0, xResolution-1), (random.randint(0, yResolution-1)), random.randint(0,255)))
             i = i + 1
