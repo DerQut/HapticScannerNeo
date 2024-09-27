@@ -8,9 +8,20 @@ class ScanChannel:
         self.__gain = gain
         self.__enabled = enabled
         self.scanPoints = set()
-        self.__isLoopRunning = False
         self.resolution = 128
         self.preload()
+
+        self.__zCutMin = 0
+        self.__zCutMax = 1
+
+    def zCut(self):
+        return self.__zCutMin, self.__zCutMax
+
+    def zCutMin(self):
+        return self.__zCutMin
+
+    def zCutMax(self):
+        return self.__zCutMax
 
     def name(self):
         return self.__name
@@ -30,11 +41,9 @@ class ScanChannel:
     def setName(self, name: str):
         self.__name = name
 
-    def isLoopRunning(self):
-        return self.__isLoopRunning
-
-    def setLoopRunning(self, isRunning: bool):
-        self.__isLoopRunning = isRunning
+    def setZCutMin(self, zCutMin: float, zCutMax: float):
+        self.__zCutMin = zCutMin
+        self.__zCutMax = zCutMax
 
     def getXValues(self):
         xList = []
@@ -82,8 +91,7 @@ class ScanChannel:
         scanPointsLocal.update(self.scanPoints)
 
         for point in scanPointsLocal:
-            array[point[1]][point[0]] = point[2]
-
+            array[point[1]][point[0]] = min(self.zCutMax(), point[2]) if point[2] > self.zCutMin() else self.zCutMin()
         return array
 
     def preload(self):
@@ -93,7 +101,7 @@ class ScanChannel:
         while j < self.resolution:
             while i < self.resolution:
                 i = i + 1
-                self.scanPoints.add((i, j, i*j/self.resolution/self.resolution*255))
+                self.scanPoints.add((i, j, i*j/self.resolution/self.resolution))
             j = j + 1
             i = 0
 

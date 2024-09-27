@@ -351,6 +351,7 @@ class ChannelPopupWindow(QMainWindow):
 
         self.plot = MplCanvas(self, width=100, height=100, dpi=100)
         self.plot.axes.imshow(self.channelEntryView.channel.getArray(), cmap="hot", interpolation="nearest")
+        self.plot.axes.set_ylim([0, max(channelEntryView.channel.getYValues())])
 
         toolbar = NavigationToolbar(self.plot, self)
 
