@@ -34,7 +34,6 @@ class ScanSettingsDetailView(QWidget):
         super().__init__(parent)
 
         self.cv = parent
-        self.runningLoops = 0
 
         self.timer = QTimer()
         self.timer.timeout.connect(self.pollServerStatus)
@@ -349,8 +348,6 @@ class ChannelPopupWindow(QMainWindow):
 
         dummyLayout = QHBoxLayout()
         plotVStack = QVBoxLayout()
-
-        x, y, z = self.channelEntryView.channel.getAllValues()
 
         self.plot = MplCanvas(self, width=100, height=100, dpi=100)
         self.plot.axes.imshow(self.channelEntryView.channel.getArray(), cmap="hot", interpolation="nearest")
@@ -983,5 +980,3 @@ def prePlot(channelPopupWindow: ChannelPopupWindow):
 
         channelPopupWindow.plot.axes.imshow(channelPopupWindow.channelEntryView.channel.getArray(), cmap="hot", interpolation="nearest")
         channelPopupWindow.plot.draw()
-
-        channelPopupWindow.channelEntryView.scanSettingsDetailView.runningLoops -= 1
