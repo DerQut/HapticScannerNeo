@@ -17,3 +17,9 @@ class Divider(Color):
     def __init__(self, color: tuple):
         super().__init__(color)
         self.setFixedHeight(1)
+
+
+class VerticalDivider(Color):
+    def __init__(self, color: tuple):
+        super().__init__(color)
+        self.setFixedWidth(1)
