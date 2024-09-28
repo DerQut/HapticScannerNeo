@@ -378,7 +378,12 @@ class ChannelPopupWindow(QMainWindow):
         self.zCutMaxSlider.setValue(10000)
         self.zCutMaxSlider.setFixedHeight(300)
         lowerPlotHStackWithSliders.addWidget(self.zCutMaxSlider)
+
         lowerPlotHStackWithSliders.addStretch()
+
+        self.slowModeToggle = QCheckBox("Slow Mode [Debug Feature]")
+        self.slowModeToggle.setChecked(True)
+        lowerPlotHStackWithSliders.addWidget(self.slowModeToggle)
 
         hContainer = QWidget(self)
         hContainer.setLayout(hStack)
@@ -1003,7 +1008,7 @@ class HapticModeBottomView(QWidget):
 
 def prePlot(channelPopupWindow: ChannelPopupWindow):
     while True:
-        time.sleep(0.5)
+        time.sleep(1 if channelPopupWindow.slowModeToggle.isChecked() else 0.001)
         if not channelPopupWindow.isVisible():
             time.sleep(2)
             continue
