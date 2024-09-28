@@ -360,7 +360,6 @@ class ChannelPopupWindow(QMainWindow):
         plotVStack.addLayout(lowerPlotHStackWithSliders)
 
         hStack.addLayout(plotVStack)
-        hStack.addStretch()
 
         self.zCutMinSlider = QSlider()
         self.zCutMinSlider.setOrientation(Qt.Orientation.Vertical)
@@ -379,6 +378,7 @@ class ChannelPopupWindow(QMainWindow):
         self.zCutMaxSlider.setValue(10000)
         self.zCutMaxSlider.setFixedHeight(300)
         lowerPlotHStackWithSliders.addWidget(self.zCutMaxSlider)
+        lowerPlotHStackWithSliders.addStretch()
 
         hContainer = QWidget(self)
         hContainer.setLayout(hStack)
