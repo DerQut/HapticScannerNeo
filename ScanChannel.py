@@ -130,5 +130,5 @@ class ScanChannel:
         xResolution = max(self.getXValues())
         yResolution = max(self.getYValues())
         while i < count:
-            self.scanPoints.add((random.randint(0, xResolution-1), (random.randint(0, yResolution-1)), random.randint(0,255)))
+            self.scanPoints.add((random.randint(0, xResolution-1), (random.randint(0, yResolution-1)), random.randint(0,10000)))
             i = i + 1
