@@ -26,9 +26,6 @@ class MplCanvas(FigureCanvasQTAgg):
         super(MplCanvas, self).__init__(fig)
 
 
-# Improve load time by disabling ChannelEntryView.popupWindow
-NEODEBUG = False
-
 class ScanSettingsDetailView(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -287,21 +284,16 @@ class ChannelEntryView(QWidget):
         hStack.addWidget(button)
 
         self.popupWindow = None
-        if not NEODEBUG:
-            self.popupWindow = ChannelPopupWindow(self)
+        self.popupWindow = ChannelPopupWindow(self)
 
     def summonWindow(self):
-        if not NEODEBUG:
-            self.popupWindow.show()
+        self.popupWindow.show()
 
     def setGainsEnabledDependingOnScanMode(self):
         enabled = False if self.scanSettingsDetailView.scanModePicker.currentText() == "Initial scan" else True
         self.gainPicker.setEnabled(enabled)
 
     def sendName(self):
-        if NEODEBUG:
-            return
-
         self.channel.setName(self.textEntry.text())
         if self.channel.name() != "":
             self.popupWindow.setWindowTitle(self.channel.name())
