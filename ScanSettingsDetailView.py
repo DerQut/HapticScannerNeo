@@ -344,7 +344,7 @@ class ChannelPopupWindow(QMainWindow):
         plotVStack = QVBoxLayout()
 
         self.plot = MplCanvas(self, width=100, height=100, dpi=100)
-        self.plot.axes.imshow(self.channel.getArray(), cmap="hot", interpolation="nearest")
+        self.plot.axes.imshow(self.channel.getPlotArray(), cmap="hot", interpolation="nearest")
         self.plot.axes.set_ylim([0, max(self.channel.getYValues())])
 
         toolbar = NavigationToolbar(self.plot, self)
@@ -355,14 +355,35 @@ class ChannelPopupWindow(QMainWindow):
         dummyWidget.setFixedSize(300, 300)
 
         plotVStack.addWidget(toolbar)
-        plotVStack.addWidget(dummyWidget)
+        lowerPlotHStackWithSliders = QHBoxLayout()
+        lowerPlotHStackWithSliders.addWidget(dummyWidget)
+        plotVStack.addLayout(lowerPlotHStackWithSliders)
 
         hStack.addLayout(plotVStack)
+        hStack.addStretch()
 
-        vContainer = QWidget(self)
-        vContainer.setLayout(hStack)
+        self.zCutMinSlider = QSlider()
+        self.zCutMinSlider.setOrientation(Qt.Orientation.Vertical)
+        self.zCutMinSlider.setMaximum(10000)
+        self.zCutMinSlider.setMinimum(0)
+        self.zCutMinSlider.setTickInterval(1)
+        self.zCutMinSlider.setValue(0)
+        self.zCutMinSlider.setFixedHeight(300)
+        lowerPlotHStackWithSliders.addWidget(self.zCutMinSlider)
 
-        zStack.addWidget(vContainer)
+        self.zCutMaxSlider = QSlider()
+        self.zCutMaxSlider.setOrientation(Qt.Orientation.Vertical)
+        self.zCutMaxSlider.setMaximum(10000)
+        self.zCutMaxSlider.setMinimum(0)
+        self.zCutMaxSlider.setTickInterval(1)
+        self.zCutMaxSlider.setValue(10000)
+        self.zCutMaxSlider.setFixedHeight(300)
+        lowerPlotHStackWithSliders.addWidget(self.zCutMaxSlider)
+
+        hContainer = QWidget(self)
+        hContainer.setLayout(hStack)
+
+        zStack.addWidget(hContainer)
 
         zContainer = QWidget(self)
         zContainer.setLayout(zStack)
@@ -372,6 +393,8 @@ class ChannelPopupWindow(QMainWindow):
         self.channelEntryView.scanSettingsDetailView.cv.windowsToKillIfNeeded.append(self)
         self.pointsOnScatter = set()
 
+        self.zCutMinSlider.valueChanged.connect(self.sendZCutMin)
+        self.zCutMaxSlider.valueChanged.connect(self.sendZCutMax)
 
         x = threading.Thread(target=prePlot, args=(self,), daemon=True)
         x.start()
@@ -391,6 +414,18 @@ class ChannelPopupWindow(QMainWindow):
 
     def closeEvent(self, a0):
         self.timer.stop()
+
+    def sendZCutMin(self):
+        if self.zCutMinSlider.value() > self.zCutMaxSlider.value():
+            self.zCutMaxSlider.setValue(self.zCutMinSlider.value())
+
+        self.channel.setZCutMin(self.zCutMinSlider.value())
+
+    def sendZCutMax(self):
+        if self.zCutMaxSlider.value() < self.zCutMinSlider.value():
+            self.zCutMinSlider.setValue(self.zCutMaxSlider.value())
+
+        self.channel.setZCutMax(self.zCutMaxSlider.value())
 
 
 class InitialScanTopView(QWidget):
@@ -973,5 +1008,5 @@ def prePlot(channelPopupWindow: ChannelPopupWindow):
             time.sleep(2)
             continue
 
-        channelPopupWindow.plot.axes.imshow(channelPopupWindow.channel.getArray(), cmap="hot", interpolation="nearest")
+        channelPopupWindow.plot.axes.imshow(channelPopupWindow.channel.getPlotArray(), cmap="hot", interpolation="nearest")
         channelPopupWindow.plot.draw()

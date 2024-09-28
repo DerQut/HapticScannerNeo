@@ -12,7 +12,7 @@ class ScanChannel:
         self.preload()
 
         self.__zCutMin = 0
-        self.__zCutMax = 1
+        self.__zCutMax = 10000
 
     def zCut(self):
         return self.__zCutMin, self.__zCutMax
@@ -87,7 +87,10 @@ class ScanChannel:
             zList.append(point[2])
         return xList, yList, zList
 
-    def getArray(self):
+    def getPlotArray(self) -> np.ndarray:
+        """
+        Returns: Numpy array containing all scanPoints, arranged in a 2D grid, with an applied zCut setting
+        """
 
         xResolution = max(self.getXValues())
         yResolution = max(self.getYValues())
@@ -107,7 +110,7 @@ class ScanChannel:
         while j < self.resolution:
             while i < self.resolution:
                 i = i + 1
-                self.scanPoints.add((i, j, i*j/self.resolution/self.resolution))
+                self.scanPoints.add((i, j, i*j/self.resolution/self.resolution*10000))
             j = j + 1
             i = 0
 
