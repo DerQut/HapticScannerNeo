@@ -1020,5 +1020,9 @@ def prePlot(channelPopupWindow: ChannelPopupWindow):
             time.sleep(2)
             continue
 
-        channelPopupWindow.plot.axes.imshow(channelPopupWindow.channel.getPlotArray(), cmap="hot", interpolation="nearest")
-        channelPopupWindow.plot.draw()
+        try:
+            channelPopupWindow.plot.axes.imshow(channelPopupWindow.channel.getPlotArray(), cmap="hot", interpolation="nearest")
+            channelPopupWindow.plot.draw()
+        except:
+            # Same as above
+            break
