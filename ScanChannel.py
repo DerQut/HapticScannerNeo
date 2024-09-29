@@ -121,7 +121,7 @@ class ScanChannel:
         while j < self.resolution:
             while i < self.resolution:
                 i = i + 1
-                self.scanPoints.add((i, j, random.randint(0,255)))
+                self.scanPoints.add((i, j, random.randint(4500,5500)))
             j = j + 1
             i = 0
 
