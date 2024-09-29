@@ -1009,9 +1009,13 @@ class HapticModeBottomView(QWidget):
 def prePlot(channelPopupWindow: ChannelPopupWindow):
     while True:
         time.sleep(1 if channelPopupWindow.slowModeToggle.isChecked() else 0.001)
-        if not channelPopupWindow.isVisible():
-            time.sleep(2)
-            continue
+        try:
+            if not channelPopupWindow.isVisible():
+                time.sleep(2)
+                continue
+        except:
+            # This will only trigger if channelPopupWindow ceases to exist while the thread is still running
+            break
 
         channelPopupWindow.plot.axes.imshow(channelPopupWindow.channel.getPlotArray(), cmap="hot", interpolation="nearest")
         channelPopupWindow.plot.draw()
