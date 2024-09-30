@@ -8,6 +8,8 @@ from DetailView import *
 
 from ServerNeo import *
 
+import sys
+
 
 class ContentView(QMainWindow):
     def __init__(self):
@@ -30,3 +32,5 @@ class ContentView(QMainWindow):
     def closeEvent(self, a0):
         for window in self.windowsToKillIfNeeded:
             window.close()
+
+        sys.exit()
