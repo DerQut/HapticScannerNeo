@@ -1,3 +1,5 @@
+import sys
+
 from PyQt6.QtCore import QSize, Qt
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QStackedLayout
 
@@ -7,8 +9,6 @@ from LogView import *
 from DetailView import *
 
 from ServerNeo import *
-
-import sys
 
 
 class ContentView(QMainWindow):
