@@ -1024,5 +1024,5 @@ def prePlot(channelPopupWindow: ChannelPopupWindow):
             channelPopupWindow.plot.axes.imshow(channelPopupWindow.channel.getPlotArray(), cmap="hot", interpolation="nearest")
             channelPopupWindow.plot.draw()
         except:
-            # Same as above
+            # Same as above: preventing the program from crashing while it's in the process of shutting down
             break
