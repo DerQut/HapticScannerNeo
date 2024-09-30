@@ -354,27 +354,36 @@ class ChannelPopupWindow(QMainWindow):
         lowerPlotHStack.addWidget(dummyWidget)
 
         controlVStack = QVBoxLayout()
+        controlLabel = QLabel("Plot display settings")
+        controlLabel.setFont(QFont("Helvetica", 16))
+        controlVStack.addWidget(controlLabel)
         lowerPlotHStack.addLayout(controlVStack)
 
         plotVStack.addLayout(lowerPlotHStack)
 
         hStack.addLayout(plotVStack)
 
+        zCutMinHStack = QHBoxLayout()
+        zCutMinHStack.addWidget(QLabel("ZCut (min)"))
         self.zCutMinSlider = QSlider()
         self.zCutMinSlider.setOrientation(Qt.Orientation.Horizontal)
         self.zCutMinSlider.setMaximum(10000)
         self.zCutMinSlider.setMinimum(0)
         self.zCutMinSlider.setTickInterval(1)
         self.zCutMinSlider.setValue(0)
-        controlVStack.addWidget(self.zCutMinSlider)
+        zCutMinHStack.addWidget(self.zCutMinSlider)
+        controlVStack.addLayout(zCutMinHStack)
 
+        zCutMaxHStack = QHBoxLayout()
+        zCutMaxHStack.addWidget(QLabel("ZCut (max)"))
         self.zCutMaxSlider = QSlider()
         self.zCutMaxSlider.setOrientation(Qt.Orientation.Horizontal)
         self.zCutMaxSlider.setMaximum(10000)
         self.zCutMaxSlider.setMinimum(0)
         self.zCutMaxSlider.setTickInterval(1)
         self.zCutMaxSlider.setValue(10000)
-        controlVStack.addWidget(self.zCutMaxSlider)
+        zCutMaxHStack.addWidget(self.zCutMaxSlider)
+        controlVStack.addLayout(zCutMaxHStack)
 
         controlVStack.addStretch()
 
