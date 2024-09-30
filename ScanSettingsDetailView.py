@@ -130,18 +130,9 @@ class ScanSettingsDetailView(QWidget):
         self.initialScanBottomView.startButton.setEnabled(enabled)
         self.initialScanBottomView.stopButton.setEnabled(not enabled)
 
-        #self.initialScanTopView.modePicker.setEnabled(enabled)
-        #self.initialScanTopView.densityStepper.setEnabled(enabled)
-        #self.initialScanTopView.speedStepper.setEnabled(enabled)
-
         self.rasterModeBottomView.nameField.setEnabled(enabled)
         self.rasterModeBottomView.startButton.setEnabled(enabled)
         self.rasterModeBottomView.stopButton.setEnabled(not enabled)
-
-        #self.rasterModeTopView.modePicker.setEnabled(enabled)
-        #self.rasterModeTopView.traceTimeStepper.setEnabled(enabled)
-        #self.rasterModeTopView.retraceTimeStepper.setEnabled(enabled)
-        #self.rasterModeTopView.intervalStepper.setEnabled(enabled)
 
         self.hapticModeBottomView.nameField.setEnabled(enabled)
         self.hapticModeBottomView.startButton.setEnabled(enabled)
