@@ -350,35 +350,37 @@ class ChannelPopupWindow(QMainWindow):
         dummyWidget.setFixedSize(300, 300)
 
         plotVStack.addWidget(toolbar)
-        lowerPlotHStackWithSliders = QHBoxLayout()
-        lowerPlotHStackWithSliders.addWidget(dummyWidget)
-        plotVStack.addLayout(lowerPlotHStackWithSliders)
+        lowerPlotHStack = QHBoxLayout()
+        lowerPlotHStack.addWidget(dummyWidget)
+
+        controlVStack = QVBoxLayout()
+        lowerPlotHStack.addLayout(controlVStack)
+
+        plotVStack.addLayout(lowerPlotHStack)
 
         hStack.addLayout(plotVStack)
 
         self.zCutMinSlider = QSlider()
-        self.zCutMinSlider.setOrientation(Qt.Orientation.Vertical)
+        self.zCutMinSlider.setOrientation(Qt.Orientation.Horizontal)
         self.zCutMinSlider.setMaximum(10000)
         self.zCutMinSlider.setMinimum(0)
         self.zCutMinSlider.setTickInterval(1)
         self.zCutMinSlider.setValue(0)
-        self.zCutMinSlider.setFixedHeight(300)
-        lowerPlotHStackWithSliders.addWidget(self.zCutMinSlider)
+        controlVStack.addWidget(self.zCutMinSlider)
 
         self.zCutMaxSlider = QSlider()
-        self.zCutMaxSlider.setOrientation(Qt.Orientation.Vertical)
+        self.zCutMaxSlider.setOrientation(Qt.Orientation.Horizontal)
         self.zCutMaxSlider.setMaximum(10000)
         self.zCutMaxSlider.setMinimum(0)
         self.zCutMaxSlider.setTickInterval(1)
         self.zCutMaxSlider.setValue(10000)
-        self.zCutMaxSlider.setFixedHeight(300)
-        lowerPlotHStackWithSliders.addWidget(self.zCutMaxSlider)
+        controlVStack.addWidget(self.zCutMaxSlider)
 
-        lowerPlotHStackWithSliders.addStretch()
+        controlVStack.addStretch()
 
         self.slowModeToggle = QCheckBox("Slow Mode [Debug Feature]")
         self.slowModeToggle.setChecked(True)
-        lowerPlotHStackWithSliders.addWidget(self.slowModeToggle)
+        controlVStack.addWidget(self.slowModeToggle)
 
         hContainer = QWidget(self)
         hContainer.setLayout(hStack)
