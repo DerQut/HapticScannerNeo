@@ -89,7 +89,7 @@ class ScanChannel:
 
     def getPlotArray(self) -> np.ndarray:
         """
-        Returns: Numpy array containing all scanPoints, arranged in a 2D grid, with an applied zCut setting
+        Returns: Numpy array containing all scanPoints arranged in a 2D grid
         """
 
         xResolution = max(self.getXValues())
