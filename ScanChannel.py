@@ -100,7 +100,7 @@ class ScanChannel:
         scanPointsLocal.update(self.scanPoints)
 
         for point in scanPointsLocal:
-            array[point[1]][point[0]] = min(self.zCutMax(), point[2]) if point[2] > self.zCutMin() else self.zCutMin()
+            array[point[1]][point[0]] = point[2]
         return array
 
     def preload(self):

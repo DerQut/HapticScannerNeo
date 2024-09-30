@@ -15,6 +15,7 @@ import time
 
 
 import matplotlib
+import matplotlib.pyplot as plt
 matplotlib.use('QtAgg')
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
@@ -335,7 +336,7 @@ class ChannelPopupWindow(QMainWindow):
         plotVStack = QVBoxLayout()
 
         self.plot = MplCanvas(self, width=100, height=100, dpi=100)
-        self.plot.axes.imshow(self.channel.getPlotArray(), cmap="hot", interpolation="nearest")
+        self.image = self.plot.axes.imshow(self.channel.getPlotArray(), cmap="hot", interpolation="nearest", vmax=self.channel.zCutMax(), vmin=self.channel.zCutMin())
         self.plot.axes.set_ylim([0, max(self.channel.getYValues())])
 
         toolbar = NavigationToolbar(self.plot, self)
@@ -391,6 +392,7 @@ class ChannelPopupWindow(QMainWindow):
 
         self.zCutMinSlider.valueChanged.connect(self.sendZCutMin)
         self.zCutMaxSlider.valueChanged.connect(self.sendZCutMax)
+        self.bar = plt.colorbar(self.image)
 
         x = threading.Thread(target=prePlot, args=(self,), daemon=True)
         x.start()
@@ -416,12 +418,14 @@ class ChannelPopupWindow(QMainWindow):
             self.zCutMaxSlider.setValue(self.zCutMinSlider.value())
 
         self.channel.setZCutMin(self.zCutMinSlider.value())
+        self.bar.norm.autoscale(self.channel.zCut())
 
     def sendZCutMax(self):
         if self.zCutMaxSlider.value() < self.zCutMinSlider.value():
             self.zCutMinSlider.setValue(self.zCutMaxSlider.value())
 
         self.channel.setZCutMax(self.zCutMaxSlider.value())
+        self.bar.norm.autoscale(self.channel.zCut())
 
 
 class InitialScanTopView(QWidget):
@@ -1006,13 +1010,19 @@ def prePlot(channelPopupWindow: ChannelPopupWindow):
             # This will only trigger if channelPopupWindow ceases to exist while the thread is still running
             break
 
-        time.sleep(isSlowModeEnabled + 0.001)
+        time.sleep(isSlowModeEnabled + 0.1)
         if not isPopupWindowVisible:
             time.sleep(2)
             continue
 
         try:
-            channelPopupWindow.plot.axes.imshow(channelPopupWindow.channel.getPlotArray(), cmap="hot", interpolation="nearest")
+            channelPopupWindow.plot.axes.imshow(
+                channelPopupWindow.channel.getPlotArray(),
+                cmap="hot",
+                interpolation="nearest",
+                vmin=channelPopupWindow.channel.zCutMin(),
+                vmax=channelPopupWindow.channel.zCutMax()
+            )
             channelPopupWindow.plot.draw()
         except:
             # Same as above: preventing the program from crashing while it's in the process of shutting down
