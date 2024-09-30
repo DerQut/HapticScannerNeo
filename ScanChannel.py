@@ -1,4 +1,5 @@
 import random
+import math
 import numpy as np
 
 
@@ -110,7 +111,7 @@ class ScanChannel:
         while j < self.resolution:
             while i < self.resolution:
                 i = i + 1
-                self.scanPoints.add((i, j, i*j/self.resolution/self.resolution*10000))
+                self.scanPoints.add((i, j, 0))
             j = j + 1
             i = 0
 
@@ -129,6 +130,9 @@ class ScanChannel:
         i = 0
         xResolution = max(self.getXValues())
         yResolution = max(self.getYValues())
+
         while i < count:
-            self.scanPoints.add((random.randint(0, xResolution-1), (random.randint(0, yResolution-1)), random.randint(0,10000)))
+            x = random.randint(0, xResolution - 1)
+            y = (random.randint(0, yResolution - 1))
+            self.scanPoints.add((x, y, 7500 + random.randint(-1000, 1000) + y**0.5*250*math.sin(x/2)))
             i = i + 1
