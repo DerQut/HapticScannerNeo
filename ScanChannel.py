@@ -4,11 +4,11 @@ import numpy as np
 
 class ScanChannel:
     def __init__(self, name: str, gain: float, enabled: bool):
-        self.__name = name
-        self.__gain = gain
-        self.__enabled = enabled
+        self.__name: str = name
+        self.__gain: float = gain
+        self.__enabled: bool = enabled
         self.scanPoints = set()
-        self.resolution = 128
+        self.resolution: int = 128
         self.preload()
 
         self.__zCutMin = 0
@@ -125,7 +125,7 @@ class ScanChannel:
             j = j + 1
             i = 0
 
-    def addRandomDot(self, count=1):
+    def addRandomDot(self, count: int = 1):
         i = 0
         xResolution = max(self.getXValues())
         yResolution = max(self.getYValues())
