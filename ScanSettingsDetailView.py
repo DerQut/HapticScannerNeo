@@ -417,8 +417,8 @@ class ChannelPopupWindow(QMainWindow):
         self.zCutMaxSlider.valueChanged.connect(self.sendZCutMax)
         self.bar = plt.colorbar(self.image)
 
-        x = threading.Thread(target=prePlot, args=(self,), daemon=True)
-        x.start()
+        plotUpdateThread = threading.Thread(target=updatePlot, args=(self,), daemon=True)
+        plotUpdateThread.start()
 
     def rePlot(self):
         if self.channel.enabled():
@@ -1023,7 +1023,7 @@ class HapticModeBottomView(QWidget):
         super().show()
 
 
-def prePlot(channelPopupWindow: ChannelPopupWindow):
+def updatePlot(channelPopupWindow: ChannelPopupWindow):
     while True:
         try:
             isSlowModeEnabled = channelPopupWindow.slowModeToggle.isChecked()
