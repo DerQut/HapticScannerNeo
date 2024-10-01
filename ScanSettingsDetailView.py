@@ -12,6 +12,7 @@ import os
 
 import threading
 import time
+import sys
 
 
 import matplotlib
@@ -22,6 +23,14 @@ from matplotlib.figure import Figure
 
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning)
+
+
+class DevNull:
+    def write(self, msg):
+        pass
+
+sys.stderr = DevNull()
+
 
 class MplCanvas(FigureCanvasQTAgg):
     def __init__(self, parent=None, width=5, height=4, dpi=100):
@@ -347,7 +356,7 @@ class ChannelPopupWindow(QMainWindow):
         dummyLayout.addWidget(self.plot)
         dummyWidget = QWidget()
         dummyWidget.setLayout(dummyLayout)
-        dummyWidget.setFixedSize(300, 300)
+        dummyWidget.setFixedSize(350, 300)
 
         plotVStack.addWidget(toolbar)
         lowerPlotHStack = QHBoxLayout()
@@ -412,9 +421,8 @@ class ChannelPopupWindow(QMainWindow):
         x.start()
 
     def rePlot(self):
-
         if self.channel.enabled():
-            self.channel.addRandomDot(1)
+            self.channel.addRandomDot(50)
 
     def hide(self):
         self.timer.stop()
